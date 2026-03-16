@@ -10,6 +10,7 @@ This artifact presents an AI-based Job Interview Assistant created during the AI
 The Job Interview Assistant is a conversational AI tool designed to simulate interview preparation support. It helps users think through possible interview questions, structure responses, and engage in guided practice. This artifact represents an early example of applying AI to a practical, user-focused problem.
 
 ## Objective
+The objective of this artifact was to explore how AI tools can assist with interview preparation. The project focuses on using conversational AI to guide users through interview questions and help them organize clear, structured responses.
 
 ## Process
 
