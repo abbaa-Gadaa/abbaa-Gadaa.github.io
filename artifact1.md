@@ -31,3 +31,12 @@ Interview preparation is a common challenge for many professionals and students.
 
 ## References
 No external references were required for this artifact.
+
+## Evidence
+
+This artifact is based on the AI Lab project "JobPrep AI", a generative AI chatbot designed to help students and job seekers prepare for interviews and career opportunities. The chatbot was developed using the ChatGPT Custom GPT platform and applies design thinking principles to create a practical AI assistant that provides interview preparation guidance, resume advice, and career planning support.
+
+A full project report documenting the development process, experimentation with generative AI tools, and testing of the assistant was produced as part of the AI Lab assignment.
+
+Project Demo:
+https://chatgpt.com/g/g-69ab0d5b416481919189e1d19e6351da-jobprep-ai
