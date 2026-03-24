@@ -1,30 +1,30 @@
 # AI Strategy: 75 Years of Evolution
-> Mapping the industry trajectory from symbolic logic to generative intelligence.
+> Understanding where we started to navigate where the industry is headed.
 
 ---
 
 ## Strategic Evolution Timeline
 ![AI Evolution Timeline](assets/timeline-screenshot.png)
-*A synthesis of seven decades of AI milestones, categorizing the shift from rule-based systems to creative intelligence.*
+*A synthesized view of AI breakthroughs, mapping the shift from symbolic logic to creative intelligence.*
 
 ---
 
-## Industry Era Analysis
-| Era | Core Innovation | Technical Impact |
+## Industry Perspective
+| Era | Innovation | Industry Context |
 | :--- | :--- | :--- |
-| **Symbolic** | Rule-Based Logic | Established the foundational "IF-THEN" structures of early AI. |
-| **Statistical** | Pattern Recognition | Enabled machines to learn from data rather than just following rigid rules. |
-| **Deep Learning** | Neural Networks | Leveraged GPU scaling to solve complex vision and language problems. |
-| **Generative** | Creative AI | Shifted the paradigm from data analysis to synthetic content creation. |
+| **Symbolic** | Rule-Based Logic | The era of "hand-coded" intelligence and theoretical foundations. |
+| **Statistical** | Pattern Recognition | The shift to data-driven models and internet-scale pattern finding. |
+| **Deep Learning** | Neural Networks | The breakthrough of hardware-accelerated "seeing" and "hearing." |
+| **Generative** | Creative AI | The current move from machines that analyze to machines that create. |
 
 ---
 
 ## Technical Framework
-* **Methodology:** Comparative research of milestone developments (1950–2025).
-* **Key References:** Alan Turing (1950), IBM Deep Blue (1997), AlexNet (2012), GPT-4 (2023).
-* **Regulatory Context:** Analysis of the 2024 EU AI Act and its impact on responsible development.
+* **Methodology:** Comparative analysis of 75 years of AI milestones (1950–2025).
+* **Key Benchmarks:** Turing (1950), Deep Blue (1997), AlexNet (2012), GPT-4 (2023).
+* **The Horizon:** Integrating 2024 regulatory trends and ethical frameworks into the development lifecycle.
 
 ---
 
-## Value Proposition
-I specialize in translating technical complexity into clear strategic roadmaps. This work demonstrates my ability to provide high-level insights on AI trends for organizations navigating rapid technological change.
+## The Bottom Line
+To understand the trajectory of modern AI, we must understand the foundations that built it. This work demonstrates the ability to contextualize current industry shifts by mapping the technical milestones that brought us here.
