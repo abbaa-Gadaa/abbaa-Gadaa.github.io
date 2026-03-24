@@ -1,39 +1,30 @@
 # AI Strategy: 75 Years of Evolution
-> **A visual roadmap from early logic to Generative Intelligence.**
+> Mapping the industry trajectory from symbolic logic to generative intelligence.
 
 ---
 
-## 🕒 The Big Picture
+## Strategic Evolution Timeline
 ![AI Evolution Timeline](assets/timeline-screenshot.png)
-*A strategic synthesis of 70+ years of AI breakthroughs.*
+*A synthesis of seven decades of AI milestones, categorizing the shift from rule-based systems to creative intelligence.*
 
 ---
 
-## 🚀 The Four Eras of Innovation
-| Era | Key Milestone | Fun Fact |
+## Industry Era Analysis
+| Era | Core Innovation | Technical Impact |
 | :--- | :--- | :--- |
-| **1950-93: Symbolic** | Turing's Logic | AI started as a 1956 summer camp project. |
-| **1997-11: Statistical** | Deep Blue vs. Chess | Computers learned to find patterns in data. |
-| **2012-19: Deep Learning** | AlexNet Breakthrough | AI learned to "see" and recognize objects. |
-| **2020+: Generative** | GPT-4 & Beyond | AI moved from analyzing to **creating** content. |
+| **Symbolic** | Rule-Based Logic | Established the foundational "IF-THEN" structures of early AI. |
+| **Statistical** | Pattern Recognition | Enabled machines to learn from data rather than just following rigid rules. |
+| **Deep Learning** | Neural Networks | Leveraged GPU scaling to solve complex vision and language problems. |
+| **Generative** | Creative AI | Shifted the paradigm from data analysis to synthetic content creation. |
 
 ---
 
-## 🛠️ Project Breakdown
-
-### **The Objective**
-To distill seven decades of technical evolution into a scannable strategic roadmap for stakeholders and non-technical audiences.
-
-### **The Process**
-* **Research:** Analyzed foundational papers from Turing (1950) to OpenAI (2023).
-* **Synthesis:** Categorized complex technical shifts into four digestible "Eras."
-* **Compliance:** Evaluated modern regulatory trends like the EU AI Act (2024).
-
-### **Tools & Tech**
-* **Analysis:** Neural Networks, Large Language Models (LLMs).
-* **Software:** Microsoft PowerPoint, GitHub Markdown.
+## Technical Framework
+* **Methodology:** Comparative research of milestone developments (1950–2025).
+* **Key References:** Alan Turing (1950), IBM Deep Blue (1997), AlexNet (2012), GPT-4 (2023).
+* **Regulatory Context:** Analysis of the 2024 EU AI Act and its impact on responsible development.
 
 ---
 
-## 💡 Value Proposition
-I specialize in translating high-level technical complexity into **clear, actionable roadmaps**. This demonstrates my ability to provide strategic AI insights to organizations navigating rapid technological change.
+## Value Proposition
+I specialize in translating technical complexity into clear strategic roadmaps. This work demonstrates my ability to provide high-level insights on AI trends for organizations navigating rapid technological change.
