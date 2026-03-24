@@ -11,7 +11,7 @@
 
 ---
 
-## Core Functionality
+## Core Functionality 
 | Feature | Capabilities |
 | :--- | :--- |
 | **Interview Simulation** | Generates role-specific technical and behavioral questions using the STAR method. |
