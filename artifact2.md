@@ -1,30 +1,39 @@
-# 75 Years of AI: From Logic to Magic
-> **The Strategic Evolution of Intelligence (1950–2025)**
+# AI Strategy: 75 Years of Evolution
+> **A visual roadmap from early logic to Generative Intelligence.**
 
 ---
 
 ## 🕒 The Big Picture
-[INSERT TIMELINE IMAGE HERE]
-*Capture a high-res screenshot of the '4 Eras' slide from your PPT and place it here.*
+![AI Evolution Timeline](assets/timeline-screenshot.png)
+*A strategic synthesis of 70+ years of AI breakthroughs.*
 
 ---
 
 ## 🚀 The Four Eras of Innovation
-| Era | The "Big Win" | Fun Fact |
+| Era | Key Milestone | Fun Fact |
 | :--- | :--- | :--- |
-| **Symbolic (1950-93)** | Rule-based logic | AI started as a 1956 summer camp project. |
-| **Statistical (1997-11)** | Pattern finding | A computer finally beat the World Chess Champion. |
-| **Deep Learning (2012-19)** | Neural Networks | AI learned to "see" cats with 70% accuracy. |
-| **Generative (2020+)** | Creative AI | AI moved from analyzing data to **creating** it. |
+| **1950-93: Symbolic** | Turing's Logic | AI started as a 1956 summer camp project. |
+| **1997-11: Statistical** | Deep Blue vs. Chess | Computers learned to find patterns in data. |
+| **2012-19: Deep Learning** | AlexNet Breakthrough | AI learned to "see" and recognize objects. |
+| **2020+: Generative** | GPT-4 & Beyond | AI moved from analyzing to **creating** content. |
 
 ---
 
-## 🛠️ The Toolkit
-* **Analysis:** Synthesized 70+ years of technical milestones.
-* **Tools:** Python, Neural Networks, GPU Computing, OpenAI GPT-4 Research.
-* **Compliance:** Evaluated the EU AI Act and Ethical Frameworks.
+## 🛠️ Project Breakdown
+
+### **The Objective**
+To distill seven decades of technical evolution into a scannable strategic roadmap for stakeholders and non-technical audiences.
+
+### **The Process**
+* **Research:** Analyzed foundational papers from Turing (1950) to OpenAI (2023).
+* **Synthesis:** Categorized complex technical shifts into four digestible "Eras."
+* **Compliance:** Evaluated modern regulatory trends like the EU AI Act (2024).
+
+### **Tools & Tech**
+* **Analysis:** Neural Networks, Large Language Models (LLMs).
+* **Software:** Microsoft PowerPoint, GitHub Markdown.
 
 ---
 
 ## 💡 Value Proposition
-I translate decades of technical complexity into clear, visual roadmaps. This demonstrates my ability to provide **strategic AI insights** to stakeholders who need to know where the industry is heading.
+I specialize in translating high-level technical complexity into **clear, actionable roadmaps**. This demonstrates my ability to provide strategic AI insights to organizations navigating rapid technological change.
