@@ -1,7 +1,7 @@
 # Abel Edea
-## AI Engineer | Sortera Technologies
+AI Engineer focused on real-time computer vision systems.
 
-I am an AI Engineer and Data Science student at Indiana Wesleyan University. My work focuses on the design, implementation, and optimization of computer vision and AI algorithms for real-time applications. I specialize in bridging the gap between advanced algorithmic research and practical, high-performance software solutions.
+I build production AI systems for industrial environments and intelligent applications.
 
 ---
 
