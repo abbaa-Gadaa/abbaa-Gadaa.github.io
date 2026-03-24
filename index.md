@@ -1,24 +1,43 @@
-# Abel Edea
-AI Engineer focused on real-time computer vision systems.
+## AI Engineer | Sortera Technologies
 
-I build production AI systems for industrial environments and intelligent applications.
+I build production AI systems for real-time computer vision and intelligent applications.
 
----
-
-## Technical Stack
-**AI & Computer Vision:** Real-time Algorithm Optimization, Image Recognition, C++
-**Data & Analytics:** Power BI, Tableau, SQL, Excel
-**Modern AI:** LLM Implementation, Prompt Engineering, Predictive Modeling
-**Tools:** GitHub, Markdown, AI Development Frameworks
+My work focuses on turning machine learning models into reliable systems that operate in real-world environments.
 
 ---
 
 ## Featured Work
 
-### [AI Strategy: 75 Years of Evolution](artifact2.md)
-A strategic analysis of the industry's trajectory, mapping the shift from rule-based symbolic logic to modern generative intelligence. This project explores why understanding AI's foundations is essential for navigating its future.
+### JobPrep AI – Interview Assistant An  
+AI-powered tool that simulates technical and behavioral interviews and provides structured preparation guidance.
 
-### [Job Interview Assistant (AI Lab)](artifact1.md)
-A functional AI application developed to demonstrate expertise in prompt engineering and the deployment of conversational models for practical use cases.
+![JobPrep AI Screenshot](assets/jobprep-screenshot.png)
+
+[View Project](artifact1.html)
 
 ---
+
+## Technical Stack
+
+**AI & Computer Vision**
+- Real-time image processing  
+- Model optimization  
+- C++ / Python  
+
+**Data & Analytics**
+- SQL, Excel  
+- Power BI, Tableau  
+
+**Modern AI**
+- LLMs  
+- Prompt engineering  
+- Predictive modeling  
+
+---
+
+## Additional Work
+
+### AI Strategy: 75 Years of Evolution  
+Analysis of key milestones shaping modern AI systems.
+
+[View Project](artifact2.html)
