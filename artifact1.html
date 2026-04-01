@@ -4,106 +4,435 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Story of AI – Artifact 1</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      color: #dce8e2;
+      background: #0a1612;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Nav */
+    .page-nav {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      padding: 1.25rem 2rem;
+      z-index: 100;
+      background: rgba(10, 22, 18, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .page-nav a { font-size: 0.9rem; font-weight: 600; color: #8fa8a0; transition: color 0.3s; }
+    .page-nav a:hover { color: #fff; }
+
+    /* Hero */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 3rem;
+      background: linear-gradient(180deg, #0a1612 0%, #132a1c 50%, #0a1612 100%);
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      max-width: 700px;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: #8fa8a0;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    /* Section */
+    .era {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .era h2 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+    .era .date {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15rem;
+      color: #10b981;
+      margin-bottom: 0.6rem;
+    }
+    .era .sub {
+      font-size: 1.05rem;
+      color: #5f7a6e;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .divider {
+      max-width: 900px;
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Cards grid */
+    .card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .card {
+      padding: 2rem 1.25rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .card .icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .card h3 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .card p { font-size: 0.8rem; color: #5f7a6e; line-height: 1.5; }
+
+    /* Timeline connector */
+    .scroll-cue {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .scroll-cue span {
+      font-size: 1.3rem;
+      color: #10b981;
+      animation: drift 2s ease-in-out infinite;
+    }
+    @keyframes drift {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* Compare row */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .compare-card {
+      padding: 2rem 1.5rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .compare-card .icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
+    .compare-card h3 { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .compare-card p { font-size: 0.8rem; color: #5f7a6e; line-height: 1.5; }
+    .compare-card--accent {
+      background: rgba(16,185,129,0.06);
+      border-color: rgba(16,185,129,0.15);
+    }
+    .compare-arrow { font-size: 1.5rem; color: #10b981; }
+
+    /* Origin */
+    .origin {
+      position: relative;
+      padding: 5rem 2rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    .origin-year {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -55%);
+      font-size: clamp(10rem, 25vw, 18rem);
+      font-weight: 900;
+      color: rgba(16,185,129,0.04);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .origin-content {
+      position: relative;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+    .origin-content h2 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .origin-content p {
+      font-size: 1rem;
+      color: #8fa8a0;
+      line-height: 1.7;
+    }
+    .origin-content em { color: #c2d6cc; }
+    .origin-quote {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-style: italic;
+      color: #10b981;
+    }
+
+    /* Takeaway */
+    .takeaway {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem;
+      text-align: center;
+    }
+    .takeaway p {
+      font-size: clamp(1.1rem, 3vw, 1.35rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.5;
+    }
+    .takeaway .sub {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #5f7a6e;
+      margin-top: 0.75rem;
+    }
+
+    /* Project info */
+    .project-info {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    .project-info h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .info-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+    }
+    .info-label {
+      flex-shrink: 0;
+      width: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12rem;
+      color: #10b981;
+    }
+    .info-text {
+      font-size: 0.9rem;
+      color: #8fa8a0;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .page-footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: #07110d;
+      color: #3d5a4a;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 6rem 1.5rem 2rem; }
+      .era { padding: 3rem 1.5rem; }
+      .card-row { grid-template-columns: 1fr 1fr; }
+      .compare { grid-template-columns: 1fr; }
+      .compare-arrow { transform: rotate(90deg); }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="story-nav">
+  <nav class="page-nav">
     <a href="index.html">← Back to Portfolio</a>
   </nav>
 
-  <!-- Section 1 — AI Is Everywhere Now -->
-  <section class="story-section story-opening">
-    <div class="story-opening__inner">
-      <div class="story-opening__text">
-        <h1>AI Is Everywhere Now</h1>
-        <p class="story-lead">Artificial intelligence is no longer a distant idea.</p>
-        <ul class="story-points">
-          <li>ChatGPT brought AI into everyday conversation</li>
-          <li>Coding copilots changed how developers work</li>
-          <li>Image generation turned prompts into visual creation</li>
-          <li>AI assistants are now part of how people learn, work, and create</li>
-        </ul>
-        <p class="story-takeaway">What feels sudden today is the result of a journey that began more than seventy years ago.</p>
+  <!-- Hero -->
+  <section class="hero">
+    <h1>The Story of AI</h1>
+    <p>From a question in 1950 to the tools you use every day — told in four chapters.</p>
+  </section>
+
+  <!-- Era 1: Now -->
+  <section class="era">
+    <span class="date">Today</span>
+    <h2>AI Is Everywhere</h2>
+    <p class="sub">It's in your phone, your inbox, your search results.</p>
+
+    <div class="card-row">
+      <div class="card">
+        <div class="icon">💬</div>
+        <h3>ChatGPT</h3>
+        <p>Brought AI into everyday conversation</p>
       </div>
-      <div class="story-opening__visual">
-        <img src="assets/story-ai-modern-opening.png" alt="Modern AI landscape">
+      <div class="card">
+        <div class="icon">👨‍💻</div>
+        <h3>Copilot</h3>
+        <p>Changed how developers write code</p>
       </div>
-    </div>
-    <div class="story-hook">
-      <p class="story-hook__text">Just over a decade ago, AI took a dramatic leap forward. What changed around 2012?</p>
-      <span class="story-hook__cue">↓</span>
+      <div class="card">
+        <div class="icon">🎨</div>
+        <h3>Image Gen</h3>
+        <p>Turned text prompts into artwork</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎙️</div>
+        <h3>Voice AI</h3>
+        <p>Understands and responds in real time</p>
+      </div>
     </div>
   </section>
 
-  <!-- Section 2 — The Breakthrough That Changed Everything -->
-  <section class="story-section story-chapter">
-    <div class="story-chapter__inner story-chapter--reverse">
-      <div class="story-chapter__text">
-        <h2>When AI Learned on Its Own</h2>
-        <p class="story-lead">2012 changed everything.</p>
-        <ul class="story-points">
-          <li>Before 2012, most AI systems followed fixed human-written rules</li>
-          <li>Deep learning allowed neural networks to learn from examples</li>
-          <li>Image recognition and speech understanding improved dramatically</li>
-          <li>More data and stronger hardware accelerated progress</li>
-        </ul>
-        <p class="story-takeaway">Deep learning was the turning point — AI began learning patterns on its own.</p>
+  <div class="scroll-cue"><span>↓</span></div>
+  <hr class="divider">
+
+  <!-- Era 2: 2012 -->
+  <section class="era">
+    <span class="date">2012</span>
+    <h2>The Breakthrough</h2>
+    <p class="sub">AI stopped following instructions and started learning on its own.</p>
+
+    <div class="compare">
+      <div class="compare-card">
+        <div class="icon">📋</div>
+        <h3>Before</h3>
+        <p>Humans wrote rules. AI followed them.</p>
       </div>
-      <div class="story-chapter__visual">
-        <img src="assets/story-ai-neural-network.png" alt="Neural network diagram showing input, hidden, and output layers">
+      <span class="compare-arrow">→</span>
+      <div class="compare-card compare-card--accent">
+        <div class="icon">🧠</div>
+        <h3>After</h3>
+        <p>AI saw examples. It figured out the rules itself.</p>
       </div>
     </div>
-    <div class="story-hook">
-      <p class="story-hook__text">But before 2012 and the deep learning revolution, how did AI systems work?</p>
-      <span class="story-hook__cue">↓</span>
+
+    <div class="card-row" style="margin-top:1.5rem; max-width:700px;">
+      <div class="card">
+        <div class="icon">🖼️</div>
+        <h3>Vision</h3>
+        <p>Recognized images better than humans</p>
+      </div>
+      <div class="card">
+        <div class="icon">🗣️</div>
+        <h3>Speech</h3>
+        <p>Understood spoken language accurately</p>
+      </div>
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>Scale</h3>
+        <p>More data + faster hardware = rapid progress</p>
+      </div>
     </div>
   </section>
 
-  <!-- Section 3 — Before AI Could Learn, It Followed Rules -->
-  <section class="story-section story-chapter">
-    <div class="story-chapter__inner">
-      <div class="story-chapter__text">
-        <h2>Before AI Could Learn, It Followed Rules</h2>
-        <p class="story-lead">Before deep learning, AI depended on human logic.</p>
-        <ul class="story-points">
-          <li>Engineers wrote explicit rules for how systems should behave</li>
-          <li>Logic trees and expert systems worked in narrow domains</li>
-          <li>These systems performed well in controlled environments</li>
-          <li>Real-world complexity made rule-based AI hard to scale</li>
-        </ul>
-        <p class="story-takeaway">Early AI could be powerful, but only within the boundaries humans defined.</p>
+  <div class="scroll-cue"><span>↓</span></div>
+  <hr class="divider">
+
+  <!-- Era 3: Pre-2012 -->
+  <section class="era">
+    <span class="date">1970s – 2000s</span>
+    <h2>The Rule-Following Era</h2>
+    <p class="sub">AI could only do what engineers told it to do — nothing more.</p>
+
+    <div class="card-row" style="max-width:700px;">
+      <div class="card">
+        <div class="icon">🌳</div>
+        <h3>Decision Trees</h3>
+        <p>If this, then that. Rigid logic paths.</p>
       </div>
-      <div class="story-chapter__visual story-chapter__visual--placeholder">
-        <!-- Future image: <img src="assets/story-ai-rules.png" alt="Rule-based AI systems"> -->
+      <div class="card">
+        <div class="icon">🏥</div>
+        <h3>Expert Systems</h3>
+        <p>Worked in narrow domains like medicine</p>
       </div>
-    </div>
-    <div class="story-hook">
-      <p class="story-hook__text">To understand how far back this idea goes, we have to go even further — to the moment people first began asking whether machines could think at all.</p>
-      <span class="story-hook__cue">↓</span>
+      <div class="card">
+        <div class="icon">🚧</div>
+        <h3>The Limit</h3>
+        <p>Couldn't handle the real world's messiness</p>
+      </div>
     </div>
   </section>
 
-  <!-- Section 4 — Where It All Began -->
-  <section class="story-section story-origin">
-    <div class="story-origin__year" aria-hidden="true">1950</div>
-    <div class="story-origin__content">
-      <h2>Where It All Began — Alan Turing, 1950</h2>
-      <p class="story-lead">The origin of AI begins with a question.</p>
-      <ul class="story-points">
-        <li>In 1950, Alan Turing asked: <em>Can machines think?</em></li>
-        <li>He published <em>Computing Machinery and Intelligence</em></li>
-        <li>He introduced the idea behind what became the Turing Test</li>
-        <li>This question shaped the future of computing and AI</li>
-      </ul>
-      <p class="story-takeaway">Long before modern models existed, Turing created the intellectual spark that started the field.</p>
-    </div>
-    <div class="story-hook">
-      <p class="story-hook__text">From one question in 1950, artificial intelligence evolved through decades of breakthroughs to become the systems we use today.</p>
-      <span class="story-hook__cue">↓</span>
+  <div class="scroll-cue"><span>↓</span></div>
+  <hr class="divider">
+
+  <!-- Era 4: Origin -->
+  <section class="origin">
+    <div class="origin-year" aria-hidden="true">1950</div>
+    <div class="origin-content">
+      <span class="date" style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.15rem; color:#10b981;">Where it started</span>
+      <h2>Alan Turing Asked a Question</h2>
+      <p>In 1950, Turing published <em>Computing Machinery and Intelligence</em> and proposed something radical: what if machines could think?</p>
+      <p class="origin-quote">"Can machines think?"</p>
+      <p style="margin-top:1rem;">That one question launched the entire field.</p>
     </div>
   </section>
+
+  <hr class="divider">
+
+  <!-- Takeaway -->
+  <div class="takeaway">
+    <p>One question → decades of rules → a breakthrough in learning → AI everywhere.</p>
+    <p class="sub">70 years of progress, one scroll.</p>
+  </div>
+
+  <!-- About This Project -->
+  <section class="project-info">
+    <h2>About This Project</h2>
+    <div class="info-list">
+      <div class="info-item">
+        <span class="info-label">Objective</span>
+        <span class="info-text">Trace the evolution of artificial intelligence from its origins to the present day, making 70+ years of history accessible and engaging.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Process</span>
+        <span class="info-text">Researched key milestones across AI's history, organized them into four narrative chapters, and designed a scroll-driven visual experience built from scratch.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Tools</span>
+        <span class="info-text">HTML, CSS, AI-assisted research (ChatGPT), and generative image tools.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Value</span>
+        <span class="info-text">Demonstrates the ability to synthesize complex technical history into a clear, narrative-driven format — a core skill for communicating AI concepts to non-technical stakeholders.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Relevance</span>
+        <span class="info-text">Understanding where AI came from is essential for making informed decisions about where it's going — from model selection to infrastructure design.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    © 2026 Abel Edea
+  </footer>
 
 </body>
 </html>

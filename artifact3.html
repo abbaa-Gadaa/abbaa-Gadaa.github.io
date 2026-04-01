@@ -3,18 +3,652 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artifact 3 – Coming Soon</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Neural Networks Made Simple – Artifact 3</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      color: #dce8e2;
+      background: #0a1612;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Nav */
+    .page-nav {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      padding: 1.25rem 2rem;
+      z-index: 100;
+      background: rgba(10, 22, 18, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .page-nav a { font-size: 0.9rem; font-weight: 600; color: #8fa8a0; transition: color 0.3s; }
+    .page-nav a:hover { color: #fff; }
+
+    /* Shared */
+    .beat {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .beat h2 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.6rem;
+    }
+    .beat .sub {
+      font-size: 1.05rem;
+      color: #5f7a6e;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .divider {
+      max-width: 900px;
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 3rem;
+      background: linear-gradient(180deg, #0a1612 0%, #132a1c 50%, #0a1612 100%);
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      max-width: 700px;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #8fa8a0;
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    /* Beat 1: Signal conversion cards */
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .signal-card {
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+    .signal-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2.5rem 1.5rem;
+    }
+    .signal-in, .signal-out {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .signal-icon {
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+    .signal-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15rem;
+      color: #5f7a6e;
+    }
+    .signal-arrow {
+      font-size: 1.8rem;
+      color: #10b981;
+    }
+    .signal-caption {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.85rem;
+      color: #8fa8a0;
+      text-align: center;
+    }
+
+    /* Beat 2: Architecture */
+    .arch-wrap {
+      max-width: 750px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .arch-label-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding: 0 1rem;
+    }
+    .arch-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15rem;
+    }
+    .arch-label--in { color: #6ee7b7; }
+    .arch-label--net { color: #10b981; }
+    .arch-label--out { color: #34d399; }
+
+    .arch-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 2rem 1rem;
+      border-radius: 1.25rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+    }
+
+    .arch-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .node {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      border: 2px solid;
+    }
+    .node--in { border-color: #6ee7b7; background: rgba(110,231,183,0.1); }
+    .node--h { border-color: #10b981; background: rgba(16,185,129,0.06); }
+    .node--out { border-color: #34d399; background: rgba(52,211,153,0.1); }
+
+    .arch-lines {
+      flex: 1;
+      max-width: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+    }
+    .arch-line {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(16,185,129,0.3), rgba(16,185,129,0.08));
+    }
+
+    .arch-note {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: #8fa8a0;
+      max-width: 550px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    /* Brain comparison */
+    .brain-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 600px;
+      margin: 1.5rem auto 0;
+    }
+    .brain-card {
+      padding: 2rem 1.5rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .brain-card .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .brain-card h3 { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem; }
+    .brain-card p { font-size: 0.85rem; color: #5f7a6e; line-height: 1.5; }
+
+    /* Beat 3: Training loop */
+    .loop-wrap {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .loop-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .loop-step {
+      width: 140px;
+      padding: 2rem 1rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .loop-step .icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .loop-step h3 { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .loop-step p { font-size: 0.75rem; color: #5f7a6e; line-height: 1.4; }
+    .loop-arrow { font-size: 1.4rem; color: #10b981; }
+
+    .loop-repeat {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+    .loop-repeat .icon { font-size: 1.5rem; }
+    .loop-repeat p {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #10b981;
+    }
+
+    .loop-note {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: #8fa8a0;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    /* Real world tie-it-together */
+    .realworld {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .rw-flow {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    .rw-card {
+      flex: 1;
+      padding: 2rem 1.25rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .rw-card .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .rw-card h3 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .rw-card p { font-size: 0.8rem; color: #5f7a6e; line-height: 1.5; }
+    .rw-card--center {
+      background: rgba(16,185,129,0.06);
+      border-color: rgba(16,185,129,0.15);
+    }
+    .rw-arrow { font-size: 1.4rem; color: #10b981; align-self: center; }
+
+    .rw-note {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: #8fa8a0;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* Takeaway */
+    .takeaway {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem;
+      text-align: center;
+    }
+    .takeaway p {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.5;
+    }
+    .takeaway .sub {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #5f7a6e;
+      margin-top: 1rem;
+    }
+
+    /* Project info */
+    .project-info {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    .project-info h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .info-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+    }
+    .info-label {
+      flex-shrink: 0;
+      width: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12rem;
+      color: #10b981;
+    }
+    .info-text {
+      font-size: 0.9rem;
+      color: #8fa8a0;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .page-footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: #07110d;
+      color: #3d5a4a;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 6rem 1.5rem 2rem; }
+      .beat { padding: 3rem 1.5rem; }
+      .signal-grid { grid-template-columns: 1fr; max-width: 320px; }
+      .arch-diagram { flex-wrap: wrap; gap: 1.5rem; padding: 2rem 1rem; }
+      .arch-lines { display: none; }
+      .brain-compare { grid-template-columns: 1fr; }
+      .loop-steps { flex-direction: column; }
+      .loop-arrow { transform: rotate(90deg); }
+      .rw-flow { flex-direction: column; }
+      .rw-arrow { transform: rotate(90deg); }
+    }
+  </style>
 </head>
 <body>
 
-  <section class="artifact-placeholder">
-    <div>
-      <h1>Artifact 3</h1>
-      <p>This project is coming soon. Check back later.</p>
-      <a href="index.html" class="back-link">← Back to Portfolio</a>
+  <nav class="page-nav">
+    <a href="index.html">← Back to Portfolio</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Neural Networks Made Simple</h1>
+    <p>You use them every day. Here's how they actually work.</p>
+  </section>
+
+  <!-- Beat 1: What it does -->
+  <section class="beat">
+    <h2>What It Does</h2>
+    <p class="sub">It takes something in and gives you something useful back.</p>
+
+    <div class="signal-grid">
+      <div class="signal-card">
+        <div class="signal-row">
+          <div class="signal-in">
+            <span class="signal-icon">📷</span>
+            <span class="signal-label">Photo</span>
+          </div>
+          <span class="signal-arrow">→</span>
+          <div class="signal-out">
+            <span class="signal-icon">👤</span>
+            <span class="signal-label">Person</span>
+          </div>
+        </div>
+        <div class="signal-caption">Who is this?</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-row">
+          <div class="signal-in">
+            <span class="signal-icon">💬</span>
+            <span class="signal-label">Text</span>
+          </div>
+          <span class="signal-arrow">→</span>
+          <div class="signal-out">
+            <span class="signal-icon">📝</span>
+            <span class="signal-label">Next word</span>
+          </div>
+        </div>
+        <div class="signal-caption">What comes next?</div>
+      </div>
+
+      <div class="signal-card">
+        <div class="signal-row">
+          <div class="signal-in">
+            <span class="signal-icon">🔊</span>
+            <span class="signal-label">Audio</span>
+          </div>
+          <span class="signal-arrow">→</span>
+          <div class="signal-out">
+            <span class="signal-icon">📄</span>
+            <span class="signal-label">Transcript</span>
+          </div>
+        </div>
+        <div class="signal-caption">What did they say?</div>
+      </div>
     </div>
   </section>
+
+  <hr class="divider">
+
+  <!-- Beat 2: The architecture -->
+  <section class="beat">
+    <h2>How It's Built</h2>
+    <p class="sub">Layers of neurons wired together — same idea as your brain.</p>
+
+    <div class="arch-wrap">
+      <div class="arch-diagram">
+        <div class="arch-col">
+          <div class="node node--in"></div>
+          <div class="node node--in"></div>
+          <div class="node node--in"></div>
+          <span class="signal-label" style="margin-top:0.5rem; color:#6ee7b7;">Input</span>
+        </div>
+        <div class="arch-lines">
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+        </div>
+        <div class="arch-col">
+          <div class="node node--h"></div>
+          <div class="node node--h"></div>
+          <div class="node node--h"></div>
+          <div class="node node--h"></div>
+          <span class="signal-label" style="margin-top:0.5rem; color:#10b981;">Hidden</span>
+        </div>
+        <div class="arch-lines">
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+        </div>
+        <div class="arch-col">
+          <div class="node node--h"></div>
+          <div class="node node--h"></div>
+          <div class="node node--h"></div>
+          <div class="node node--h"></div>
+          <span class="signal-label" style="margin-top:0.5rem; color:#10b981;">Hidden</span>
+        </div>
+        <div class="arch-lines">
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+          <div class="arch-line"></div>
+        </div>
+        <div class="arch-col">
+          <div class="node node--out"></div>
+          <div class="node node--out"></div>
+          <span class="signal-label" style="margin-top:0.5rem; color:#34d399;">Output</span>
+        </div>
+      </div>
+
+      <p class="arch-note">
+        Data enters on the left. Each layer picks up on different patterns.
+        By the time it reaches the output, the network has its answer.
+      </p>
+
+      <div class="brain-compare">
+        <div class="brain-card">
+          <div class="icon">🧠</div>
+          <h3>Human Brain</h3>
+          <p>Neurons connected by synapses. Learns from experience.</p>
+        </div>
+        <div class="brain-card">
+          <div class="icon">🔗</div>
+          <h3>Neural Network</h3>
+          <p>Digital neurons connected by weights. Learns from data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Beat 3: How it learns -->
+  <section class="beat">
+    <h2>How It Gets Good</h2>
+    <p class="sub">It starts wrong. Then it keeps practicing until it's not.</p>
+
+    <div class="loop-wrap">
+      <div class="loop-steps">
+        <div class="loop-step">
+          <div class="icon">🎯</div>
+          <h3>Guess</h3>
+          <p>Takes a shot at the answer</p>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-step">
+          <div class="icon">❌</div>
+          <h3>Check</h3>
+          <p>Was it right or wrong?</p>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-step">
+          <div class="icon">🔧</div>
+          <h3>Adjust</h3>
+          <p>Changes connections to do better</p>
+        </div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-step">
+          <div class="icon">🔁</div>
+          <h3>Repeat</h3>
+          <p>Thousands of times until it nails it</p>
+        </div>
+      </div>
+
+      <div class="loop-repeat">
+        <span class="icon">📈</span>
+        <p>Every round, it gets a little better.</p>
+      </div>
+
+      <p class="loop-note">
+        This is called training. More examples = better results.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Tie it together: Face ID -->
+  <section class="beat">
+    <h2>You Already Use This</h2>
+    <p class="sub">Every time you unlock your phone, a neural network does all of the above.</p>
+
+    <div class="realworld">
+      <div class="rw-flow">
+        <div class="rw-card">
+          <div class="icon">📷</div>
+          <h3>Your Face</h3>
+          <p>Camera scans you</p>
+        </div>
+        <span class="rw-arrow">→</span>
+        <div class="rw-card rw-card--center">
+          <div class="icon">🧠</div>
+          <h3>The Network</h3>
+          <p>Runs your face through layers of pattern matching</p>
+        </div>
+        <span class="rw-arrow">→</span>
+        <div class="rw-card">
+          <div class="icon">🔓</div>
+          <h3>The Answer</h3>
+          <p>Match? Unlock. No match? Stay locked.</p>
+        </div>
+      </div>
+      <p class="rw-note">Input, layers, output, trained from data — all happening in under a second.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Takeaway -->
+  <div class="takeaway">
+    <p>Take something in. Run it through layers. Give an answer. Learn from mistakes. Get better.</p>
+    <p class="sub">That's a neural network.</p>
+  </div>
+
+  <!-- About This Project -->
+  <section class="project-info">
+    <h2>About This Project</h2>
+    <div class="info-list">
+      <div class="info-item">
+        <span class="info-label">Objective</span>
+        <span class="info-text">Explain how neural networks work in a way that anyone can understand in under a minute — using visuals instead of jargon.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Process</span>
+        <span class="info-text">Distilled neural network fundamentals into three core concepts (signal conversion, architecture, training), then designed visual diagrams and flows to communicate each one without relying on text.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Tools</span>
+        <span class="info-text">HTML, CSS, ChatGPT for research and content refinement.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Value</span>
+        <span class="info-text">Shows the ability to take a complex technical concept and make it accessible — a critical skill for technical communication, stakeholder presentations, and cross-team collaboration.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Relevance</span>
+        <span class="info-text">Neural networks are the foundation of modern AI. Being able to explain them clearly demonstrates both technical understanding and communication ability.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    © 2026 Abel Edea
+  </footer>
 
 </body>
 </html>

@@ -1,160 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JobPrep AI – Artifact 2</title>
   <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      color: #dce8e2;
+      background: #0a1612;
       line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* Nav */
+    .page-nav {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      padding: 1.25rem 2rem;
+      z-index: 100;
+      background: rgba(10, 22, 18, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .page-nav a { font-size: 0.9rem; font-weight: 600; color: #8fa8a0; transition: color 0.3s; }
+    .page-nav a:hover { color: #fff; }
+
+    /* Hero */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 3rem;
+      background: linear-gradient(180deg, #0a1612 0%, #132a1c 50%, #0a1612 100%);
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: #8fa8a0;
+      max-width: 500px;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .hero .cta {
+      display: inline-block;
+      padding: 0.8rem 2.2rem;
+      border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+    }
+    .hero .cta:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Section */
+    .beat {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .beat h2 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.6rem;
+    }
+    .beat .sub {
+      font-size: 1.05rem;
+      color: #5f7a6e;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .divider {
       max-width: 900px;
       margin: 0 auto;
-      padding: 40px 20px;
-      color: #111;
-      background: #fff;
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
 
-    h1, h2, h3 {
-      color: #111;
+    /* Problem/Solution cards */
+    .card-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .ps-card {
+      padding: 2rem 1.5rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: left;
+    }
+    .ps-card .icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    .ps-card h3 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .ps-card p { font-size: 0.8rem; color: #5f7a6e; line-height: 1.5; }
+    .ps-card--green {
+      background: rgba(16,185,129,0.05);
+      border-color: rgba(16,185,129,0.12);
     }
 
-    h1 {
-      margin-bottom: 10px;
+    /* Chat demo */
+    .chat-wrap {
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .chat-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .bubble {
+      padding: 1.1rem 1.4rem;
+      border-radius: 1rem;
+      max-width: 88%;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .bubble--user {
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.18);
+      align-self: flex-end;
+      color: #c2d6cc;
+      border-bottom-right-radius: 0.25rem;
+    }
+    .bubble--ai {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      align-self: flex-start;
+      color: #8fa8a0;
+      border-bottom-left-radius: 0.25rem;
+    }
+    .bubble-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+    .bubble--user .bubble-label { color: #34d399; }
+    .bubble--ai .bubble-label { color: #3d5a4a; }
+    .bubble--ai ul { list-style: none; padding: 0; margin-top: 0.4rem; }
+    .bubble--ai li { padding-left: 1rem; position: relative; margin-bottom: 0.3rem; }
+    .bubble--ai li::before { content: "→"; position: absolute; left: 0; color: #10b981; }
+
+    /* Steps */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .step {
+      padding: 2rem 1.25rem;
+      border-radius: 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.2rem; height: 2.2rem;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.1);
+      color: #10b981;
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    .step h3 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .step p { font-size: 0.8rem; color: #5f7a6e; line-height: 1.5; }
+
+    /* Takeaway */
+    .takeaway {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem;
+      text-align: center;
+    }
+    .takeaway p {
+      font-size: clamp(1.1rem, 3vw, 1.35rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.5;
+    }
+    .takeaway .sub {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #5f7a6e;
+      margin-top: 0.75rem;
     }
 
-    p {
-      margin-bottom: 16px;
+    /* Project info */
+    .project-info {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    .project-info h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .info-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+    }
+    .info-label {
+      flex-shrink: 0;
+      width: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12rem;
+      color: #10b981;
+    }
+    .info-text {
+      font-size: 0.9rem;
+      color: #8fa8a0;
+      line-height: 1.6;
     }
 
-    .back-link {
-      display: inline-block;
-      margin-bottom: 30px;
-      text-decoration: none;
-      color: #0066cc;
-      font-weight: bold;
+    /* Footer */
+    .page-footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: #07110d;
+      color: #3d5a4a;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
     }
 
-    .section {
-      margin-top: 35px;
-    }
-
-    .card {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 15px;
-      background: #fafafa;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-top: 15px;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    .label {
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    .example-box {
-      background: #f4f4f4;
-      padding: 16px;
-      border-left: 4px solid #333;
-      border-radius: 6px;
-      margin-top: 12px;
-      white-space: pre-line;
+    @media (max-width: 640px) {
+      .hero { padding: 6rem 1.5rem 2rem; }
+      .beat { padding: 3rem 1.5rem; }
+      .card-row { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .bubble { max-width: 95%; }
     }
   </style>
 </head>
 <body>
 
-  <a href="index.html" class="back-link">← Back to Portfolio</a>
+  <nav class="page-nav">
+    <a href="index.html">← Back to Portfolio</a>
+  </nav>
 
-  <h1>JobPrep AI</h1>
-  <p>
-    JobPrep AI is an interview preparation tool designed to help users practice for technical
-    and behavioral interviews. It generates structured guidance, sample questions, and targeted
-    preparation support based on the user's needs.
-  </p>
+  <!-- Hero -->
+  <section class="hero">
+    <h1>JobPrep AI</h1>
+    <p>An AI assistant that helps you prepare for technical and behavioral interviews.</p>
+    <a href="https://chatgpt.com/g/g-69ab0d5b416481919189e1d19e6351da-jobprep-ai" class="cta" target="_blank" rel="noopener">
+      Try It Live →
+    </a>
+  </section>
 
-  <div class="section">
-    <h2>What It Does</h2>
-    <div class="card">
-      <ul>
-        <li>Generates interview preparation guidance</li>
-        <li>Supports technical and behavioral interview practice</li>
-        <li>Helps users organize topics to study</li>
-        <li>Provides structured responses and coaching support</li>
-      </ul>
-    </div>
-  </div>
+  <!-- Problem vs Solution -->
+  <section class="beat">
+    <h2>The Problem</h2>
+    <p class="sub">Interview prep is stressful, scattered, and generic.</p>
 
-  <div class="section">
-    <h2>Project Demo</h2>
-    <div class="card">
-      <p class="label">Interface Preview</p>
-      <img src="assets/jobprep-screenshot.png" alt="Screenshot of JobPrep AI interface">
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>Example Interaction</h2>
-    <div class="card">
-      <p class="label">Sample Input and Output</p>
-      <div class="example-box">
-Input:
-"I have an embedded systems interview. Help me prepare."
-
-Output:
-- Key topics to review: memory, interrupts, drivers, debugging
-- Suggested preparation plan
-- Common interview question areas
-- Structured response guidance
+    <div class="card-row">
+      <div class="ps-card">
+        <div class="icon">😰</div>
+        <h3>High Pressure</h3>
+        <p>Interviews are unpredictable and hard to prepare for</p>
+      </div>
+      <div class="ps-card">
+        <div class="icon">🤷</div>
+        <h3>No Direction</h3>
+        <p>Candidates don't know what to study</p>
+      </div>
+      <div class="ps-card">
+        <div class="icon">😶</div>
+        <h3>Hard to Practice</h3>
+        <p>Structuring clear answers takes real repetition</p>
+      </div>
+      <div class="ps-card">
+        <div class="icon">📄</div>
+        <h3>Generic Resources</h3>
+        <p>Most prep content isn't tailored to your role</p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="section">
-    <h2>Core Features</h2>
-    <div class="card">
-      <ul>
-        <li>Interview simulation support</li>
-        <li>Structured preparation plans</li>
-        <li>Technical and behavioral question guidance</li>
-        <li>Career-focused coaching assistance</li>
-      </ul>
-    </div>
-  </div>
+  <hr class="divider">
 
-  <div class="section">
-    <h2>Technology Used</h2>
-    <div class="card">
-      <ul>
-        <li>Large Language Model workflow</li>
-        <li>Prompt engineering</li>
-        <li>Web-based interface design</li>
-      </ul>
-    </div>
-  </div>
+  <section class="beat">
+    <h2>The Solution</h2>
+    <p class="sub">Personalized prep, generated in seconds.</p>
 
-  <div class="section">
-    <h2>Why This Project Matters</h2>
-    <div class="card">
-      <p>
-        This project shows how AI can be used to create practical tools that support users in a
-        real task. Instead of only explaining concepts, it demonstrates an application that helps
-        people prepare for interviews in a more guided and interactive way.
-      </p>
+    <div class="card-row">
+      <div class="ps-card ps-card--green">
+        <div class="icon">🎯</div>
+        <h3>Targeted Questions</h3>
+        <p>Practice questions based on the specific role</p>
+      </div>
+      <div class="ps-card ps-card--green">
+        <div class="icon">📚</div>
+        <h3>Study Plan</h3>
+        <p>Key topics organized so nothing gets missed</p>
+      </div>
+      <div class="ps-card ps-card--green">
+        <div class="icon">🗂️</div>
+        <h3>Answer Frameworks</h3>
+        <p>Structured guidance for clear, confident responses</p>
+      </div>
+      <div class="ps-card ps-card--green">
+        <div class="icon">⚙️</div>
+        <h3>Technical + Behavioral</h3>
+        <p>Covers both sides of the interview</p>
+      </div>
     </div>
-  </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Chat demo -->
+  <section class="beat">
+    <h2>See It in Action</h2>
+    <p class="sub">Tell it the role. It builds your prep plan.</p>
+
+    <div class="chat-wrap">
+      <div class="chat-demo">
+        <div class="bubble bubble--user">
+          <span class="bubble-label">You</span>
+          I have an embedded systems interview next week. Help me prepare.
+        </div>
+        <div class="bubble bubble--ai">
+          <span class="bubble-label">JobPrep AI</span>
+          <ul>
+            <li>Key topics: memory management, interrupts, drivers, debugging</li>
+            <li>5 likely technical questions with answer outlines</li>
+            <li>3 behavioral questions with STAR framework</li>
+            <li>Day-by-day study plan for the week</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- How it works -->
+  <section class="beat">
+    <h2>How It Works</h2>
+    <p class="sub">Three steps. No signup.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <h3>Share the Role</h3>
+        <p>Tell it the job, company, or interview type</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <h3>Get a Plan</h3>
+        <p>Receive topics, questions, and prep guidance</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <h3>Practice</h3>
+        <p>Iterate on answers until you're confident</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- About This Project -->
+  <section class="project-info">
+    <h2>About This Project</h2>
+    <div class="info-list">
+      <div class="info-item">
+        <span class="info-label">Objective</span>
+        <span class="info-text">Build a practical AI-powered tool that helps users prepare for technical and behavioral interviews with personalized, role-specific guidance.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Process</span>
+        <span class="info-text">Designed the prompt architecture, tested it across multiple interview scenarios (embedded systems, software engineering, data science), and refined outputs until they felt like real coaching.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Tools</span>
+        <span class="info-text">OpenAI GPT, prompt engineering, iterative testing, and web interface design.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Value</span>
+        <span class="info-text">Demonstrates how generative AI can be shaped into user-focused products through careful prompt design — turning a raw language model into something genuinely useful.</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Relevance</span>
+        <span class="info-text">Applied prompt engineering is a critical skill for building AI-powered applications. This project shows the full cycle from concept to working product.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    © 2026 Abel Edea
+  </footer>
 
 </body>
 </html>
