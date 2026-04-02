@@ -170,7 +170,7 @@ img {
 .card-image--placeholder::after {
   content: "◈";
   font-size: 3rem;
-  color: rgba(148, 163, 184, 0.2);
+  color: rgba(16, 185, 129, 0.15);
 }
 
 .card-body {
@@ -315,7 +315,7 @@ img {
   width: 100%;
   padding: 1.25rem 2rem;
   z-index: 100;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(10, 22, 18, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -392,8 +392,8 @@ img {
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.6) 100%),
-    linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, transparent 50%);
+    linear-gradient(180deg, rgba(10, 22, 18, 0.15) 0%, rgba(10, 22, 18, 0.6) 100%),
+    linear-gradient(135deg, rgba(10, 22, 18, 0.3) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -476,8 +476,8 @@ img {
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.6) 100%),
-    linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, transparent 50%);
+    linear-gradient(180deg, rgba(10, 22, 18, 0.15) 0%, rgba(10, 22, 18, 0.6) 100%),
+    linear-gradient(135deg, rgba(10, 22, 18, 0.3) 0%, transparent 50%);
   pointer-events: none;
 }
 
