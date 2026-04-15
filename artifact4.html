@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JobPrep AI – Abel Edea</title>
+  <title>The Data Problem – Abel Edea</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,16 +36,11 @@
     img { display: block; max-width: 100%; height: auto; }
 
     .nav {
-      position: fixed;
-      top: 0; left: 0; width: 100%;
-      padding: 1.5rem 3rem;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 1.5rem 3rem; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
       background: rgba(250, 244, 235, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
     }
     .nav-back {
@@ -62,8 +57,7 @@
       min-height: 100vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      text-align: center;
-      padding: 8rem 2rem 6rem;
+      text-align: center; padding: 8rem 2rem 6rem;
       position: relative; overflow: hidden;
     }
     .hero-bg {
@@ -82,25 +76,13 @@
     }
     .hero h1 {
       font-family: var(--serif);
-      font-size: clamp(3.5rem, 9vw, 7rem);
+      font-size: clamp(3rem, 8vw, 6.5rem);
       font-weight: 400; line-height: 1.05; color: var(--text);
-      margin-bottom: 2rem; max-width: 800px; position: relative;
+      margin-bottom: 2rem; max-width: 850px; position: relative;
     }
     .hero-sub {
       font-size: 1.15rem; color: var(--text-muted);
-      max-width: 480px; line-height: 1.8; position: relative;
-      margin-bottom: 2.5rem;
-    }
-    .hero-cta {
-      display: inline-block; padding: 0.9rem 2.4rem;
-      border: 2px solid var(--accent); border-radius: 999px;
-      color: var(--accent); font-size: 0.85rem; font-weight: 600;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      transition: background 0.3s, color 0.3s, transform 0.3s;
-      position: relative;
-    }
-    .hero-cta:hover {
-      background: var(--accent); color: var(--bg); transform: translateY(-2px);
+      max-width: 500px; line-height: 1.8; position: relative;
     }
     .hero-scroll {
       position: absolute; bottom: 3rem; left: 50%;
@@ -173,58 +155,43 @@
       border: none; border-top: 1px solid var(--border);
     }
 
-    /* ── Chat demo ──────────────────────────── */
-    .chat-wrap { max-width: 100%; }
-    .chat-demo { display: flex; flex-direction: column; gap: 1rem; }
-    .bubble {
-      padding: 1.25rem 1.5rem; border-radius: 1rem;
-      max-width: 88%; font-size: 0.95rem; line-height: 1.7;
-    }
-    .bubble--user {
-      background: var(--bg-warm);
-      border: 1px solid rgba(139,110,78,0.15);
-      align-self: flex-end; color: var(--text);
-      border-bottom-right-radius: 0.25rem;
-    }
-    .bubble--ai {
-      background: rgba(255,255,255,0.6);
+    /* ── Compare table ─────────────────────── */
+    .compare-table {
+      max-width: 700px;
+      margin: 2rem auto 0;
+      border-radius: 1rem;
+      overflow: hidden;
       border: 1px solid var(--border);
-      align-self: flex-start; color: var(--text-muted);
-      border-bottom-left-radius: 0.25rem;
     }
-    .bubble-label {
-      font-size: 0.65rem; text-transform: uppercase;
-      letter-spacing: 0.15rem; font-weight: 700;
-      margin-bottom: 0.4rem; display: block;
+    .compare-table table {
+      width: 100%;
+      border-collapse: collapse;
     }
-    .bubble--user .bubble-label { color: var(--accent); }
-    .bubble--ai .bubble-label { color: var(--text-light); }
-    .bubble--ai ul { list-style: none; padding: 0; margin-top: 0.4rem; }
-    .bubble--ai li { padding-left: 1.2rem; position: relative; margin-bottom: 0.35rem; }
-    .bubble--ai li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
-
-    /* ── Steps ──────────────────────────────── */
-    .steps {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem; max-width: 800px; margin: 0 auto;
+    .compare-table th {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 400;
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
     }
-    .step {
-      padding: 2.5rem 1.5rem; border-radius: 1rem;
-      background: rgba(255,255,255,0.5);
-      border: 1px solid var(--border); text-align: center;
+    .compare-table th:first-child {
+      background: rgba(180,80,60,0.04);
+      color: var(--text);
     }
-    .step-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 2.6rem; height: 2.6rem; border-radius: 50%;
-      background: var(--bg-warm); border: 1px solid rgba(139,110,78,0.15);
-      color: var(--accent); font-family: var(--serif);
-      font-weight: 400; font-size: 1.1rem; margin-bottom: 1rem;
+    .compare-table th:last-child {
+      background: rgba(139,110,78,0.06);
+      color: var(--text);
     }
-    .step h3 {
-      font-family: var(--serif); font-size: 1.1rem;
-      font-weight: 400; color: var(--text); margin-bottom: 0.4rem;
+    .compare-table td {
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
     }
-    .step p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+    .compare-table tr:last-child td { border-bottom: none; }
 
     .takeaway {
       padding: 6rem 3rem; text-align: center;
@@ -273,9 +240,9 @@
       .two-col { grid-template-columns: 1fr; gap: 2.5rem; }
       .two-col--reverse .col-text,
       .two-col--reverse .col-visual { order: unset; }
-      .steps { grid-template-columns: 1fr; }
       .info-grid { grid-template-columns: 1fr; gap: 0.5rem 0; }
       .info-label { padding-top: 1rem; }
+      .compare-table th, .compare-table td { padding: 0.75rem 1rem; font-size: 0.85rem; }
       .takeaway { padding: 5rem 1.5rem; }
       .project-info { padding: 4rem 1.5rem; }
     }
@@ -288,43 +255,40 @@
 
   <nav class="nav">
     <a href="index.html" class="nav-back">← Portfolio</a>
-    <span class="nav-title">Artifact 2 · JobPrep AI</span>
+    <span class="nav-title">Artifact 4 · The Data Problem</span>
   </nav>
 
   <section class="hero">
-    <div class="hero-bg" aria-hidden="true">Prep</div>
-    <span class="hero-label reveal">Artifact 2 · AI-powered coaching</span>
-    <h1 class="reveal reveal-delay-1">JobPrep AI</h1>
-    <p class="hero-sub reveal reveal-delay-2">An AI assistant that turns interview anxiety into a personalized study plan — in seconds, not hours.</p>
-    <a href="https://chatgpt.com/g/g-69ab0d5b416481919189e1d19e6351da-jobprep-ai" class="hero-cta reveal reveal-delay-3" target="_blank" rel="noopener">
-      Try It Live →
-    </a>
+    <div class="hero-bg" aria-hidden="true">Data</div>
+    <span class="hero-label reveal">Artifact 4 · Data challenges in ML</span>
+    <h1 class="reveal reveal-delay-1">The Data<br>Problem</h1>
+    <p class="hero-sub reveal reveal-delay-2">Your model is only as good as what you feed it. Here's what goes wrong — and why it matters.</p>
     <div class="hero-scroll">
       <span>Scroll</span>
       <div class="scroll-line"></div>
     </div>
   </section>
 
-  <!-- Full-width screenshot -->
+  <!-- Full-width pipeline image -->
   <section class="section" style="padding-top: 2rem; padding-bottom: 2rem;">
     <div class="full-image reveal">
-      <img src="assets/a2-flow.png" alt="JobPrep AI conversation flow — person chatting with AI assistant">
+      <img src="assets/a4-pipeline.png" alt="Data pipeline — messy raw data flows through cleaning stages into organized structured data">
     </div>
   </section>
 
-  <!-- Problem -->
+  <!-- The Core Issue -->
   <section class="section">
     <div class="section-inner">
       <div class="two-col">
         <div class="col-text">
-          <span class="section-label reveal">The Problem</span>
-          <h2 class="section-title reveal reveal-delay-1">Interview Prep<br>Is Broken</h2>
-          <p class="section-text reveal reveal-delay-2">It's stressful, scattered, and generic. Candidates spend hours searching for the right questions, never sure if they're studying the right things. Most prep content isn't tailored to the specific role — it's the same list of "top 50 questions" regardless of whether you're interviewing for embedded systems or product management.</p>
-          <p class="section-text reveal reveal-delay-3">Structuring clear, confident answers takes real repetition, but there's no feedback loop. You practice alone, guess at what's important, and hope for the best.</p>
+          <span class="section-label reveal">The Core Issue</span>
+          <h2 class="section-title reveal reveal-delay-1">Garbage In,<br>Garbage Out</h2>
+          <p class="section-text reveal reveal-delay-2">ML models learn from data. If the data is biased, incomplete, noisy, or poorly labeled, the model inherits every flaw. No amount of tuning fixes bad inputs.</p>
+          <p class="section-text reveal reveal-delay-3">Three core quality issues break ML models more than anything else: imbalanced data where the model ignores minority classes (often the ones you care about most — fraud, disease, defects), class overlap where different categories occupy the same data space, and underrepresented subconcepts where rare patterns the model never learns.</p>
         </div>
         <div class="col-visual">
           <div class="img-frame reveal reveal-delay-2">
-            <img src="assets/a2-input-output.png" alt="Resume transformed into interview prep through AI processing">
+            <img src="assets/a4-good-bad-data.png" alt="Good data vs bad data — scattered question marks versus organized bar chart">
           </div>
         </div>
       </div>
@@ -333,33 +297,19 @@
 
   <hr class="divider">
 
-  <!-- Solution -->
+  <!-- Operational Challenges -->
   <section class="section section--warm">
     <div class="section-inner">
       <div class="two-col two-col--reverse">
         <div class="col-text">
-          <span class="section-label reveal">The Solution</span>
-          <h2 class="section-title reveal reveal-delay-1">Personalized Prep,<br>Generated Instantly</h2>
-          <p class="section-text reveal reveal-delay-2">Tell it the role. It builds a complete prep strategy — targeted questions, answer frameworks, and a study schedule — all in one conversation. Technical questions based on the specific role, behavioral prompts with STAR framework guidance, and a day-by-day study plan.</p>
-          <p class="section-text reveal reveal-delay-3">It adapts to any role in real time. An embedded systems interview gets memory management and interrupt questions. A data science interview gets statistics and ML pipeline questions. Same tool, completely different output.</p>
+          <span class="section-label reveal">Operational Challenges</span>
+          <h2 class="section-title reveal reveal-delay-1">Getting Data Right<br>Is Hard Work</h2>
+          <p class="section-text reveal reveal-delay-2">Beyond quality, there's the operational reality. Labeling is slow, expensive, and error-prone — especially in vision and NLP. Privacy regulations (GDPR, HIPAA) limit what you can collect and use. Data distributions drift over time, making last year's model fail on today's inputs.</p>
+          <p class="section-text reveal reveal-delay-3">Real projects combine structured, unstructured, and real-time data from multiple sources. Versioning matters for reproducibility. Scale requires distributed processing and significant compute. Every step adds cost and complexity.</p>
         </div>
         <div class="col-visual">
-          <div class="chat-wrap reveal reveal-delay-1">
-            <div class="chat-demo">
-              <div class="bubble bubble--user">
-                <span class="bubble-label">You</span>
-                I have an embedded systems interview next week. Help me prepare.
-              </div>
-              <div class="bubble bubble--ai">
-                <span class="bubble-label">JobPrep AI</span>
-                <ul>
-                  <li>Key topics: memory management, interrupts, drivers, debugging</li>
-                  <li>5 likely technical questions with answer outlines</li>
-                  <li>3 behavioral questions with STAR framework</li>
-                  <li>Day-by-day study plan for the week</li>
-                </ul>
-              </div>
-            </div>
+          <div class="img-frame reveal reveal-delay-2">
+            <img src="assets/a4-pipeline.png" alt="Data processing pipeline illustration">
           </div>
         </div>
       </div>
@@ -368,37 +318,47 @@
 
   <hr class="divider">
 
-  <!-- How It Works -->
+  <!-- Model-Centric vs Data-Centric -->
   <section class="section">
-    <div class="section-inner" style="text-align: center;">
-      <span class="section-label reveal">How It Works</span>
-      <h2 class="section-title reveal reveal-delay-1" style="text-align: center;">Three Steps. No Signup.</h2>
-      <div style="height: 2.5rem;"></div>
-      <div class="steps reveal reveal-delay-2">
-        <div class="step">
-          <span class="step-num">1</span>
-          <h3>Share the Role</h3>
-          <p>Tell it the job, company, or interview type</p>
+    <div class="section-inner">
+      <div class="two-col">
+        <div class="col-text">
+          <span class="section-label reveal">The Shift</span>
+          <h2 class="section-title reveal reveal-delay-1">Model-Centric vs<br>Data-Centric AI</h2>
+          <p class="section-text reveal reveal-delay-2">The field is moving from "build a better model" to "build better data." The old approach treated data as fixed and tuned the model. The new approach keeps the model fixed and iterates on the data — cleaning labels, balancing classes, removing noise.</p>
+          <p class="section-text reveal reveal-delay-3">Understanding data quality is now the competitive edge. Better data beats better algorithms, every time.</p>
         </div>
-        <div class="step">
-          <span class="step-num">2</span>
-          <h3>Get a Plan</h3>
-          <p>Receive topics, questions, and prep guidance</p>
-        </div>
-        <div class="step">
-          <span class="step-num">3</span>
-          <h3>Practice</h3>
-          <p>Iterate on answers until you're confident</p>
+        <div class="col-visual reveal reveal-delay-2">
+          <div class="compare-table">
+            <table>
+              <tr>
+                <th>Model-Centric</th>
+                <th>Data-Centric</th>
+              </tr>
+              <tr>
+                <td>Fix the model when accuracy drops</td>
+                <td>Fix the data when accuracy drops</td>
+              </tr>
+              <tr>
+                <td>Add more layers, tune hyperparameters</td>
+                <td>Clean labels, balance classes, remove noise</td>
+              </tr>
+              <tr>
+                <td>Treat data as fixed</td>
+                <td>Iterate on data systematically</td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <section class="takeaway">
-    <div class="takeaway-bg" aria-hidden="true">AI</div>
+    <div class="takeaway-bg" aria-hidden="true">Data</div>
     <div class="takeaway-inner reveal">
-      <p class="takeaway-text">One prompt turns a raw language model into a personal interview coach.</p>
-      <p class="takeaway-sub">From anxiety to action in under a minute.</p>
+      <p class="takeaway-text">Better data beats better algorithms. Every time.</p>
+      <p class="takeaway-sub">The models are only as good as what we feed them.</p>
     </div>
   </section>
 
@@ -407,31 +367,31 @@
       <h2 class="reveal">About This Project</h2>
       <div class="info-grid reveal reveal-delay-1">
         <span class="info-label">Introduction</span>
-        <span class="info-text">A custom GPT that turns interview prep from stressful guesswork into a guided, personalized experience — role-specific questions, study plans, and answer frameworks in seconds.</span>
+        <span class="info-text">This artifact explores why data — not models — is the primary bottleneck in ML, covering quality issues, operational challenges, and the shift toward data-centric AI.</span>
 
         <span class="info-label">Description</span>
-        <span class="info-text">Takes a job title as input and generates targeted technical questions, behavioral prompts with STAR framework, and a day-by-day study plan.</span>
+        <span class="info-text">A visual explainer that breaks down data challenges into three categories: quality problems (imbalance, overlap, underrepresentation), operational hurdles (labeling, privacy, drift), and the paradigm shift from model-centric to data-centric AI.</span>
 
         <span class="info-label">Objective</span>
-        <span class="info-text">Build a practical AI tool for personalized, role-specific interview preparation.</span>
+        <span class="info-text">Make the case that data quality is the most important — and most overlooked — factor in building reliable ML systems.</span>
 
         <span class="info-label">Process</span>
-        <span class="info-text">Designed prompt architecture, tested across multiple roles (embedded systems, SWE, data science), refined until outputs felt like real coaching.</span>
+        <span class="info-text">Synthesized course materials and research (Santos et al., 2023) into a visual narrative, then designed comparison layouts and flow diagrams to communicate each concept without dense text.</span>
 
         <span class="info-label">Tools</span>
-        <span class="info-text">OpenAI GPT, prompt engineering, iterative testing.</span>
+        <span class="info-text">HTML, CSS, JavaScript (IntersectionObserver), course research materials, ChatGPT for content refinement.</span>
 
         <span class="info-label">Value</span>
-        <span class="info-text">Shows how careful prompt design turns a raw language model into a user-focused product.</span>
+        <span class="info-text">Demonstrates understanding of the full ML pipeline — not just model architecture, but the data engineering that makes or breaks production systems.</span>
 
         <span class="info-label">Unique Value</span>
-        <span class="info-text">Adapts to any role in real time — doesn't just list questions, builds a complete prep strategy with topics, frameworks, and schedule.</span>
+        <span class="info-text">Frames data challenges as an engineering problem, not an academic one. Uses the model-centric vs data-centric comparison to show a practical mental model for approaching real-world ML.</span>
 
         <span class="info-label">Relevance</span>
-        <span class="info-text">Applied prompt engineering is a core skill for building AI products. This shows the full cycle from concept to working tool.</span>
+        <span class="info-text">Every ML engineer spends more time on data than on models. This artifact demonstrates the data literacy that separates research prototypes from production systems.</span>
 
         <span class="info-label">References</span>
-        <span class="info-text">OpenAI GPT documentation. AIML-500, Indiana Wesleyan University.</span>
+        <span class="info-text">Santos, M. et al. (2023). "A Unifying View of Class Overlap and Imbalance." Information Fusion 89. Krawczyk, B. (2016). "Learning from Imbalanced Data." Progress in AI. Course materials from AIML-500, Indiana Wesleyan University.</span>
       </div>
     </div>
   </section>

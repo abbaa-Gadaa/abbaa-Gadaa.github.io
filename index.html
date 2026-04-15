@@ -3,60 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Abel Edea – Portfolio</title>
+  <title>Abel Edea – AI/ML Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- Nav -->
+  <nav class="site-nav">
+    <a href="index.html" class="site-nav-name">Abel Edea</a>
+    <div class="site-nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
   <!-- Hero -->
   <section class="hero">
+    <div class="hero-bg" aria-hidden="true">AE</div>
     <div class="hero-content">
-      <p class="tag">AI Infrastructure Architect</p>
-      <h1>Abel Edea</h1>
-      <h2>Engineering the intelligent future.</h2>
-      <a href="#explore" class="cta-btn">See the work ↓</a>
+      <p class="tag reveal">AI Infrastructure Architect</p>
+      <h1 class="reveal reveal-delay-1">Hi, I'm Abel Edea</h1>
+      <h2 class="reveal reveal-delay-2">Welcome to my portfolio.</h2>
+      <a href="#work" class="cta-btn reveal reveal-delay-3">See the work ↓</a>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
-  <!-- Explore -->
-  <section class="explore" id="explore">
-    <div class="explore-heading">
+  <!-- Work -->
+  <section class="explore" id="work">
+    <div class="explore-heading reveal">
       <h2>Selected Work</h2>
+      <p class="explore-sub">Four artifacts from my AIML-500 graduate coursework at Indiana Wesleyan University.</p>
     </div>
 
     <div class="card-grid">
 
-      <!-- Card 1 – Story of AI -->
-      <a href="artifact1.html" class="card">
+      <a href="artifact1.html" class="card reveal">
         <div class="card-image">
-          <img src="assets/timeline-screenshot.png" alt="AI evolution timeline">
+          <img src="assets/card-1.png" alt="AI history illustration — vintage computer transforming into neural brain">
         </div>
         <div class="card-body">
+          <span class="card-tag">Artifact 1</span>
           <h3>Story of AI</h3>
           <p>One question started it all — can machines think?</p>
-          <span class="card-arrow">View project →</span>
         </div>
       </a>
 
-      <!-- Card 2 – JobPrep AI -->
-      <a href="artifact2.html" class="card">
+      <a href="artifact2.html" class="card reveal reveal-delay-1">
         <div class="card-image">
-          <img src="assets/jobprep-screenshot.png" alt="JobPrep AI interface">
+          <img src="assets/card-2.png" alt="Interview prep illustration — laptop with chat bubbles and briefcase">
         </div>
         <div class="card-body">
+          <span class="card-tag">Artifact 2</span>
           <h3>JobPrep AI</h3>
           <p>Nervous about interviews? This one coaches back.</p>
-          <span class="card-arrow">View project →</span>
         </div>
       </a>
 
-      <!-- Card 3 – Neural Networks -->
-      <a href="artifact3.html" class="card">
-        <div class="card-image card-image--placeholder"></div>
+      <a href="artifact3.html" class="card reveal reveal-delay-2">
+        <div class="card-image">
+          <img src="assets/card-3.png" alt="Neural network illustration — connected nodes in warm colors">
+        </div>
         <div class="card-body">
+          <span class="card-tag">Artifact 3</span>
           <h3>Neural Networks Made Simple</h3>
           <p>What if you could explain AI to anyone?</p>
-          <span class="card-arrow">View project →</span>
+        </div>
+      </a>
+
+      <a href="artifact4.html" class="card reveal reveal-delay-3">
+        <div class="card-image">
+          <img src="assets/card-4.png" alt="Data quality illustration — scattered puzzle pieces becoming organized">
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Artifact 4</span>
+          <h3>The Data Problem</h3>
+          <p>Your model is only as good as what you feed it.</p>
         </div>
       </a>
 
@@ -65,29 +94,65 @@
 
   <!-- About -->
   <section class="about" id="about">
-    <h2>About Me</h2>
-    <p>
-      I build intelligent systems that bridge machine learning, software
-      engineering, and real-world deployment. My work focuses on building
-      scalable tools, computer vision pipelines, and infrastructure that turns
-      research ideas into practical systems.
-    </p>
-    <p class="value-prop">
-      I bring value by turning complex AI concepts into working systems —
-      and by communicating technical ideas in ways that drive decisions,
-      not confusion.
-    </p>
-    <div class="about-tags">
-      <span class="chip">Machine Learning</span>
-      <span class="chip">Computer Vision</span>
-      <span class="chip">Systems Engineering</span>
+    <div class="about-inner reveal">
+      <h2>About Me</h2>
+      <p>
+        Software engineer with production experience, now focused on AI
+        infrastructure — studying machine learning at Indiana Wesleyan
+        University and building tools that actually ship.
+      </p>
+      <p class="value-prop">
+        I take AI from idea to production. Research, design, engineering
+        — the full stack.
+      </p>
+      <p class="target-audience">
+        I'd love to work with teams building ML pipelines, data infrastructure,
+        and AI-powered products at scale.
+      </p>
+      <div class="about-tags">
+        <span class="chip">Machine Learning</span>
+        <span class="chip">Computer Vision</span>
+        <span class="chip">Systems Engineering</span>
+        <span class="chip">Prompt Engineering</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="contact-inner reveal">
+      <h2>Get in Touch</h2>
+      <p>Open to AI/ML engineering roles and research collaborations.</p>
+      <div class="contact-links">
+        <a href="mailto:abeledea2@gmail.com" class="contact-link">abeledea2@gmail.com</a>
+        <a href="https://linkedin.com/in/" class="contact-link" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="site-footer">
-    © 2026 Abel Edea
+    <div class="footer-inner">
+      <div class="footer-nav">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <p>© 2026 Abel Edea · AIML-500 · Indiana Wesleyan University</p>
+    </div>
   </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>
