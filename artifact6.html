@@ -1,1 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Notebook to Production – Abel Edea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
+    :root {
+      --bg: #FAF4EB;
+      --bg-warm: #F3EAD8;
+      --bg-dark: #1B1B18;
+      --text: #2C2C28;
+      --text-muted: #7A776D;
+      --text-light: #A09C92;
+      --accent: #8B6E4E;
+      --accent-light: #C4A97D;
+      --border: rgba(0,0,0,0.08);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+
+    .nav {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 1.5rem 3rem; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250, 244, 235, 0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted); transition: color 0.3s;
+    }
+    .nav-back:hover { color: var(--text); }
+    .nav-title {
+      font-family: var(--serif); font-size: 1rem;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 8rem 2rem 6rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--serif);
+      font-size: clamp(10rem, 25vw, 22rem);
+      font-weight: 400; color: rgba(0,0,0,0.03);
+      line-height: 1; pointer-events: none; user-select: none;
+      white-space: nowrap;
+    }
+    .hero-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 2rem; position: relative;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 400; line-height: 1.05; color: var(--text);
+      margin-bottom: 2rem; max-width: 900px; position: relative;
+    }
+    .hero-sub {
+      font-size: 1.15rem; color: var(--text-muted);
+      max-width: 520px; line-height: 1.8; position: relative;
+    }
+    .hero-scroll {
+      position: absolute; bottom: 3rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .hero-scroll span {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-light);
+    }
+    .scroll-line {
+      width: 1px; height: 48px; background: var(--accent-light);
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+    @keyframes scroll-pulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    .section { padding: 6rem 3rem; position: relative; }
+    .section--warm { background: var(--bg-warm); }
+    .section-inner { max-width: 1000px; margin: 0 auto; }
+
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    .two-col--reverse .col-text { order: 2; }
+    .two-col--reverse .col-visual { order: 1; }
+
+    .section-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem; display: block;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400; line-height: 1.15; color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .section-text {
+      font-size: 1rem; color: var(--text-muted); line-height: 1.8;
+    }
+    .section-text + .section-text { margin-top: 1rem; }
+
+    .img-frame {
+      border-radius: 1rem; overflow: hidden; border: 1px solid var(--border);
+    }
+    .img-frame img { width: 100%; display: block; }
+
+    .full-image {
+      max-width: 900px; margin: 0 auto;
+      border-radius: 1rem; overflow: hidden; border: 1px solid var(--border);
+    }
+    .full-image img { width: 100%; display: block; }
+
+    .divider {
+      max-width: 1000px; margin: 0 auto;
+      border: none; border-top: 1px solid var(--border);
+    }
+
+    .compare-table {
+      max-width: 700px;
+      margin: 2rem auto 0;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .compare-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .compare-table th {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 400;
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-table th:first-child {
+      background: rgba(180,80,60,0.04);
+      color: var(--text);
+    }
+    .compare-table th:last-child {
+      background: rgba(139,110,78,0.06);
+      color: var(--text);
+    }
+    .compare-table td {
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+
+    .takeaway {
+      padding: 6rem 3rem; text-align: center;
+      background: var(--bg-dark); color: #E8E4DC;
+      position: relative; overflow: hidden;
+    }
+    .takeaway-bg {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--serif);
+      font-size: clamp(10rem, 25vw, 20rem);
+      font-weight: 400; color: rgba(255,255,255,0.03);
+      line-height: 1; pointer-events: none; user-select: none;
+    }
+    .takeaway-inner { max-width: 650px; margin: 0 auto; position: relative; }
+    .takeaway-text {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 400; line-height: 1.5; color: #F5F0E8;
+    }
+    .takeaway-sub { margin-top: 1.5rem; font-size: 0.85rem; color: #7A776D; letter-spacing: 0.04em; }
+
+    .project-info { padding: 6rem 3rem; border-top: 1px solid var(--border); }
+    .project-info-inner { max-width: 800px; margin: 0 auto; }
+    .project-info h2 {
+      font-family: var(--serif); font-size: 1.8rem;
+      font-weight: 400; color: var(--text);
+      text-align: center; margin-bottom: 3.5rem;
+    }
+    .info-grid { display: grid; grid-template-columns: 120px 1fr; gap: 2rem 2.5rem; }
+    .info-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); padding-top: 0.15rem;
+    }
+    .info-text { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; }
+
+    .footer {
+      text-align: center; padding: 3rem 2rem;
+      background: var(--bg-dark); color: #5A574F;
+      font-size: 0.8rem; letter-spacing: 0.06em;
+    }
+
+    @media (max-width: 900px) {
+      .nav { padding: 1.25rem 1.5rem; }
+      .section { padding: 4rem 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2.5rem; }
+      .two-col--reverse .col-text,
+      .two-col--reverse .col-visual { order: unset; }
+      .info-grid { grid-template-columns: 1fr; gap: 0.5rem 0; }
+      .info-label { padding-top: 1rem; }
+      .compare-table th, .compare-table td { padding: 0.75rem 1rem; font-size: 0.85rem; }
+      .takeaway { padding: 5rem 1.5rem; }
+      .project-info { padding: 4rem 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      .hero h1 { font-size: clamp(2.5rem, 12vw, 4rem); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-back">← Portfolio</a>
+    <span class="nav-title">Artifact 6 · Production ML</span>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true">Ship</div>
+    <span class="hero-label reveal">Artifact 6 · MLOps &amp; reliability</span>
+    <h1 class="reveal reveal-delay-1">From Notebook<br>to Production</h1>
+    <p class="hero-sub reveal reveal-delay-2">Training a model is the beginning. Serving it safely, observing it, and evolving it is where most teams actually live.</p>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <div class="full-image reveal">
+      <img src="assets/a6-lifecycle.png" alt="ML lifecycle — develop, deploy, monitor, and retrain connected in a loop">
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="two-col">
+        <div class="col-text">
+          <span class="section-label reveal">The gap</span>
+          <h2 class="section-title reveal reveal-delay-1">Research Code<br>Is Not a System</h2>
+          <p class="section-text reveal reveal-delay-2">Notebooks optimize for exploration: mutable state, implicit dependencies, and results that live on one machine. Production optimizes for contracts: APIs with latency budgets, reproducible builds, secrets handled outside source control, and rollbacks when something breaks.</p>
+          <p class="section-text reveal reveal-delay-3">Bridging that gap means packaging models, versioning datasets and artifacts, and defining who owns on-call when predictions drift or infrastructure fails.</p>
+        </div>
+        <div class="col-visual">
+          <div class="img-frame reveal reveal-delay-2">
+            <img src="assets/a6-notebook-vs-prod.png" alt="Notebook chaos versus structured deployment pipeline">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section section--warm">
+    <div class="section-inner">
+      <div class="two-col two-col--reverse">
+        <div class="col-text">
+          <span class="section-label reveal">Operations</span>
+          <h2 class="section-title reveal reveal-delay-1">Serve, Observe,<br>Iterate</h2>
+          <p class="section-text reveal reveal-delay-2">Serving paths include batch scoring, real-time APIs, and streaming inference — each with different scaling and failure modes. Monitoring is not only uptime: track data drift, slice metrics by cohort, and log enough context to debug bad predictions without leaking sensitive fields.</p>
+          <p class="section-text reveal reveal-delay-3">Retraining should be triggered by policy — thresholds on quality, volume, or calendar — not by whoever remembers to run a script last.</p>
+        </div>
+        <div class="col-visual">
+          <div class="img-frame reveal reveal-delay-2">
+            <img src="assets/a6-lifecycle.png" alt="Closed-loop ML operations — monitor feeds back into retrain">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="two-col">
+        <div class="col-text">
+          <span class="section-label reveal">Mindset</span>
+          <h2 class="section-title reveal reveal-delay-1">Prototype vs<br>Product</h2>
+          <p class="section-text reveal reveal-delay-2">The same team often oscillates between proving value quickly and hardening for users. The healthiest teams make that transition explicit: a checklist for production readiness, shared definitions of done, and a bias toward small, measurable releases.</p>
+          <p class="section-text reveal reveal-delay-3">MLOps is not a single tool — it is the discipline of shipping ML that stays correct over time.</p>
+        </div>
+        <div class="col-visual reveal reveal-delay-2">
+          <div class="compare-table">
+            <table>
+              <tr>
+                <th>Prototype</th>
+                <th>Product</th>
+              </tr>
+              <tr>
+                <td>Best effort on one dataset snapshot</td>
+                <td>Versioned data, model, and serving config</td>
+              </tr>
+              <tr>
+                <td>Manual runs and ad-hoc fixes</td>
+                <td>Pipelines, tests, and staged rollout</td>
+              </tr>
+              <tr>
+                <td>Accuracy on a holdout set</td>
+                <td>Latency, cost, fairness slices, and drift</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="takeaway">
+    <div class="takeaway-bg" aria-hidden="true">Ship</div>
+    <div class="takeaway-inner reveal">
+      <p class="takeaway-text">Production is where the model meets reality — and reality does not wait for a rerun cell.</p>
+      <p class="takeaway-sub">Reliability, observability, and iteration close the loop.</p>
+    </div>
+  </section>
+
+  <section class="project-info">
+    <div class="project-info-inner">
+      <h2 class="reveal">About This Project</h2>
+      <div class="info-grid reveal reveal-delay-1">
+        <span class="info-label">Introduction</span>
+        <span class="info-text">This artifact outlines what changes when machine learning leaves the notebook: packaging, deployment, monitoring, and continuous improvement as an operational loop.</span>
+
+        <span class="info-label">Description</span>
+        <span class="info-text">A narrative page contrasting research-style workflows with production expectations, then mapping core MLOps themes — serving, observability, drift, and retraining policy — into a practical mental model.</span>
+
+        <span class="info-label">Objective</span>
+        <span class="info-text">Show how ML engineering extends beyond model selection into systems thinking: contracts, ownership, and measurable behavior in production.</span>
+
+        <span class="info-label">Process</span>
+        <span class="info-text">Structured content around a lifecycle diagram and a prototype-vs-product comparison, aligned with common MLOps literature and production experience.</span>
+
+        <span class="info-label">Tools</span>
+        <span class="info-text">HTML, CSS, JavaScript (IntersectionObserver).</span>
+
+        <span class="info-label">Value</span>
+        <span class="info-text">Connects coursework themes (data quality, modeling) to the infrastructure layer where models actually run and degrade.</span>
+
+        <span class="info-label">Unique Value</span>
+        <span class="info-text">Frames MLOps as explicit handoffs and policies, not a vendor feature list — useful for interviews and cross-functional conversations with platform and product teams.</span>
+
+        <span class="info-label">Relevance</span>
+        <span class="info-text">Complements Artifact 4 (data) by focusing on what happens after a model is trained: shipping, observing, and sustaining it.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    © 2026 Abel Edea
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
