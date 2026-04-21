@@ -148,6 +148,75 @@
     }
     .diagram-wrap svg { width: 100%; height: auto; display: block; }
 
+    .divider {
+      max-width: 1000px; margin: 0 auto;
+      border: none; border-top: 1px solid var(--border);
+    }
+
+    .callout {
+      max-width: 720px;
+      margin: 1.5rem 0 0;
+      padding: 1rem 1.25rem;
+      border-left: 3px solid var(--accent);
+      background: rgba(139,110,78,0.06);
+      border-radius: 0 0.5rem 0.5rem 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .mini-table {
+      width: 100%;
+      max-width: 520px;
+      margin: 1.25rem 0 0;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .mini-table th, .mini-table td {
+      padding: 0.55rem 0.85rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .mini-table th { background: rgba(139,110,78,0.08); font-weight: 600; color: var(--text); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .mini-table tr:last-child td { border-bottom: none; }
+
+    .code-inline {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88em;
+      background: rgba(0,0,0,0.06);
+      padding: 0.12em 0.4em;
+      border-radius: 4px;
+    }
+
+    .fig-note {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 0.65rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    pre.snippet {
+      margin-top: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      background: #252522;
+      color: #E8E4DC;
+      font-size: 0.76rem;
+      line-height: 1.55;
+      overflow-x: auto;
+    }
+    pre.snippet code {
+      font-family: inherit;
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+
     /* Interactive decision tree demo */
     .dt-demo {
       max-width: 520px; margin: 0 auto;
@@ -258,10 +327,6 @@
       font-weight: 400; color: var(--text);
       text-align: center; margin-bottom: 0.75rem;
     }
-    .template-note {
-      text-align: center; font-size: 0.9rem; color: var(--text-muted);
-      margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto;
-    }
     .info-grid { display: grid; grid-template-columns: 140px 1fr; gap: 1.75rem 2rem; }
     .info-label {
       font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
@@ -299,7 +364,7 @@
     <div class="hero-bg" aria-hidden="true">If / Else</div>
     <span class="hero-label reveal">Artifact 5 · Interpretable ML</span>
     <h1 class="reveal reveal-delay-1">Decision Trees,<br>Step by Step</h1>
-    <p class="hero-sub reveal reveal-delay-2">A tiny model you can draw on a napkin — yet powerful enough to headline random forests and gradient boosting.</p>
+    <p class="hero-sub reveal reveal-delay-2">From greedy splits and impurity to random forests — a single page that connects intuition, a toy dataset, code you can run, and the same walk-through you liked.</p>
     <div class="hero-scroll">
       <span>Scroll</span>
       <div class="scroll-line"></div>
@@ -378,12 +443,141 @@
     </div>
   </section>
 
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-inner">
+      <span class="section-label reveal">Training</span>
+      <h2 class="section-title reveal reveal-delay-1">How a tree grows from rows and columns</h2>
+      <p class="section-text reveal reveal-delay-2">Algorithms such as CART (Classification and Regression Trees) grow the model <strong>top-down</strong>. At each step they consider many candidate questions — for example “is age ≤ 35?” or “is color = blue?” — and pick the one that best separates the training labels into purer child groups.</p>
+      <p class="section-text reveal reveal-delay-3">Training is <strong>greedy</strong>: it chooses the best split <em>now</em>, without lookahead to future levels. That makes training fast, but it also means the tree is not guaranteed to be globally optimal — depth limits, leaf-size rules, and ensembles exist partly to tame that greed.</p>
+      <p class="callout reveal reveal-delay-3"><strong>Stopping rules</strong> matter: maximum depth, minimum samples per leaf, minimum impurity decrease, or maximum number of leaves. Without them, a tree can keep splitting until every leaf holds a single training row — perfect training accuracy, poor generalization.</p>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="section-inner">
+      <div class="two-col two-col--reverse">
+        <div class="col-text">
+          <span class="section-label reveal">Impurity</span>
+          <h2 class="section-title reveal reveal-delay-1">Measuring “mixedness” at a node</h2>
+          <p class="section-text reveal reveal-delay-2">For classification, a node is <strong>pure</strong> if every example shares the same label. Common impurity scores are <strong>Gini</strong> and <strong>entropy</strong>. Both are highest when classes are evenly split at a node, and zero when only one class remains.</p>
+          <p class="section-text reveal reveal-delay-3">For a binary node with positive class proportion <em>p</em>, Gini is <code class="code-inline">2p(1−p)</code> and entropy is <code class="code-inline">−p log₂ p − (1−p) log₂ (1−p)</code> (with the convention 0 log 0 = 0). Libraries average child impurities weighted by sample counts to score a candidate split.</p>
+        </div>
+        <div class="col-visual">
+          <div class="diagram-wrap reveal reveal-delay-2" role="img" aria-label="Chart showing Gini and entropy for a binary class proportion from zero to one; both peak near even mix and fall to zero at pure nodes">
+            <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg">
+              <rect width="420" height="240" fill="#FAF4EB"/>
+              <line x1="50" y1="200" x2="380" y2="200" stroke="#A09C92" stroke-width="1.5"/>
+              <line x1="50" y1="200" x2="50" y2="40" stroke="#A09C92" stroke-width="1.5"/>
+              <text x="215" y="228" text-anchor="middle" fill="#7A776D" font-size="11" font-family="system-ui,sans-serif">Class proportion p (positive)</text>
+              <text transform="rotate(-90 18 120)" x="18" y="120" text-anchor="middle" fill="#7A776D" font-size="11" font-family="system-ui,sans-serif">Impurity</text>
+              <polyline fill="none" stroke="#8B6E4E" stroke-width="2.5" points="50,200 132.5,70 215,40 297.5,70 380,200"/>
+              <polyline fill="none" stroke="#a85c4a" stroke-width="2" stroke-dasharray="6 4" points="50,200 132.5,80 215,40 297.5,80 380,200"/>
+              <text x="300" y="100" fill="#8B6E4E" font-size="11" font-family="system-ui,sans-serif">Entropy</text>
+              <text x="300" y="118" fill="#a85c4a" font-size="11" font-family="system-ui,sans-serif">Gini (×2, same peak)</text>
+              <text x="215" y="24" text-anchor="middle" fill="#2C2C28" font-size="12" font-weight="600" font-family="system-ui,sans-serif">Both peak near p = 0.5</text>
+            </svg>
+            <p class="fig-note">Curves use the textbook formulas; vertical scale is illustrative.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <span class="section-label reveal">Worked micro-example</span>
+      <h2 class="section-title reveal reveal-delay-1">One split, two purer buckets</h2>
+      <p class="section-text reveal reveal-delay-2">Imagine eight loan applications: five will default (D) and three will not (N). The root is messy. A rule “income ≤ 40k?” sends five rows to the left leaf — four D and one N — and three rows to the right leaf — one D and two N. Neither leaf is perfect, but both are <strong>less mixed</strong> than the parent; the algorithm would compare this gain against other candidate questions.</p>
+      <table class="mini-table reveal reveal-delay-3" aria-label="Toy loan outcome counts before and after a split">
+        <thead><tr><th>Region</th><th>Default (D)</th><th>Not default (N)</th></tr></thead>
+        <tbody>
+          <tr><td>Before split (root)</td><td>5</td><td>3</td></tr>
+          <tr><td>Left: income ≤ 40k</td><td>4</td><td>1</td></tr>
+          <tr><td>Right: income &gt; 40k</td><td>1</td><td>2</td></tr>
+        </tbody>
+      </table>
+      <p class="section-text reveal reveal-delay-3" style="margin-top:1rem;">In practice you never hand-count this for real data — <code class="code-inline">DecisionTreeClassifier</code> in scikit-learn does it for every feature threshold the implementation considers.</p>
+      <pre class="snippet reveal reveal-delay-3" role="region" aria-label="Python snippet for fitting a decision tree"><code>from sklearn.tree import DecisionTreeClassifier
+
+clf = DecisionTreeClassifier(
+    max_depth=4,
+    min_samples_leaf=20,
+    random_state=42,
+)
+clf.fit(X_train, y_train)</code></pre>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="section-inner">
+      <div class="two-col">
+        <div class="col-text">
+          <span class="section-label reveal">Risk</span>
+          <h2 class="section-title reveal reveal-delay-1">High variance &amp; the axis-aligned frontier</h2>
+          <p class="section-text reveal reveal-delay-2">A single tree can change a lot if you perturb the training sample — that is <strong>high variance</strong>. Its decision boundaries are <strong>axis-aligned</strong> (boxes and stair-steps in feature space), which matches spreadsheet-style data well but approximates diagonal boundaries only by stacking many small steps.</p>
+          <p class="section-text reveal reveal-delay-3"><strong>Pruning</strong> (cost-complexity pruning in CART) removes splits that do not pay for themselves on a validation metric. <strong>Hyperparameters</strong> like <code class="code-inline">max_depth</code> and <code class="code-inline">min_samples_leaf</code> are often easier to tune first than full pruning schedules.</p>
+        </div>
+        <div class="col-visual">
+          <div class="diagram-wrap reveal reveal-delay-2" role="img" aria-label="Axis-aligned decision boundary versus a smooth diagonal boundary">
+            <svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg">
+              <rect width="360" height="220" fill="#FAF4EB"/>
+              <text x="180" y="22" text-anchor="middle" fill="#2C2C28" font-size="12" font-weight="600" font-family="system-ui,sans-serif">Feature space (2D sketch)</text>
+              <rect x="40" y="44" width="280" height="156" fill="#fff" stroke="#C4A97D"/>
+              <path d="M40 120 H200 V44 H280 V200 H40 Z" fill="none" stroke="#8B6E4E" stroke-width="2" opacity="0.85"/>
+              <path d="M60 180 L300 50" stroke="#a85c4a" stroke-width="2" stroke-dasharray="5 4" opacity="0.9"/>
+              <text x="52" y="200" fill="#8B6E4E" font-size="10" font-family="system-ui,sans-serif">Tree boundary</text>
+              <text x="248" y="58" fill="#a85c4a" font-size="10" font-family="system-ui,sans-serif">Possible linear boundary</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <span class="section-label reveal">Ensembles</span>
+      <h2 class="section-title reveal reveal-delay-1">Why no one stops at one tree</h2>
+      <p class="section-text reveal reveal-delay-2"><strong>Random forests</strong> train many deep trees on bootstrap samples of the data and, at each split, consider only a random subset of features. Averaging (voting) predictions reduces variance while keeping non-linear boundaries.</p>
+      <p class="section-text reveal reveal-delay-3"><strong>Gradient boosting</strong> builds trees sequentially: each new tree targets the mistakes (residuals) of the ensemble so far. Shallow trees plus many rounds often beat a single giant tree on accuracy — at the cost of more tuning and a less transparent model unless you add explainability tools.</p>
+      <p class="callout reveal reveal-delay-3">Takeaway: interpretability lives at the <strong>single-tree</strong> level; competitive accuracy on tabular data often lives at the <strong>forest / boosted</strong> level.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
   <!-- Simple example: interactive -->
   <section class="section section--warm">
     <div class="section-inner">
-      <span class="section-label reveal">Simple example</span>
-      <h2 class="section-title reveal reveal-delay-1">Walk a classic “play outside?” tree</h2>
-      <p class="section-text reveal reveal-delay-2" style="text-align: center; max-width: 560px; margin: 0 auto 2rem;">This matches the toy examples used in intro ML courses (similar spirit to the “play tennis” dataset). Tap <strong>Yes</strong> or <strong>No</strong> at each step; the path you take is a branch in a decision tree.</p>
+      <span class="section-label reveal">Interactive</span>
+      <h2 class="section-title reveal reveal-delay-1">Walk the “play outside?” tree</h2>
+      <p class="section-text reveal reveal-delay-2" style="text-align: center; max-width: 580px; margin: 0 auto 1.5rem;">Same logic as classic toy weather tables: each answer follows one branch until you hit a leaf. The path log at the end is exactly the list of rules a program would evaluate for one prediction.</p>
+      <div class="diagram-wrap reveal reveal-delay-2" style="max-width: 520px; margin: 0 auto 2rem;" role="img" aria-label="Decision flow: sunny leads to humidity question; not sunny leads to wind question; four outcomes">
+        <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg">
+          <rect width="480" height="200" fill="#FAF4EB"/>
+          <rect x="190" y="8" width="100" height="34" rx="8" fill="#8B6E4E"/>
+          <text x="240" y="30" text-anchor="middle" fill="#FAF4EB" font-size="12" font-weight="600" font-family="system-ui,sans-serif">Sunny?</text>
+          <path d="M240 42 L120 78 M240 42 L360 78" stroke="#A09C92" stroke-width="2" fill="none"/>
+          <text x="155" y="58" fill="#7A776D" font-size="10" font-family="system-ui,sans-serif">Yes</text>
+          <text x="310" y="58" fill="#7A776D" font-size="10" font-family="system-ui,sans-serif">No</text>
+          <rect x="60" y="78" width="120" height="32" rx="8" fill="#fff" stroke="#C4A97D"/>
+          <text x="120" y="99" text-anchor="middle" fill="#2C2C28" font-size="11" font-family="system-ui,sans-serif">Humidity high?</text>
+          <rect x="300" y="78" width="120" height="32" rx="8" fill="#fff" stroke="#C4A97D"/>
+          <text x="360" y="99" text-anchor="middle" fill="#2C2C28" font-size="11" font-family="system-ui,sans-serif">Wind strong?</text>
+          <path d="M120 110 L75 148 M120 110 L165 148" stroke="#C4A97D" stroke-width="1.5" fill="none"/>
+          <path d="M360 110 L315 148 M360 110 L405 148" stroke="#C4A97D" stroke-width="1.5" fill="none"/>
+          <rect x="28" y="148" width="94" height="40" rx="8" fill="rgba(168,92,74,0.15)" stroke="#a85c4a"/>
+          <text x="75" y="172" text-anchor="middle" fill="#a85c4a" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Stay</text>
+          <rect x="132" y="148" width="94" height="40" rx="8" fill="rgba(61,122,86,0.15)" stroke="#3d7a56"/>
+          <text x="179" y="172" text-anchor="middle" fill="#3d7a56" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Play</text>
+          <rect x="268" y="148" width="94" height="40" rx="8" fill="rgba(168,92,74,0.15)" stroke="#a85c4a"/>
+          <text x="315" y="172" text-anchor="middle" fill="#a85c4a" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Stay</text>
+          <rect x="372" y="148" width="94" height="40" rx="8" fill="rgba(61,122,86,0.15)" stroke="#3d7a56"/>
+          <text x="419" y="172" text-anchor="middle" fill="#3d7a56" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Play</text>
+        </svg>
+      </div>
       <div class="dt-demo reveal reveal-delay-3">
         <h3>Should we play outside?</h3>
         <p class="hint">Three nodes deep — then a leaf prediction.</p>
@@ -411,28 +605,27 @@
   <section class="project-info">
     <div class="project-info-inner">
       <h2 class="reveal">About this project</h2>
-      <p class="template-note reveal reveal-delay-1">Structured per the course artifact template (title in the hero; remaining items in this grid).</p>
-      <div class="info-grid reveal reveal-delay-2">
+      <div class="info-grid reveal reveal-delay-1">
         <span class="info-label">Introduction</span>
-        <span class="info-text">Decision trees are one of the most approachable models in supervised learning: they encode decisions as nested rules. This artifact introduces their structure, shows a visual diagram and a hands-on path through a toy problem, and documents the work in a standard portfolio layout.</span>
+        <span class="info-text">Decision trees are one of the most approachable models in supervised learning: they encode decisions as nested rules. This artifact builds from topology and prediction flow into training mechanics (greedy splitting, impurity, variance), a numeric toy split, ensembles, and an interactive walk-through — all in one static page.</span>
 
         <span class="info-label">Description</span>
-        <span class="info-text">The page combines narrative explanation, two static illustrations (tree topology and data-to-prediction flow), and a small interactive demo that simulates traversing a binary tree. Together they show how classification can be presented without equations while still remaining precise.</span>
+        <span class="info-text">Multiple SVG figures illustrate structure, impurity curves, axis-aligned boundaries, and the exact branching logic behind the demo. A miniature loan table shows how a split reallocates counts before and after a threshold. A Python snippet shows how the same ideas appear in scikit-learn with regularization hyperparameters.</span>
 
         <span class="info-label">Objective</span>
-        <span class="info-text">Help a reader with minimal ML background understand what a decision tree is, how a prediction is produced by following branches, and why interpretability matters — while documenting the work in the format required for the final digital portfolio.</span>
+        <span class="info-text">Give a reader enough depth to connect lecture definitions (entropy, Gini, information gain) to everyday practice (tuning depth, choosing forests vs boosting) while keeping a concrete, testable mental model via the interactive tree.</span>
 
         <span class="info-label">Process</span>
-        <span class="info-text">Aligned artifact headings with the About section; drafted copy aligned with standard treatments of binary splits and leaves; designed SVG figures for layout-independent “pictures”; implemented the walkthrough as a small state machine in JavaScript; validated accessibility (alt text, aria-live on path log).</span>
+        <span class="info-text">Outlined topics from CART-style references through ensemble methods; drafted diagrams in SVG for crisp scaling; implemented the demo as an explicit state machine mirroring the figure; cross-checked impurity formulas and curve shapes against standard texts.</span>
 
         <span class="info-label">Tools and technologies used</span>
-        <span class="info-text">HTML5, CSS (layout, typography, responsive breakpoints), JavaScript (DOM updates for the demo), and SVG for diagrams.</span>
+        <span class="info-text">HTML5, CSS (layout, responsive grids, callouts, code styling), JavaScript (IntersectionObserver, demo state), SVG for all figures, and Python/scikit-learn as the referenced training stack.</span>
 
         <span class="info-label">Value proposition</span>
         <span class="info-text">Delivers a self-contained teaching artifact: visuals plus interaction in one static page, suitable for sharing with instructors or employers without extra tooling.</span>
 
         <span class="info-label">Unique value</span>
-        <span class="info-text">The interactive path mirrors real tree inference step-by-step, so readers experience the same branch logic a deployed tree uses — uncommon in purely static explainers.</span>
+        <span class="info-text">Combines five original diagrams (structure, pipeline, impurity curves, axis-aligned vs linear boundary, demo tree), a hand-counted split table, runnable-style Python, and the interactive path — so theory, geometry, and behavior stay aligned.</span>
 
         <span class="info-label">Relevance</span>
         <span class="info-text">Decision trees and their ensembles (random forest, gradient boosting) appear across industry tabular ML, credit risk, churn, and fault triage. Interpretable baselines are also increasingly important next to black-box models for audit and trust.</span>
