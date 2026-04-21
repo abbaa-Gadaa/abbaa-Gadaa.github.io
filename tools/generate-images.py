@@ -43,7 +43,7 @@ images = {
     "card-3": f"{STYLE} Landscape format. Three layers of connected circles forming a simple neural network. Warm amber and terracotta nodes. Minimal.",
     "card-4": f"{STYLE} Landscape format. Scattered puzzle pieces on one side flowing into a complete organized grid on the other. Conveys data quality. Minimal.",
     "a5-tree": f"{STYLE} A clear binary decision tree diagram: root question at top, branches to internal nodes, four leaf nodes with soft green and terracotta outcomes. Educational, no text labels on nodes.",
-    "card-5": f"{STYLE} Landscape format. Simple decision tree with rounded nodes and branches on cream background. Warm browns and amber. Minimal thumbnail for portfolio card.",
+    "card-5": f"{STYLE} Landscape format. Simple binary decision tree: brick-red root gradient, warm orange internal nodes, peach and terracotta leaves, soft cream background. Clean vector-like look, minimal text, no people.",
 }
 
 os.makedirs("assets", exist_ok=True)
