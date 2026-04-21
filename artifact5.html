@@ -148,16 +148,6 @@
     }
     .diagram-wrap svg { width: 100%; height: auto; display: block; }
 
-    .req-image {
-      border-radius: 0.75rem; border: 1px solid var(--border);
-      overflow: hidden;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-    }
-    .req-caption {
-      font-size: 0.85rem; color: var(--text-muted);
-      margin-top: 1rem; line-height: 1.6;
-    }
-
     /* Interactive decision tree demo */
     .dt-demo {
       max-width: 520px; margin: 0 auto;
@@ -388,19 +378,6 @@
     </div>
   </section>
 
-  <!-- Course portfolio template + screenshot -->
-  <section class="section">
-    <div class="section-inner">
-      <span class="section-label reveal">Course alignment</span>
-      <h2 class="section-title reveal reveal-delay-1">Artifact template (AIML portfolio)</h2>
-      <p class="section-text reveal reveal-delay-2" style="max-width: 720px; margin-bottom: 1.5rem;">This page is organized to match the program’s digital portfolio requirements: bio and value proposition live on the home page; each artifact includes the sections below in the “About this project” area.</p>
-      <div class="req-image reveal reveal-delay-3">
-        <img src="assets/a5-portfolio-requirements.png" alt="Screenshot of course document listing portfolio requirements and artifact sections: Title, Introduction, Description, Objective, Process, Tools and Technologies Used, Value Proposition with Unique Value and Relevance, and References">
-      </div>
-      <p class="req-caption reveal reveal-delay-3">Figure: Portfolio requirements as provided in the course materials.</p>
-    </div>
-  </section>
-
   <!-- Simple example: interactive -->
   <section class="section section--warm">
     <div class="section-inner">
@@ -437,31 +414,31 @@
       <p class="template-note reveal reveal-delay-1">Structured per the course artifact template (title in the hero; remaining items in this grid).</p>
       <div class="info-grid reveal reveal-delay-2">
         <span class="info-label">Introduction</span>
-        <span class="info-text">Decision trees are one of the most approachable models in supervised learning: they encode decisions as nested rules. This artifact introduces their structure, shows a visual diagram and a hands-on path through a toy problem, and connects the topic to portfolio expectations for AIML coursework.</span>
+        <span class="info-text">Decision trees are one of the most approachable models in supervised learning: they encode decisions as nested rules. This artifact introduces their structure, shows a visual diagram and a hands-on path through a toy problem, and documents the work in a standard portfolio layout.</span>
 
         <span class="info-label">Description</span>
-        <span class="info-text">The page combines narrative explanation, two static illustrations (tree topology and data-to-prediction flow), a screenshot of the official portfolio requirements, and a small interactive demo that simulates traversing a binary tree. Together they show how classification can be presented without equations while still remaining precise.</span>
+        <span class="info-text">The page combines narrative explanation, two static illustrations (tree topology and data-to-prediction flow), and a small interactive demo that simulates traversing a binary tree. Together they show how classification can be presented without equations while still remaining precise.</span>
 
         <span class="info-label">Objective</span>
         <span class="info-text">Help a reader with minimal ML background understand what a decision tree is, how a prediction is produced by following branches, and why interpretability matters — while documenting the work in the format required for the final digital portfolio.</span>
 
         <span class="info-label">Process</span>
-        <span class="info-text">Mapped course rubric headings to page sections; drafted copy aligned with standard treatments of binary splits and leaves; designed SVG figures for layout-independent “pictures”; implemented the walkthrough as a small state machine in JavaScript; validated accessibility (alt text, aria-live on path log).</span>
+        <span class="info-text">Aligned artifact headings with the About section; drafted copy aligned with standard treatments of binary splits and leaves; designed SVG figures for layout-independent “pictures”; implemented the walkthrough as a small state machine in JavaScript; validated accessibility (alt text, aria-live on path log).</span>
 
         <span class="info-label">Tools and technologies used</span>
-        <span class="info-text">HTML5, CSS (layout, typography, responsive breakpoints), JavaScript (DOM updates for the demo), SVG for diagrams, and static PNG for the course requirements figure.</span>
+        <span class="info-text">HTML5, CSS (layout, typography, responsive breakpoints), JavaScript (DOM updates for the demo), and SVG for diagrams.</span>
 
         <span class="info-label">Value proposition</span>
         <span class="info-text">Delivers a self-contained teaching artifact: visuals plus interaction in one static page, suitable for sharing with instructors or employers without extra tooling.</span>
 
         <span class="info-label">Unique value</span>
-        <span class="info-text">The interactive path mirrors real tree inference step-by-step, and the portfolio-requirements figure explicitly ties the page to the program’s artifact checklist — uncommon in generic tutorials.</span>
+        <span class="info-text">The interactive path mirrors real tree inference step-by-step, so readers experience the same branch logic a deployed tree uses — uncommon in purely static explainers.</span>
 
         <span class="info-label">Relevance</span>
         <span class="info-text">Decision trees and their ensembles (random forest, gradient boosting) appear across industry tabular ML, credit risk, churn, and fault triage. Interpretable baselines are also increasingly important next to black-box models for audit and trust.</span>
 
         <span class="info-label">References</span>
-        <span class="info-text">Breiman, L., Friedman, J., Olshen, R., &amp; Stone, C. (1984). <em>Classification and Regression Trees</em>. Chapman &amp; Hall. Mitchell, T. M. (1997). <em>Machine Learning</em>, Chapter 3. scikit-learn documentation: <a href="https://scikit-learn.org/stable/modules/tree.html" target="_blank" rel="noopener">Decision Trees</a>. Course materials: AIML-500, Indiana Wesleyan University (portfolio requirements).</span>
+        <span class="info-text">Breiman, L., Friedman, J., Olshen, R., &amp; Stone, C. (1984). <em>Classification and Regression Trees</em>. Chapman &amp; Hall. Mitchell, T. M. (1997). <em>Machine Learning</em>, Chapter 3. scikit-learn documentation: <a href="https://scikit-learn.org/stable/modules/tree.html" target="_blank" rel="noopener">Decision Trees</a>. Course materials: AIML-500, Indiana Wesleyan University.</span>
       </div>
     </div>
   </section>
