@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decision Trees, Step by Step – Abel Edea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg: #FAF4EB;
+      --bg-warm: #F3EAD8;
+      --bg-dark: #1B1B18;
+      --text: #2C2C28;
+      --text-muted: #7A776D;
+      --text-light: #A09C92;
+      --accent: #8B6E4E;
+      --accent-light: #C4A97D;
+      --border: rgba(0,0,0,0.08);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+      --yes: #3d7a56;
+      --no: #a85c4a;
+    }
+
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+
+    .nav {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 1.5rem 3rem; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250, 244, 235, 0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted); transition: color 0.3s;
+    }
+    .nav-back:hover { color: var(--text); }
+    .nav-title {
+      font-family: var(--serif); font-size: 1rem;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 8rem 2rem 6rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--serif);
+      font-size: clamp(8rem, 22vw, 18rem);
+      font-weight: 400; color: rgba(0,0,0,0.03);
+      line-height: 1; pointer-events: none; user-select: none;
+      white-space: nowrap;
+    }
+    .hero-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 2rem; position: relative;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 7vw, 5.5rem);
+      font-weight: 400; line-height: 1.05; color: var(--text);
+      margin-bottom: 2rem; max-width: 900px; position: relative;
+    }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--text-muted);
+      max-width: 540px; line-height: 1.8; position: relative;
+    }
+    .hero-scroll {
+      position: absolute; bottom: 3rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .hero-scroll span {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-light);
+    }
+    .scroll-line {
+      width: 1px; height: 48px; background: var(--accent-light);
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+    @keyframes scroll-pulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    .section { padding: 5rem 3rem; position: relative; }
+    .section--warm { background: var(--bg-warm); }
+    .section-inner { max-width: 1000px; margin: 0 auto; }
+
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
+    }
+    .two-col--reverse .col-text { order: 2; }
+    .two-col--reverse .col-visual { order: 1; }
+
+    .section-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem; display: block;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.85rem, 3.5vw, 2.75rem);
+      font-weight: 400; line-height: 1.15; color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .section-text {
+      font-size: 1rem; color: var(--text-muted); line-height: 1.8;
+    }
+    .section-text + .section-text { margin-top: 1rem; }
+
+    .diagram-wrap {
+      border-radius: 1rem; overflow: hidden; border: 1px solid var(--border);
+      background: #fff;
+      padding: 1.5rem;
+    }
+    .diagram-wrap svg { width: 100%; height: auto; display: block; }
+
+    .req-image {
+      border-radius: 0.75rem; border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+    }
+    .req-caption {
+      font-size: 0.85rem; color: var(--text-muted);
+      margin-top: 1rem; line-height: 1.6;
+    }
+
+    /* Interactive decision tree demo */
+    .dt-demo {
+      max-width: 520px; margin: 0 auto;
+      padding: 2rem 2rem 1.75rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      background: linear-gradient(165deg, rgba(255,255,255,0.95), rgba(243,234,216,0.5));
+      text-align: center;
+    }
+    .dt-demo h3 {
+      font-family: var(--serif);
+      font-size: 1.35rem; font-weight: 400;
+      margin-bottom: 0.5rem; color: var(--text);
+    }
+    .dt-demo .hint {
+      font-size: 0.8rem; color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+    .dt-demo .question {
+      font-size: 1.05rem; color: var(--text);
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      min-height: 3.2em;
+      line-height: 1.45;
+    }
+    .dt-demo .btn-row {
+      display: flex; gap: 1rem; justify-content: center;
+      flex-wrap: wrap;
+    }
+    .dt-demo button {
+      font-family: var(--sans);
+      font-size: 0.9rem; font-weight: 600;
+      padding: 0.75rem 1.75rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .dt-demo button:hover { transform: translateY(-2px); }
+    .dt-demo .btn-yes {
+      background: var(--yes); color: #fff;
+      box-shadow: 0 4px 14px rgba(61,122,86,0.35);
+    }
+    .dt-demo .btn-no {
+      background: var(--no); color: #fff;
+      box-shadow: 0 4px 14px rgba(168,92,74,0.3);
+    }
+    .dt-demo .btn-reset {
+      margin-top: 1.25rem;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent-light);
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .dt-demo .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      display: none;
+    }
+    .dt-demo .result.show { display: block; }
+    .dt-demo .result.play {
+      background: rgba(61,122,86,0.12); color: var(--yes);
+    }
+    .dt-demo .result.stay {
+      background: rgba(168,92,74,0.12); color: var(--no);
+    }
+    .dt-demo .path-log {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      font-family: ui-monospace, monospace;
+      text-align: left;
+      max-height: 4.5em;
+      overflow: hidden;
+    }
+
+    .takeaway {
+      padding: 5.5rem 3rem; text-align: center;
+      background: var(--bg-dark); color: #E8E4DC;
+      position: relative; overflow: hidden;
+    }
+    .takeaway-bg {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--serif);
+      font-size: clamp(8rem, 22vw, 16rem);
+      font-weight: 400; color: rgba(255,255,255,0.03);
+      line-height: 1; pointer-events: none; user-select: none;
+    }
+    .takeaway-inner { max-width: 640px; margin: 0 auto; position: relative; }
+    .takeaway-text {
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 3.2vw, 2rem);
+      font-weight: 400; line-height: 1.5; color: #F5F0E8;
+    }
+    .takeaway-sub { margin-top: 1.25rem; font-size: 0.85rem; color: #7A776D; letter-spacing: 0.04em; }
+
+    .project-info { padding: 5.5rem 3rem; border-top: 1px solid var(--border); }
+    .project-info-inner { max-width: 800px; margin: 0 auto; }
+    .project-info > .project-info-inner > h2 {
+      font-family: var(--serif); font-size: 1.65rem;
+      font-weight: 400; color: var(--text);
+      text-align: center; margin-bottom: 0.75rem;
+    }
+    .template-note {
+      text-align: center; font-size: 0.9rem; color: var(--text-muted);
+      margin-bottom: 2.5rem; max-width: 560px; margin-left: auto; margin-right: auto;
+    }
+    .info-grid { display: grid; grid-template-columns: 140px 1fr; gap: 1.75rem 2rem; }
+    .info-label {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent); padding-top: 0.15rem;
+    }
+    .info-text { font-size: 0.92rem; color: var(--text-muted); line-height: 1.75; }
+    .info-text a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .info-text a:hover { color: var(--text); }
+
+    .footer {
+      text-align: center; padding: 2.5rem 2rem;
+      background: var(--bg-dark); color: #5A574F;
+      font-size: 0.8rem; letter-spacing: 0.06em;
+    }
+
+    @media (max-width: 900px) {
+      .nav { padding: 1.25rem 1.5rem; }
+      .section { padding: 3.5rem 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .two-col--reverse .col-text,
+      .two-col--reverse .col-visual { order: unset; }
+      .info-grid { grid-template-columns: 1fr; gap: 0.4rem 0; }
+      .info-label { padding-top: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-back">← Portfolio</a>
+    <span class="nav-title">Artifact 5 · Decision trees</span>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true">If / Else</div>
+    <span class="hero-label reveal">Artifact 5 · Interpretable ML</span>
+    <h1 class="reveal reveal-delay-1">Decision Trees,<br>Step by Step</h1>
+    <p class="hero-sub reveal reveal-delay-2">A tiny model you can draw on a napkin — yet powerful enough to headline random forests and gradient boosting.</p>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Vector diagram: structure of a tree -->
+  <section class="section" style="padding-top: 1rem;">
+    <div class="section-inner">
+      <span class="section-label reveal">Picture 1 · Structure</span>
+      <h2 class="section-title reveal reveal-delay-1">What a decision tree looks like</h2>
+      <p class="section-text reveal reveal-delay-2" style="max-width: 720px; margin-bottom: 2rem;">Each <strong>internal node</strong> asks a yes-or-no question on one feature. Each <strong>branch</strong> is an answer. Each <strong>leaf</strong> is a prediction (a class label in classification, or a number in regression).</p>
+      <div class="diagram-wrap reveal reveal-delay-3" role="img" aria-label="Diagram of a binary decision tree with root, internal nodes, and four leaves">
+        <svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.12"/>
+            </filter>
+          </defs>
+          <rect width="640" height="320" fill="#FAF4EB"/>
+          <!-- edges -->
+          <path d="M320 52 L200 118 M320 52 L440 118" stroke="#A09C92" stroke-width="2" fill="none"/>
+          <path d="M200 154 L130 218 M200 154 L270 218" stroke="#C4A97D" stroke-width="1.75" fill="none"/>
+          <path d="M440 154 L370 218 M440 154 L510 218" stroke="#C4A97D" stroke-width="1.75" fill="none"/>
+          <!-- root -->
+          <rect x="250" y="12" width="140" height="44" rx="10" fill="#8B6E4E" filter="url(#s)"/>
+          <text x="320" y="40" text-anchor="middle" fill="#FAF4EB" font-family="Georgia,serif" font-size="15">Feature A &lt; t ?</text>
+          <!-- internal -->
+          <rect x="130" y="118" width="140" height="40" rx="8" fill="#fff" stroke="#8B6E4E" stroke-width="1.25"/>
+          <text x="200" y="143" text-anchor="middle" fill="#2C2C28" font-family="system-ui,sans-serif" font-size="12">Feature B ?</text>
+          <rect x="370" y="118" width="140" height="40" rx="8" fill="#fff" stroke="#8B6E4E" stroke-width="1.25"/>
+          <text x="440" y="143" text-anchor="middle" fill="#2C2C28" font-family="system-ui,sans-serif" font-size="12">Feature C ?</text>
+          <!-- leaves -->
+          <rect x="70" y="218" width="120" height="36" rx="8" fill="rgba(61,122,86,0.15)" stroke="#3d7a56"/>
+          <text x="130" y="241" text-anchor="middle" fill="#3d7a56" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Class 0</text>
+          <rect x="210" y="218" width="120" height="36" rx="8" fill="rgba(168,92,74,0.12)" stroke="#a85c4a"/>
+          <text x="270" y="241" text-anchor="middle" fill="#a85c4a" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Class 1</text>
+          <rect x="310" y="218" width="120" height="36" rx="8" fill="rgba(61,122,86,0.15)" stroke="#3d7a56"/>
+          <text x="370" y="241" text-anchor="middle" fill="#3d7a56" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Class 0</text>
+          <rect x="450" y="218" width="120" height="36" rx="8" fill="rgba(168,92,74,0.12)" stroke="#a85c4a"/>
+          <text x="510" y="241" text-anchor="middle" fill="#a85c4a" font-family="system-ui,sans-serif" font-size="12" font-weight="600">Class 1</text>
+          <text x="270" y="95" fill="#7A776D" font-family="system-ui,sans-serif" font-size="11">yes</text>
+          <text x="395" y="95" fill="#7A776D" font-family="system-ui,sans-serif" font-size="11">no</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm">
+    <div class="section-inner">
+      <div class="two-col">
+        <div class="col-text">
+          <span class="section-label reveal">Plain language</span>
+          <h2 class="section-title reveal reveal-delay-1">Questions, not magic</h2>
+          <p class="section-text reveal reveal-delay-2">Training finds good questions to ask about your inputs — thresholds on numeric features, or branches for categories — so that each leaf ends up with examples that mostly agree on the target label.</p>
+          <p class="section-text reveal reveal-delay-3">Because the path from root to leaf is a list of rules, you can explain a single prediction to a stakeholder without opening a thousand-dimensional weight matrix.</p>
+        </div>
+        <div class="col-visual">
+          <div class="diagram-wrap reveal reveal-delay-2" role="img" aria-label="Flow from raw rows to tree to prediction">
+            <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="220" fill="#FAF4EB"/>
+              <text x="70" y="36" fill="#8B6E4E" font-size="11" font-weight="600" font-family="system-ui,sans-serif">TABLE ROWS</text>
+              <rect x="20" y="48" width="100" height="22" rx="4" fill="#fff" stroke="#C4A97D"/><rect x="20" y="76" width="100" height="22" rx="4" fill="#fff" stroke="#C4A97D"/><rect x="20" y="104" width="100" height="22" rx="4" fill="#fff" stroke="#C4A97D"/>
+              <path d="M130 86 H175" stroke="#7A776D" stroke-width="2" marker-end="url(#arr)"/>
+              <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#7A776D"/></marker></defs>
+              <rect x="180" y="62" width="90" height="48" rx="8" fill="#8B6E4E"/>
+              <text x="225" y="92" text-anchor="middle" fill="#FAF4EB" font-size="12" font-family="system-ui,sans-serif" font-weight="600">Tree</text>
+              <path d="M275 86 H320" stroke="#7A776D" stroke-width="2" marker-end="url(#arr)"/>
+              <text x="330" y="36" fill="#8B6E4E" font-size="11" font-weight="600" font-family="system-ui,sans-serif">PREDICTION</text>
+              <rect x="325" y="72" width="55" height="28" rx="6" fill="rgba(61,122,86,0.2)" stroke="#3d7a56"/>
+              <text x="352" y="91" text-anchor="middle" fill="#2C2C28" font-size="12" font-weight="600" font-family="system-ui,sans-serif">ŷ</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Course portfolio template + screenshot -->
+  <section class="section">
+    <div class="section-inner">
+      <span class="section-label reveal">Course alignment</span>
+      <h2 class="section-title reveal reveal-delay-1">Artifact template (AIML portfolio)</h2>
+      <p class="section-text reveal reveal-delay-2" style="max-width: 720px; margin-bottom: 1.5rem;">This page is organized to match the program’s digital portfolio requirements: bio and value proposition live on the home page; each artifact includes the sections below in the “About this project” area.</p>
+      <div class="req-image reveal reveal-delay-3">
+        <img src="assets/a5-portfolio-requirements.png" alt="Screenshot of course document listing portfolio requirements and artifact sections: Title, Introduction, Description, Objective, Process, Tools and Technologies Used, Value Proposition with Unique Value and Relevance, and References">
+      </div>
+      <p class="req-caption reveal reveal-delay-3">Figure: Portfolio requirements as provided in the course materials.</p>
+    </div>
+  </section>
+
+  <!-- Simple example: interactive -->
+  <section class="section section--warm">
+    <div class="section-inner">
+      <span class="section-label reveal">Simple example</span>
+      <h2 class="section-title reveal reveal-delay-1">Walk a classic “play outside?” tree</h2>
+      <p class="section-text reveal reveal-delay-2" style="text-align: center; max-width: 560px; margin: 0 auto 2rem;">This matches the toy examples used in intro ML courses (similar spirit to the “play tennis” dataset). Tap <strong>Yes</strong> or <strong>No</strong> at each step; the path you take is a branch in a decision tree.</p>
+      <div class="dt-demo reveal reveal-delay-3">
+        <h3>Should we play outside?</h3>
+        <p class="hint">Three nodes deep — then a leaf prediction.</p>
+        <p class="question" id="dt-question">Is it sunny today?</p>
+        <div class="btn-row" id="dt-buttons">
+          <button type="button" class="btn-yes" id="dt-yes">Yes</button>
+          <button type="button" class="btn-no" id="dt-no">No</button>
+        </div>
+        <div class="result play" id="dt-result-play">Prediction: <strong>Play outside</strong> — conditions look good.</div>
+        <div class="result stay" id="dt-result-stay">Prediction: <strong>Stay inside</strong> — weather is too rough.</div>
+        <p class="path-log" id="dt-path" aria-live="polite"></p>
+        <button type="button" class="btn-reset" id="dt-reset">Start over</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="takeaway">
+    <div class="takeaway-bg" aria-hidden="true">Split</div>
+    <div class="takeaway-inner reveal">
+      <p class="takeaway-text">Trees trade some raw accuracy for clarity — and ensembles of trees trade some clarity back for state-of-the-art accuracy.</p>
+      <p class="takeaway-sub">Understand the single tree first; the forest is just teamwork.</p>
+    </div>
+  </section>
+
+  <section class="project-info">
+    <div class="project-info-inner">
+      <h2 class="reveal">About this project</h2>
+      <p class="template-note reveal reveal-delay-1">Structured per the course artifact template (title in the hero; remaining items in this grid).</p>
+      <div class="info-grid reveal reveal-delay-2">
+        <span class="info-label">Introduction</span>
+        <span class="info-text">Decision trees are one of the most approachable models in supervised learning: they encode decisions as nested rules. This artifact introduces their structure, shows a visual diagram and a hands-on path through a toy problem, and connects the topic to portfolio expectations for AIML coursework.</span>
+
+        <span class="info-label">Description</span>
+        <span class="info-text">The page combines narrative explanation, two static illustrations (tree topology and data-to-prediction flow), a screenshot of the official portfolio requirements, and a small interactive demo that simulates traversing a binary tree. Together they show how classification can be presented without equations while still remaining precise.</span>
+
+        <span class="info-label">Objective</span>
+        <span class="info-text">Help a reader with minimal ML background understand what a decision tree is, how a prediction is produced by following branches, and why interpretability matters — while documenting the work in the format required for the final digital portfolio.</span>
+
+        <span class="info-label">Process</span>
+        <span class="info-text">Mapped course rubric headings to page sections; drafted copy aligned with standard treatments of binary splits and leaves; designed SVG figures for layout-independent “pictures”; implemented the walkthrough as a small state machine in JavaScript; validated accessibility (alt text, aria-live on path log).</span>
+
+        <span class="info-label">Tools and technologies used</span>
+        <span class="info-text">HTML5, CSS (layout, typography, responsive breakpoints), JavaScript (DOM updates for the demo), SVG for diagrams, and static PNG for the course requirements figure.</span>
+
+        <span class="info-label">Value proposition</span>
+        <span class="info-text">Delivers a self-contained teaching artifact: visuals plus interaction in one static page, suitable for sharing with instructors or employers without extra tooling.</span>
+
+        <span class="info-label">Unique value</span>
+        <span class="info-text">The interactive path mirrors real tree inference step-by-step, and the portfolio-requirements figure explicitly ties the page to the program’s artifact checklist — uncommon in generic tutorials.</span>
+
+        <span class="info-label">Relevance</span>
+        <span class="info-text">Decision trees and their ensembles (random forest, gradient boosting) appear across industry tabular ML, credit risk, churn, and fault triage. Interpretable baselines are also increasingly important next to black-box models for audit and trust.</span>
+
+        <span class="info-label">References</span>
+        <span class="info-text">Breiman, L., Friedman, J., Olshen, R., &amp; Stone, C. (1984). <em>Classification and Regression Trees</em>. Chapman &amp; Hall. Mitchell, T. M. (1997). <em>Machine Learning</em>, Chapter 3. scikit-learn documentation: <a href="https://scikit-learn.org/stable/modules/tree.html" target="_blank" rel="noopener">Decision Trees</a>. Course materials: AIML-500, Indiana Wesleyan University (portfolio requirements).</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    © 2026 Abel Edea
+  </footer>
+
+  <script>
+    (function () {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+      /* states: 0 sunny?, 1 humidity (from sunny), 2 wind (from not sunny) */
+      const questionEl = document.getElementById('dt-question');
+      const btnYes = document.getElementById('dt-yes');
+      const btnNo = document.getElementById('dt-no');
+      const btnRow = document.getElementById('dt-buttons');
+      const resPlay = document.getElementById('dt-result-play');
+      const resStay = document.getElementById('dt-result-stay');
+      const pathEl = document.getElementById('dt-path');
+      const resetBtn = document.getElementById('dt-reset');
+
+      let state = 0;
+      const path = [];
+
+      function hideResults() {
+        resPlay.classList.remove('show');
+        resStay.classList.remove('show');
+      }
+
+      function showEnd(play) {
+        btnRow.style.display = 'none';
+        hideResults();
+        if (play) resPlay.classList.add('show');
+        else resStay.classList.add('show');
+        pathEl.textContent = 'Path: ' + path.join(' → ');
+      }
+
+      function setState(next) {
+        state = next;
+        hideResults();
+        btnRow.style.display = 'flex';
+        if (state === 0) {
+          questionEl.textContent = 'Is it sunny today?';
+        } else if (state === 1) {
+          questionEl.textContent = 'Is humidity high?';
+        } else if (state === 2) {
+          questionEl.textContent = 'Is the wind strong?';
+        }
+      }
+
+      function onAnswer(yes) {
+        path.push(yes ? 'Yes' : 'No');
+        if (state === 0) {
+          if (yes) setState(1);
+          else setState(2);
+          return;
+        }
+        if (state === 1) {
+          showEnd(!yes);
+          return;
+        }
+        if (state === 2) {
+          showEnd(!yes);
+        }
+      }
+
+      btnYes.addEventListener('click', () => onAnswer(true));
+      btnNo.addEventListener('click', () => onAnswer(false));
+      resetBtn.addEventListener('click', () => {
+        state = 0;
+        path.length = 0;
+        pathEl.textContent = '';
+        setState(0);
+      });
+
+      setState(0);
+    })();
+  </script>
+
+</body>
+</html>
