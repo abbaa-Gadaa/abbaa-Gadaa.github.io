@@ -84,6 +84,16 @@
   .note.baby{border-color:var(--baby); background:color-mix(in srgb,var(--baby) 7%,transparent)}
   .note.llm{border-color:var(--llm); background:color-mix(in srgb,var(--llm) 8%,transparent)}
 
+  /* example callout */
+  .eg{background:color-mix(in srgb,var(--acc) 4%,var(--card)); border:1px solid var(--border); border-left:3px solid var(--acc); border-radius:0 12px 12px 0; padding:14px 17px; margin:18px 0; font-size:14.5px; color:var(--ink-2); box-shadow:var(--shadow)}
+  .eg .lbl2{font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--acc); margin-bottom:8px}
+  .eg p{margin:0 0 8px; max-width:none} .eg p:last-child{margin:0}
+  .eg b{color:var(--ink)}
+  .eg .m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px; background:color-mix(in srgb,var(--ink) 7%,transparent); padding:1.5px 6px; border-radius:5px; color:var(--ink); white-space:nowrap}
+  .eg .arrow{color:var(--muted); padding:0 4px}
+  .eg.baby{border-left-color:var(--baby); background:color-mix(in srgb,var(--baby) 5%,var(--card))} .eg.baby .lbl2{color:var(--baby)}
+  .eg.llm{border-left-color:var(--llm); background:color-mix(in srgb,var(--llm) 6%,var(--card))} .eg.llm .lbl2{color:var(--llm)}
+
   /* mini timeline */
   .mtl{margin:18px 0; display:flex; flex-direction:column; gap:0}
   .mtl-row{display:grid; grid-template-columns:120px 1fr; gap:16px}
@@ -233,6 +243,12 @@
     </svg>
     <figcaption>A large share of the world's languages — by many counts something close to half — use lexical tone this way. A text LLM, by contrast, never sees this pitch curve at all, which is the crux of the comparison below.</figcaption>
   </figure>
+
+  <div class="eg">
+    <div class="lbl2">Make it concrete</div>
+    <p>English uses pitch too — just not to change what a word <em>means</em>. Say <span class="m">really</span> with your voice rising at the end and it's a question or a jab of surprise (<i>really?!</i>); say it with your voice falling flat and it's deadpan, even sarcastic (<i>really.</i>). Same word, same letters — pitch changed your <b>attitude</b>.</p>
+    <p>Now imagine a language where that same pitch swing changes the word itself, the way "cat" and "dog" are different words. That's lexical tone: slide <span class="m">ma</span> from a high flat pitch to a dip-then-rise and, in Mandarin, <b>"mother"</b> becomes <b>"horse."</b> For a baby, then, pitch is doing two jobs at once — attitude <em>and</em>, in some languages, identity. Untangling those is part of the job.</p>
+  </div>
 </section>
 
 <!-- ============ THE BABY ============ -->
@@ -250,6 +266,12 @@
     <div class="mtl-row"><div class="mtl-age">1–2 yr</div><div class="mtl-b"><div class="mtl-card"><b>Tone becomes lexical.</b> Toddlers in tone languages use pitch to tell words apart and lock in meanings — pitch is now part of the word. The specialization even reshapes the cortex: Mandarin speakers develop enhanced categorical tuning to native tones and longer pitch-integration windows than English speakers, atop a shared, language-independent relative-pitch code<a class="cite" href="#r7">7</a>.</div></div></div>
   </div>
 
+  <div class="eg baby">
+    <div class="lbl2">What "narrowing" feels like</div>
+    <p>You've met this from the other side. To many native Japanese speakers, English <span class="m">rice</span> and <span class="m">lice</span>, or <span class="m">right</span> and <span class="m">light</span>, sound nearly the same — Japanese doesn't use the R/L contrast, so the brain stopped tracking it after infancy. A Japanese <em>baby</em> at 6 months hears the difference fine; the adult often genuinely can't.</p>
+    <p>Tone narrowing is that exact story, on pitch. An English-learning baby who could tell Mandarin <b>mā</b> (mother) from <b>mǎ</b> (horse) at 6 months treats them as "the same word" by 9 months — English never asked it to keep that pitch distinction, so it quietly drops it.</p>
+  </div>
+
   <div class="note baby"><b>The key move.</b> No one hands the baby labeled examples of "tone 2 vs. tone 3." The categories are <em>discovered</em> from the distribution of pitch in ambient speech<a class="cite" href="#r9">9</a>, then locked in by a developmental window. Hold onto that — it's exactly where the LLM comparison gets interesting.</div>
 </section>
 
@@ -262,10 +284,26 @@
   <h3>It's a side effect of predicting the next token</h3>
   <p>An LLM is trained only to predict the next token over enormous amounts of text. But to do that well, it <em>has</em> to model tone: a formal email and an angry tweet continue very differently, so a model that ignored register would predict badly. Tone-sensitivity emerges because it lowers the loss — not because anyone labeled it. This is the same "discover structure from prediction" logic as the baby, just with a different objective.</p>
 
+  <div class="eg llm">
+    <div class="lbl2">See it predicting tone</div>
+    <p>Give a model two openings and watch what it wants to type next:</p>
+    <p><span class="m">Dear Professor Chen, I am writing to</span> <span class="arrow">→</span> <i>respectfully request a short extension…</i></p>
+    <p><span class="m">yooo did you SEE that 😭😭</span> <span class="arrow">→</span> <i>that was actually insane lmaooo</i></p>
+    <p>Nobody labeled one "formal" and the other "casual." The model continues them so differently only because, to guess the next word well, it had to internally clock the tone first. That <em>is</em> the mechanism — tone is what it picks up on the way to a good prediction.</p>
+  </div>
+
   <h3>Tone lives as a direction in representation space</h3>
   <p>Strikingly, tone often ends up encoded in a compact, almost linear way inside the network. In a famous 2017 result, an unsupervised 4,096-unit model trained only to predict the next character in 82 million Amazon reviews developed a single unit — the <em class="term">"sentiment neuron"</em> — that tracked positive vs. negative sentiment with no sentiment labels ever provided; overwriting that one unit's value even steers the sentiment of what the model generates<a class="cite" href="#r10">10</a>. More broadly, the <em class="term">linear representation hypothesis</em> holds that features like sentiment and formality correspond to directions in activation space that you can probe for and <em>steer</em> along<a class="cite" href="#r11">11</a>. Recent probing work finds a single sentiment direction that multiple methods agree on, and shows it is causally load-bearing — ablate it and sentiment-task accuracy collapses from 100% to 62%<a class="cite" href="#r12">12</a>.</p>
 
-  <p>One detail is almost poetic: that sentiment isn't stored only on obviously emotional words. Models <em>summarize</em> tone at neutral positions — punctuation and names — so that ablating the direction at the <strong>commas alone</strong> already drops accuracy sharply<a class="cite" href="#r12">12</a>. The model builds a running estimate of "how does this feel" and parks it on the scaffolding of the sentence.</p>
+  <div class="eg llm">
+    <div class="lbl2">Tone as a dial</div>
+    <p>Because sentiment sits on (roughly) a single direction, you can turn it like a knob. Take one neutral start, <span class="m">This product is</span>, and nudge that internal unit:</p>
+    <p>push it <b>positive</b> <span class="arrow">→</span> <i>…the best purchase I've made all year.</i></p>
+    <p>push it <b>negative</b> <span class="arrow">→</span> <i>…a complete waste of money.</i></p>
+    <p>Same prompt, one dial, opposite tone. That's what "tone is a direction in representation space" cashes out to — not a metaphor, an actual axis you can slide.</p>
+  </div>
+
+  <p>One detail is almost poetic: sentiment isn't stored only on obviously emotional words. Models <em>summarize</em> tone at neutral positions — punctuation and names — so that ablating the direction at the <strong>commas alone</strong> already drops accuracy sharply<a class="cite" href="#r12">12</a>. The model builds a running estimate of "how does this feel" and parks it on the scaffolding of the sentence, the way you might feel the mood of an email before you've consciously read a word.</p>
 
   <div class="note llm"><b>Attention supplies the context tone needs.</b> Tone is contextual — "great, another meeting" is only sarcastic given surrounding cues. The transformer's self-attention lets each token pull in that context, which is how a model resolves sarcasm, irony, and register from text.</div>
 
