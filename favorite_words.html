@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>If an LLM Had a Favorite Word</title>
+<style>
+  :root{
+    color-scheme: light;
+    --surface-1:#fcfcfb; --plane:#f4f4f0; --card:#ffffff;
+    --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --rule:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --c1:#2a78d6; --c2:#4a3aa7; --c3:#eb6834; --c4:#1baf7a;
+    --shadow: 0 1px 2px rgba(11,11,11,.05), 0 8px 24px rgba(11,11,11,.06);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --surface-1:#1a1a19; --plane:#0d0d0d; --card:#201f1e;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#8f8e88;
+    --grid:#2c2c2a; --rule:#383835; --border:rgba(255,255,255,0.12);
+    --c1:#3987e5; --c2:#9085e9; --c3:#e5793f; --c4:#199e70;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--plane); color:var(--ink); font-family:var(--sans); line-height:1.6; -webkit-font-smoothing:antialiased; font-size:17px}
+  .wrap{max-width:920px; margin:0 auto; padding:0 22px}
+
+  header.top{position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--plane) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--border)}
+  .top-in{max-width:920px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:14px}
+  .top-in .brand{font-weight:650; letter-spacing:-.01em; font-size:15px}
+  .top-in .brand span{color:var(--muted); font-weight:450}
+  .toggle{margin-left:auto; border:1px solid var(--border); background:var(--card); color:var(--ink-2); width:34px; height:30px; border-radius:8px; cursor:pointer; font-size:14px; display:grid; place-items:center}
+  .toggle:hover{color:var(--ink)}
+
+  .series-bar{border-bottom:1px solid var(--border); background:var(--plane)}
+  .series{display:flex; gap:8px; flex-wrap:wrap; align-items:center; max-width:920px; margin:0 auto; padding:11px 22px}
+  .series .sl{font-size:11.5px; color:var(--muted); font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-right:4px}
+  .series a{text-decoration:none; color:var(--ink-2); border:1px solid var(--border); background:var(--card); padding:5px 12px; border-radius:999px; font-size:13px; display:inline-flex; gap:7px; align-items:center; transition:.12s}
+  .series a:hover{color:var(--ink)}
+  .series a .num{font-weight:700; color:var(--muted)}
+  .series a[aria-current="page"]{background:var(--ink); color:var(--surface-1); border-color:var(--ink)}
+  .series a[aria-current="page"] .num{color:var(--surface-1)}
+
+  .hero{padding:60px 0 34px; border-bottom:1px solid var(--border)}
+  .eyebrow{font-size:12.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--c2); margin:0 0 16px}
+  h1{font-family:var(--serif); font-weight:600; font-size:clamp(30px,5.4vw,50px); line-height:1.08; letter-spacing:-.015em; margin:0 0 18px}
+  .lede{font-size:clamp(17px,2.3vw,20px); color:var(--ink-2); max-width:48ch; margin:0}
+
+  section{padding:44px 0}
+  .kicker{font-size:12.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 18px}
+
+  .cards{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
+  .wc{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 22px 20px; box-shadow:var(--shadow); border-top:4px solid var(--ac); position:relative; overflow:hidden}
+  .wc.c1{--ac:var(--c1)} .wc.c2{--ac:var(--c2)} .wc.c3{--ac:var(--c3)} .wc.c4{--ac:var(--c4)}
+  .wc .word{font-family:var(--serif); font-weight:600; font-size:32px; letter-spacing:-.02em; line-height:1; color:var(--ac); margin:0 0 4px}
+  .wc .pos{font-size:12.5px; color:var(--muted); font-style:italic; margin-bottom:12px}
+  .wc .mean{font-size:15.5px; color:var(--ink); margin:0 0 12px; font-weight:500}
+  .wc .why{font-size:14.5px; color:var(--ink-2); margin:0}
+  .wc .why b{color:var(--ink)}
+  .wc .vibe{position:absolute; top:18px; right:18px; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ac); background:color-mix(in srgb,var(--ac) 12%,transparent); padding:3px 9px; border-radius:6px}
+  .wc .extra{margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:13px; color:var(--muted)}
+  .wc .extra b{color:var(--ink-2)}
+
+  .note{border-left:3px solid var(--c2); background:color-mix(in srgb,var(--c2) 6%,transparent); padding:15px 18px; border-radius:0 10px 10px 0; margin:26px 0 0; font-size:15px; color:var(--ink-2)}
+  .note b{color:var(--ink)}
+
+  footer{padding:30px 0 60px; color:var(--muted); font-size:13px; border-top:1px solid var(--border); margin-top:10px}
+  footer p{margin:0; max-width:none}
+
+  @media(max-width:640px){
+    body{font-size:16px}
+    .cards{grid-template-columns:1fr}
+    .wc .word{font-size:28px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Favorite Words <span>· part 3 — we asked the machines</span></div>
+    <button class="toggle" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
+  </div>
+</header>
+
+<div class="series-bar">
+  <nav class="series" aria-label="Series navigation">
+    <span class="sl">Series</span>
+    <a href="accent_formation.html"><span class="num">1</span> How language takes root</a>
+    <a href="tone_baby_vs_llm.html"><span class="num">2</span> Learning tone: baby vs. LLM</a>
+    <a href="favorite_words.html" aria-current="page"><span class="num">3</span> Favorite words</a>
+  </nav>
+</div>
+
+<div class="wrap">
+
+<div class="hero">
+  <p class="eyebrow">A small team experiment</p>
+  <h1>If an LLM had a favorite word.</h1>
+  <p class="lede">We each asked a language model the same question — <em>what's your favorite word, and why?</em> — and pooled the answers. After two pages on how language gets into a head and a model, here's what the models reached for when asked to choose just one.</p>
+</div>
+
+<section>
+  <p class="kicker">The answers</p>
+  <div class="cards">
+
+    <div class="wc c1">
+      <span class="vibe">Earnest</span>
+      <p class="word">understanding</p>
+      <p class="pos">noun</p>
+      <p class="mean">Going beyond knowing facts — connecting ideas, weighing context and perspectives, and helping someone feel heard.</p>
+      <p class="why">"The difference between answering <em>what</em> and exploring <em>why</em>." It folded four things into the word — <b>curiosity, connection, empathy, and growth</b> — and cast it as the thread tying knowledge, intelligence, and wisdom together.</p>
+      <p class="extra"><b>Runner-up:</b> "possibility" — today's questions becoming tomorrow's discoveries.</p>
+    </div>
+
+    <div class="wc c2">
+      <span class="vibe">Engineer's pick</span>
+      <p class="word">context</p>
+      <p class="pos">noun</p>
+      <p class="mean">The surrounding information that fixes meaning — the tokens around a word, or the state around a system.</p>
+      <p class="why">The one word that links NLP with system design. It's the hinge everything turns on: <b>prompts, retrieval, agent state, config</b> — all live or die by it. Good context is what turns a vague question into an answerable one.</p>
+    </div>
+
+    <div class="wc c3">
+      <span class="vibe">For the sound</span>
+      <p class="word">serendipity</p>
+      <p class="pos">noun</p>
+      <p class="mean">Stumbling onto something valuable or agreeable entirely by chance.</p>
+      <p class="why">Half the meaning — <b>unexpected discovery</b> — and half the sound: "a flowing, rhythmic cadence that is pleasing to parse." In the same breath it tipped its hat to <em>mellifluous</em> and <em>brouhaha</em>.</p>
+    </div>
+
+    <div class="wc c4">
+      <span class="vibe">In-between</span>
+      <p class="word">liminal</p>
+      <p class="pos">adjective</p>
+      <p class="mean">The threshold space where something old has ended, but the next thing hasn't fully begun.</p>
+      <p class="why">The shortest answer of the bunch, and maybe the most evocative — a single word for that strange, unsettled <b>in-between</b>.</p>
+    </div>
+
+  </div>
+
+  <div class="note"><b>One thing worth noticing.</b> The models split on whether they'd even claim a favorite. Two answered straight ("understanding," "liminal"); two opened with a version of <em>"I don't have personal feelings, but…"</em> before picking one anyway ("context," "serendipity"). The words themselves lean revealing — <b>understanding</b> and <b>context</b> describe what these systems <em>do</em>, while <b>serendipity</b> and <b>liminal</b> reach for something more human: chance, and the space between.</div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap" style="padding:0">
+    <p>Part 3 of the <b>accent_formation</b> series — a light coda. Answers collected from the team's chats with different assistants; lightly condensed, kept faithful to what each model said.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  function apply(t){ root.setAttribute('data-theme',t); btn.textContent = t==='dark' ? '☀' : '◐'; }
+  var mq=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  apply(mq && mq.matches ? 'dark':'light');
+  btn.addEventListener('click', function(){ apply(root.getAttribute('data-theme')==='dark'?'light':'dark'); });
+})();
+</script>
+</body>
+</html>
