@@ -43,6 +43,15 @@
   .toggle{border:1px solid var(--border); background:var(--card); color:var(--ink-2); width:34px; height:30px; border-radius:8px; cursor:pointer; font-size:14px; display:grid; place-items:center}
   .toggle:hover{color:var(--ink)}
 
+  .series-bar{border-bottom:1px solid var(--border); background:var(--plane)}
+  .series{display:flex; gap:8px; flex-wrap:wrap; align-items:center; max-width:920px; margin:0 auto; padding:11px 22px}
+  .series .sl{font-size:11.5px; color:var(--muted); font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-right:4px}
+  .series a{text-decoration:none; color:var(--ink-2); border:1px solid var(--border); background:var(--card); padding:5px 12px; border-radius:999px; font-size:13px; display:inline-flex; gap:7px; align-items:center; transition:.12s}
+  .series a:hover{color:var(--ink)}
+  .series a .num{font-weight:700; color:var(--muted)}
+  .series a[aria-current="page"]{background:var(--ink); color:var(--surface-1); border-color:var(--ink)}
+  .series a[aria-current="page"] .num{color:var(--surface-1)}
+
   .hero{padding:60px 0 30px; border-bottom:1px solid var(--border)}
   .eyebrow{font-size:12.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--baby); margin:0 0 16px}
   .eyebrow b{color:var(--llm)}
@@ -174,6 +183,14 @@
   </div>
 </header>
 
+<div class="series-bar">
+  <nav class="series" aria-label="Series navigation">
+    <span class="sl">Series</span>
+    <a href="accent_formation.html"><span class="num">1</span> How language takes root</a>
+    <a href="tone_baby_vs_llm.html" aria-current="page"><span class="num">2</span> Learning tone: baby vs. LLM</a>
+  </nav>
+</div>
+
 <div class="wrap">
 
 <div class="hero">
@@ -184,7 +201,7 @@
     <span><b>Compares</b>&nbsp; infant pitch perception vs. LLM tone representation</span>
     <span><b>Audience</b>&nbsp; semi-academic</span>
   </div>
-  <p class="partlink">◄ Continues from <a href="accent_formation.html">Part 1 — How language takes root</a>. Statistical learning shows up in both.</p>
+  <p class="partlink">Part 2 of the series — the statistical-learning thread from Part 1 runs straight through it.</p>
 </div>
 
 <!-- ============ WHAT IS TONE ============ -->

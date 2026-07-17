@@ -59,6 +59,17 @@
   }
   .toggle:hover{color:var(--ink)}
 
+  /* ---------- series pager ---------- */
+  .series-bar{border-bottom:1px solid var(--border); background:var(--plane)}
+  .series{display:flex; gap:8px; flex-wrap:wrap; align-items:center; max-width:920px; margin:0 auto; padding:11px 22px}
+  .series .sl{font-size:11.5px; color:var(--muted); font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-right:4px}
+  .series a{text-decoration:none; color:var(--ink-2); border:1px solid var(--border); background:var(--card); padding:5px 12px; border-radius:999px; font-size:13px; display:inline-flex; gap:7px; align-items:center; transition:.12s}
+  .series a:hover{color:var(--ink)}
+  .series a .num{font-weight:700; color:var(--muted)}
+  .series a[aria-current="page"]{background:var(--ink); color:var(--surface-1); border-color:var(--ink)}
+  .series a[aria-current="page"] .num{color:var(--surface-1)}
+  .series .soon{opacity:.5; border-style:dashed; cursor:default}
+
   /* ---------- hero ---------- */
   .hero{padding:64px 0 30px; border-bottom:1px solid var(--border)}
   .eyebrow{
@@ -224,6 +235,14 @@
     <button class="toggle" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
   </div>
 </header>
+
+<div class="series-bar">
+  <nav class="series" aria-label="Series navigation">
+    <span class="sl">Series</span>
+    <a href="accent_formation.html" aria-current="page"><span class="num">1</span> How language takes root</a>
+    <a href="tone_baby_vs_llm.html"><span class="num">2</span> Learning tone: baby vs. LLM</a>
+  </nav>
+</div>
 
 <div class="wrap">
 
