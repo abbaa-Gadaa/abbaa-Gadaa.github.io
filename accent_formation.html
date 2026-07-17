@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Language Takes Root — Acquisition, Production &amp; the Accent Window</title>
+<style>
+  :root{
+    color-scheme: light;
+    --surface-1:#fcfcfb; --plane:#f4f4f0; --card:#ffffff;
+    --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --rule:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --perc:#2a78d6;   /* perception  - blue   */
+    --prod:#eb6834;   /* production  - orange */
+    --acc:#b5316b;    /* accent      - magenta*/
+    --neur:#4a3aa7;   /* neural      - violet */
+    --good:#006300;
+    --shadow: 0 1px 2px rgba(11,11,11,.05), 0 8px 24px rgba(11,11,11,.06);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --surface-1:#1a1a19; --plane:#0d0d0d; --card:#1f1f1e;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#8f8e88;
+    --grid:#2c2c2a; --rule:#383835; --border:rgba(255,255,255,0.12);
+    --perc:#3987e5; --prod:#e5793f; --acc:#dd6fa0; --neur:#9085e9; --good:#4fb14f;
+    --card:#201f1e;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--plane); color:var(--ink);
+    font-family:var(--sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased; font-size:17px;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 22px}
+
+  /* ---------- header ---------- */
+  header.top{
+    position:sticky; top:0; z-index:50;
+    background:color-mix(in srgb, var(--plane) 88%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
+  }
+  .top-in{max-width:920px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:14px}
+  .top-in .brand{font-weight:650; letter-spacing:-.01em; font-size:15px}
+  .top-in .brand span{color:var(--muted); font-weight:450}
+  .top-nav{margin-left:auto; display:flex; gap:4px; flex-wrap:wrap}
+  .top-nav a{
+    font-size:13px; color:var(--ink-2); text-decoration:none; padding:5px 9px;
+    border-radius:7px;
+  }
+  .top-nav a:hover{background:var(--card); color:var(--ink)}
+  .toggle{
+    border:1px solid var(--border); background:var(--card); color:var(--ink-2);
+    width:34px; height:30px; border-radius:8px; cursor:pointer; font-size:14px;
+    display:grid; place-items:center;
+  }
+  .toggle:hover{color:var(--ink)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:64px 0 30px; border-bottom:1px solid var(--border)}
+  .eyebrow{
+    font-size:12.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--perc); margin:0 0 16px;
+  }
+  h1{
+    font-family:var(--serif); font-weight:600; font-size:clamp(30px,5.4vw,50px);
+    line-height:1.08; letter-spacing:-.015em; margin:0 0 18px;
+  }
+  .lede{font-size:clamp(17px,2.3vw,20px); color:var(--ink-2); max-width:44ch; margin:0}
+  .meta-row{display:flex; gap:22px; flex-wrap:wrap; margin-top:26px; font-size:13.5px; color:var(--muted)}
+  .meta-row b{color:var(--ink-2); font-weight:600}
+
+  /* ---------- section scaffolding ---------- */
+  section{padding:52px 0; border-bottom:1px solid var(--border)}
+  .kicker{font-size:12.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+  h2{font-family:var(--serif); font-weight:600; font-size:clamp(24px,3.6vw,33px); line-height:1.15; letter-spacing:-.01em; margin:0 0 16px}
+  h3{font-size:19px; font-weight:650; letter-spacing:-.01em; margin:30px 0 8px}
+  p{margin:0 0 16px; max-width:68ch}
+  .dim{color:var(--ink-2)}
+  a.cite{
+    color:var(--perc); text-decoration:none; font-weight:600; font-size:.82em;
+    vertical-align:.35em; padding:0 1px;
+  }
+  a.cite:hover{text-decoration:underline}
+  strong{font-weight:650}
+  em.term{font-style:normal; font-weight:600; color:var(--neur)}
+
+  /* ---------- legend / filter ---------- */
+  .controls{
+    position:sticky; top:52px; z-index:40; margin:0 0 4px;
+    background:color-mix(in srgb, var(--plane) 90%, transparent);
+    backdrop-filter:blur(8px);
+    display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+    padding:12px 0;
+  }
+  .controls .lbl{font-size:12.5px; color:var(--muted); margin-right:2px}
+  .chip{
+    border:1px solid var(--border); background:var(--card); color:var(--ink-2);
+    padding:6px 12px; border-radius:999px; font-size:13px; cursor:pointer;
+    font-family:inherit; display:inline-flex; align-items:center; gap:7px; transition:.12s;
+  }
+  .chip:hover{color:var(--ink)}
+  .chip .dot{width:9px; height:9px; border-radius:50%; background:var(--muted)}
+  .chip[data-k="perc"] .dot{background:var(--perc)} .chip[data-k="prod"] .dot{background:var(--prod)}
+  .chip[data-k="acc"] .dot{background:var(--acc)} .chip[data-k="neur"] .dot{background:var(--neur)}
+  .chip[aria-pressed="true"]{background:var(--ink); color:var(--surface-1); border-color:var(--ink)}
+  .chip[aria-pressed="true"] .dot{outline:2px solid var(--surface-1); outline-offset:1px}
+
+  /* ---------- timeline ---------- */
+  .tl{position:relative; margin:24px 0 8px; padding-left:0}
+  .tl-item{
+    position:relative; display:grid; grid-template-columns:132px 1fr; gap:20px;
+    padding:0 0 8px;
+  }
+  .tl-age{
+    text-align:right; padding-top:16px; position:relative;
+  }
+  .tl-age .a1{font-weight:700; font-size:15px; letter-spacing:-.01em; font-variant-numeric:tabular-nums}
+  .tl-age .a2{font-size:12px; color:var(--muted); margin-top:1px}
+  .tl-body{
+    position:relative; border-left:2px solid var(--grid); padding:0 0 26px 26px;
+  }
+  .tl-body::before{
+    content:""; position:absolute; left:-8px; top:18px; width:14px; height:14px;
+    border-radius:50%; background:var(--card); border:2.5px solid var(--rule);
+  }
+  .tl-item[data-lead="perc"] .tl-body::before{border-color:var(--perc)}
+  .tl-item[data-lead="prod"] .tl-body::before{border-color:var(--prod)}
+  .tl-item[data-lead="acc"] .tl-body::before{border-color:var(--acc)}
+  .tl-item[data-lead="neur"] .tl-body::before{border-color:var(--neur)}
+  .tl-card{
+    background:var(--card); border:1px solid var(--border); border-radius:13px;
+    padding:15px 17px; box-shadow:var(--shadow);
+  }
+  .tl-card h4{margin:0 0 9px; font-size:16.5px; font-weight:650; letter-spacing:-.01em; display:flex; align-items:center; gap:9px}
+  .tag{
+    font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    padding:2px 7px; border-radius:5px; white-space:nowrap;
+  }
+  .tag.perc{color:var(--perc); background:color-mix(in srgb,var(--perc) 13%,transparent)}
+  .tag.prod{color:var(--prod); background:color-mix(in srgb,var(--prod) 15%,transparent)}
+  .tag.acc{color:var(--acc); background:color-mix(in srgb,var(--acc) 14%,transparent)}
+  .tag.neur{color:var(--neur); background:color-mix(in srgb,var(--neur) 15%,transparent)}
+  .rows{display:flex; flex-direction:column; gap:9px; margin-top:4px}
+  .r{display:grid; grid-template-columns:20px 1fr; gap:9px; font-size:14.5px; align-items:start}
+  .r .ic{margin-top:3px; width:11px; height:11px; border-radius:3px}
+  .r.perc .ic{background:var(--perc)} .r.prod .ic{background:var(--prod)}
+  .r.acc .ic{background:var(--acc)} .r.neur .ic{background:var(--neur)}
+  .r p{margin:0; color:var(--ink-2); max-width:none}
+  .r p b{color:var(--ink)}
+  .tl-item.dim-out{opacity:.28; filter:saturate(.4)}
+  .tl-item.dim-out .tl-card{box-shadow:none}
+  .tl-item{transition:opacity .2s, filter .2s}
+
+  /* ---------- plasticity curve figure ---------- */
+  figure{margin:26px 0; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px 20px 14px; box-shadow:var(--shadow)}
+  figure svg{width:100%; height:auto; display:block}
+  figcaption{font-size:13px; color:var(--muted); margin-top:12px; max-width:70ch}
+  .fig-title{font-size:15px; font-weight:650; margin:0 0 2px}
+  .fig-sub{font-size:13px; color:var(--ink-2); margin:0 0 6px}
+
+  /* ---------- callout ---------- */
+  .note{
+    border-left:3px solid var(--neur); background:color-mix(in srgb,var(--neur) 6%,transparent);
+    padding:14px 18px; border-radius:0 10px 10px 0; margin:22px 0; font-size:15px; color:var(--ink-2);
+  }
+  .note b{color:var(--ink)}
+  .note.warn{border-color:var(--prod); background:color-mix(in srgb,var(--prod) 7%,transparent)}
+
+  /* ---------- key-number strip ---------- */
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:24px 0}
+  .stat{background:var(--card); border:1px solid var(--border); border-radius:13px; padding:16px; box-shadow:var(--shadow)}
+  .stat .n{font-size:27px; font-weight:700; letter-spacing:-.02em; line-height:1; font-variant-numeric:tabular-nums}
+  .stat .l{font-size:13px; color:var(--ink-2); margin-top:7px; line-height:1.4}
+  .stat.perc .n{color:var(--perc)} .stat.prod .n{color:var(--prod)}
+  .stat.acc .n{color:var(--acc)} .stat.neur .n{color:var(--neur)}
+
+  /* ---------- references ---------- */
+  ol.refs{margin:8px 0 0; padding:0; counter-reset:r; list-style:none}
+  ol.refs li{
+    position:relative; padding:11px 0 11px 40px; border-top:1px solid var(--border);
+    font-size:14px; color:var(--ink-2); counter-increment:r;
+  }
+  ol.refs li::before{
+    content:counter(r); position:absolute; left:0; top:11px; width:26px; height:26px;
+    background:var(--card); border:1px solid var(--border); border-radius:7px;
+    display:grid; place-items:center; font-size:12px; font-weight:700; color:var(--ink);
+  }
+  ol.refs li[id]{scroll-margin-top:120px}
+  ol.refs b{color:var(--ink)}
+  ol.refs a{color:var(--perc); text-decoration:none; word-break:break-word}
+  ol.refs a:hover{text-decoration:underline}
+  .tagpill{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:1px 6px; border-radius:4px; margin-left:6px; color:var(--muted); border:1px solid var(--border)}
+
+  footer{padding:34px 0 60px; color:var(--muted); font-size:13px}
+  footer p{max-width:none}
+  .hl{background:color-mix(in srgb,var(--perc) 16%,transparent); padding:0 3px; border-radius:3px}
+
+  @media(max-width:640px){
+    body{font-size:16px}
+    .tl-item{grid-template-columns:74px 1fr; gap:12px}
+    .tl-age .a1{font-size:13px} .tl-age .a2{font-size:11px}
+    .tl-body{padding-left:20px} .top-nav{display:none}
+    .controls{top:50px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Accent&nbsp;Formation <span>· how language takes root</span></div>
+    <nav class="top-nav">
+      <a href="#timeline">Timeline</a>
+      <a href="#perception">Perception</a>
+      <a href="#production">Production</a>
+      <a href="#accent">Accents</a>
+      <a href="#neural">Neural</a>
+      <a href="#refs">Sources</a>
+    </nav>
+    <button class="toggle" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="hero">
+  <p class="eyebrow">Developmental psycholinguistics · neuroscience of language</p>
+  <h1>How language takes root — and why an accent forms early and lasts.</h1>
+  <p class="lede">A child becomes a native speaker in a specific order: listening first, then producing, with the sound system of the language locking in before the first birthday. That early commitment is what an accent really is.</p>
+  <div class="meta-row">
+    <span><b>Scope</b>&nbsp; prenatal → adulthood</span>
+    <span><b>Threads</b>&nbsp; perception · production · accent · neural embedding</span>
+    <span><b>Evidence</b>&nbsp; 18 primary studies, cited</span>
+  </div>
+</div>
+
+<!-- ============ ORIENTATION ============ -->
+<section id="intro" style="border-bottom:1px solid var(--border)">
+  <p class="kicker">The one-paragraph version</p>
+  <p>Language acquisition is not a single event but a sequence of overlapping <em class="term">sensitive periods</em>, each opening and closing on its own schedule. The <strong style="color:var(--perc)">sound system (phonology)</strong> comes first and closes earliest: infants begin as "universal listeners" who can hear the contrasts of every language, then commit to their native inventory between roughly <strong>6 and 12 months</strong><a class="cite" href="#r1">1</a><a class="cite" href="#r5">5</a>. <strong style="color:var(--prod)">Production</strong> follows the ear — cooing, babbling, then words — built on the categories the infant has already tuned into. Because the phonological map is set so early and then constrains everything layered on top, the <strong style="color:var(--acc)">age you acquire a language</strong> is the single best predictor of whether you will speak it with an accent<a class="cite" href="#r10">10</a><a class="cite" href="#r11">11</a>. Underneath it all, <strong style="color:var(--neur)">experience physically shapes the brain</strong> — a process called neural commitment, visible even in the myelination of language pathways<a class="cite" href="#r6">6</a><a class="cite" href="#r16">16</a>. The rest of this page walks that sequence and the studies behind it.</p>
+
+  <div class="stats">
+    <div class="stat perc"><div class="n">6–12<span style="font-size:15px">mo</span></div><div class="l">Window in which infants lose non-native sound contrasts and sharpen native ones<a class="cite" href="#r1">1</a></div></div>
+    <div class="stat prod"><div class="n">6–10<span style="font-size:15px">mo</span></div><div class="l">Canonical babbling — well-formed consonant–vowel syllables ("bababa")<a class="cite" href="#r14">14</a></div></div>
+    <div class="stat acc"><div class="n">18/240</div><div class="l">Korean immigrants who reached native-range English pronunciation — the rest kept an accent<a class="cite" href="#r12">12</a></div></div>
+    <div class="stat neur"><div class="n">~30<span style="font-size:15px">wk</span></div><div class="l">Gestational age by which the fetus hears and begins learning the mother's speech<a class="cite" href="#r8">8</a></div></div>
+  </div>
+</section>
+
+<!-- ============ TIMELINE ============ -->
+<section id="timeline" style="border-bottom:none; padding-bottom:20px">
+  <p class="kicker">Interactive</p>
+  <h2>The developmental timeline</h2>
+  <p class="dim">Each stage carries two threads — what the child can <span style="color:var(--perc);font-weight:600">hear</span> and what the child can <span style="color:var(--prod);font-weight:600">say</span> — plus, later, the <span style="color:var(--acc);font-weight:600">accent</span> and <span style="color:var(--neur);font-weight:600">neural</span> consequences. Use the filters to isolate a single thread.</p>
+</section>
+
+<div class="controls" id="controls" aria-label="Filter timeline by thread">
+  <span class="lbl">Show:</span>
+  <button class="chip" data-k="all" aria-pressed="true">All stages</button>
+  <button class="chip" data-k="perc" aria-pressed="false"><span class="dot"></span>Perception</button>
+  <button class="chip" data-k="prod" aria-pressed="false"><span class="dot"></span>Production</button>
+  <button class="chip" data-k="acc" aria-pressed="false"><span class="dot"></span>Accent</button>
+  <button class="chip" data-k="neur" aria-pressed="false"><span class="dot"></span>Neural</button>
+</div>
+
+<div class="tl" id="timeline-list">
+  <!-- stages injected by JS -->
+</div>
+
+<!-- ============ PERCEPTION ============ -->
+<section id="perception">
+  <p class="kicker" style="color:var(--perc)">Thread 1 · Perception</p>
+  <h2>From universal listener to native specialist</h2>
+  <p>The foundational finding of the field is that infants do not start with their native language — they start with <em>all</em> of them. In the first months of life, babies can discriminate the phonetic contrasts of every human language, including ones their own language does not use and that their parents can no longer hear<a class="cite" href="#r5">5</a>.</p>
+
+  <p>Werker &amp; Tees's classic 1984 study made this concrete. English-learning infants aged <strong>6–8 months</strong> could reliably tell apart a Hindi retroflex/dental contrast and a Salish (Nthlakampx) glottalized velar/uvular contrast — distinctions absent from English. By <strong>10–12 months</strong>, the same infants had largely lost that ability, while infants growing up in Hindi- and Salish-speaking homes kept it<a class="cite" href="#r1">1</a>. The loss is driven by <em>experience</em>, not by maturation alone: the brain keeps what the ambient language uses and lets the rest fade. This is <em class="term">perceptual narrowing</em> (or perceptual reorganization)<a class="cite" href="#r17">17</a>.</p>
+
+  <p>Kuhl's work added the mechanism. By <strong>6 months</strong>, native-language vowel prototypes already act as <em class="term">perceptual magnets</em>: a good exemplar of a native category "pulls in" nearby sounds, shrinking the perceived distance between them. Adults and 6-month-olds show this warping (their discrimination patterns correlate at r&nbsp;=&nbsp;0.82); rhesus monkeys given the same stimuli do not — the effect is specific to human language learning<a class="cite" href="#r2">2</a>. Kuhl formalized this as the <em>Native Language Magnet</em> model<a class="cite" href="#r3">3</a>.</p>
+
+  <p>Perception doesn't just narrow — it splits in two directions at once. Tracking American and Japanese infants on the English /r/–/l/ contrast over the same 6–12 month window, Kuhl and colleagues found a <em class="term">double dissociation</em>: American infants <em>improved</em> on their native contrast (63.7% → 73.8%) while Japanese infants <em>declined</em> on the same non-native contrast (64.7% → 59.9%)<a class="cite" href="#r4">4</a>. Native perception is being built and non-native perception dismantled in the very same weeks.</p>
+
+  <div class="note"><b>Why it matters for accents.</b> By the first birthday the brain has committed to a set of sound categories. Any language learned afterward is filtered through those categories — which is exactly why the /r/–/l/ distinction that Japanese infants lose at 12 months is so hard for Japanese adults to produce in English. The accent starts in the ear.</div>
+
+  <p>Kuhl also showed that this learning is <strong>social, not just acoustic</strong>. Infants exposed to a foreign language through a live interacting person learned its contrasts; infants who got the identical material through television or audio only showed <em>no</em> learning<a class="cite" href="#r7">7</a>. And infant perception is predictive: better <em>native</em> discrimination at 6 months forecasts stronger language outcomes at 13, 16 and 24 months, whereas better <em>non-native</em> discrimination predicts weaker ones — narrowing on schedule is a good sign<a class="cite" href="#r6">6</a>.</p>
+</section>
+
+<!-- ============ PRODUCTION ============ -->
+<section id="production">
+  <p class="kicker" style="color:var(--prod)">Thread 2 · Production</p>
+  <h2>How infants start generating language</h2>
+  <p>Production lags perception — children understand far more than they can say — but it follows its own remarkably universal schedule. At the point a child produces about 10 words, they already comprehend roughly 60, and there is on average a <strong>five-month gap</strong> between understanding 50 words and producing 50<a class="cite" href="#r13">13</a>. The mouth is catching up to the ear.</p>
+
+  <h3>The pre-speech ladder</h3>
+  <p>Vocal production climbs a well-documented ladder, each rung driven by developing control of the larynx, jaw, lips and tongue:</p>
+  <div class="rows" style="margin:14px 0 20px">
+    <div class="r prod"><span class="ic"></span><p><b>Cooing / reduplicated vowels (~2–4 mo).</b> Vowel-like "ooh" and "aah" sounds as the infant first gains voluntary control of phonation.</p></div>
+    <div class="r prod"><span class="ic"></span><p><b>Marginal babbling &amp; first consonants (~4–6 mo).</b> Consonantal sounds appear, typically the front, visible <b>p, b, m</b> — the stuff of "mama" and "papa" across languages<a class="cite" href="#r15">15</a>.</p></div>
+    <div class="r prod"><span class="ic"></span><p><b>Canonical babbling (~6–10 mo).</b> The landmark stage: well-formed, repeated consonant–vowel syllables — "bababa," "dadada." Its <em>absence</em> by ~10 months is a recognized clinical red flag<a class="cite" href="#r14">14</a>.</p></div>
+    <div class="r prod"><span class="ic"></span><p><b>Variegated babbling &amp; jargon (~10–12 mo).</b> Syllables vary ("badogu") and take on the intonation contour of the ambient language — it sounds like speech before it carries any words.</p></div>
+  </div>
+
+  <div class="note warn"><b>Babbling is about language, not just the mouth.</b> Deaf infants exposed to a signed language "babble" with their hands — producing rhythmic, reduced sign-syllables on a timetable parallel to vocal babbling (Petitto &amp; Marentette, 1991)<a class="cite" href="#r18b">19</a>. That is strong evidence babbling is the language faculty coming online, not merely motor practice of the vocal tract. No other species does anything like it<a class="cite" href="#r13">13</a>.</div>
+
+  <h3>From babble to grammar</h3>
+  <p>Once syllables are in place, the lexical and grammatical stages arrive on a predictable clock<a class="cite" href="#r15">15</a><a class="cite" href="#r14">14</a>: <strong>first words at ~10–15 months</strong> (often a label for a person or object); a <strong>~50-word productive vocabulary and two-word combinations near 18–24 months</strong>; and <strong>grammatical morphology</strong> (plurals, regular past tense) emerging between ages 2 and 3.</p>
+
+  <p>Grammar development even leaves a fingerprint of rule-learning: the <em class="term">U-shaped over-regularization</em> curve. A child first says an irregular form correctly ("went," "feet"), then <em>regresses</em> to "goed" and "foots" once they extract the "-ed / -s" rule and over-apply it, before finally sorting out the exceptions. Speech temporarily gets <em>less</em> adult-like — a signature that the child is generating rules, not just imitating<a class="cite" href="#r13">13</a>.</p>
+</section>
+
+<!-- ============ ACCENT ============ -->
+<section id="accent">
+  <p class="kicker" style="color:var(--acc)">Thread 3 · Accent formation</p>
+  <h2>Why age of acquisition writes the accent</h2>
+  <p>An accent is, at root, a phonological system built for one language being used to speak another. Because the native sound map is committed so early, the decisive variable for pronunciation is <strong>when</strong> a language is learned — the <em class="term">age of acquisition</em> (or age of arrival, for immigrants).</p>
+
+  <p>Across studies this is the most robust finding in the field: <strong>the earlier you start, the more native-like the pronunciation</strong><a class="cite" href="#r11">11</a>. In a study of 240 native-Korean immigrants who arrived in the US between ages 1 and 23, the later the arrival, the stronger the English accent — and only <strong>18 of the 240</strong> scored within the native range on pronunciation<a class="cite" href="#r12">12</a>. Tellingly, age of arrival independently predicted <em>pronunciation</em> but not <em>grammar</em> (morphosyntax), which depended more on formal schooling — evidence that phonology has its own, earlier sensitive period<a class="cite" href="#r12">12</a>.</p>
+
+  <figure id="curve">
+    <p class="fig-title">The phonological window closes early and gradually</p>
+    <p class="fig-sub">Schematic of ease-of-native-pronunciation against age of first exposure, synthesizing Flege, Yeni-Komshian, Johnson &amp; Newport and others. Not a single dataset — a composite of the consensus shape.</p>
+    <svg viewBox="0 0 720 300" role="img" aria-label="Curve showing native-pronunciation attainment declining with age of first exposure, high and flat in infancy, sloping down through childhood, low and variable in adulthood.">
+      <!-- gridlines -->
+      <g stroke="var(--grid)" stroke-width="1">
+        <line x1="56" y1="40" x2="690" y2="40"/>
+        <line x1="56" y1="95" x2="690" y2="95"/>
+        <line x1="56" y1="150" x2="690" y2="150"/>
+        <line x1="56" y1="205" x2="690" y2="205"/>
+        <line x1="56" y1="245" x2="690" y2="245"/>
+      </g>
+      <!-- axes -->
+      <line x1="56" y1="245" x2="690" y2="245" stroke="var(--rule)" stroke-width="1.5"/>
+      <line x1="56" y1="40" x2="56" y2="245" stroke="var(--rule)" stroke-width="1.5"/>
+      <!-- shaded sensitive period -->
+      <rect x="56" y="40" width="120" height="205" fill="var(--acc)" opacity="0.08"/>
+      <text x="66" y="150" font-size="11" fill="var(--acc)" font-weight="700" font-family="var(--sans)">PHONOLOGY</text>
+      <text x="66" y="165" font-size="11" fill="var(--acc)" font-weight="700" font-family="var(--sans)">WINDOW</text>
+      <text x="66" y="182" font-size="10.5" fill="var(--muted)" font-family="var(--sans)">wide open</text>
+      <text x="66" y="195" font-size="10.5" fill="var(--muted)" font-family="var(--sans)">birth–~7</text>
+      <!-- curve: high flat then decline then low variable -->
+      <path d="M56,68 L120,70 L176,78 Q250,96 320,140 Q390,182 470,205 Q560,222 690,224"
+            fill="none" stroke="var(--acc)" stroke-width="3" stroke-linecap="round"/>
+      <!-- variability band for late learners -->
+      <path d="M470,196 Q560,205 690,206 L690,242 Q560,238 470,214 Z" fill="var(--acc)" opacity="0.10"/>
+      <text x="527" y="182" font-size="10.5" fill="var(--muted)" font-family="var(--sans)">rare late-learner
+        <tspan x="527" dy="13">exceptions</tspan></text>
+      <!-- y labels -->
+      <text x="48" y="72" font-size="11" fill="var(--muted)" text-anchor="end" font-family="var(--sans)">native</text>
+      <text x="48" y="228" font-size="11" fill="var(--muted)" text-anchor="end" font-family="var(--sans)">accented</text>
+      <text x="20" y="150" font-size="11.5" fill="var(--ink-2)" text-anchor="middle" font-family="var(--sans)" transform="rotate(-90 20 150)" font-weight="600">Pronunciation attainment</text>
+      <!-- x labels -->
+      <g font-size="11" fill="var(--muted)" font-family="var(--sans)" text-anchor="middle">
+        <text x="116" y="264">birth–1</text>
+        <text x="230" y="264">age 3–6</text>
+        <text x="350" y="264">age 8–10</text>
+        <text x="470" y="264">age 12–15</text>
+        <text x="600" y="264">adult</text>
+      </g>
+      <text x="373" y="288" font-size="11.5" fill="var(--ink-2)" text-anchor="middle" font-family="var(--sans)" font-weight="600">Age of first exposure to the language</text>
+    </svg>
+    <figcaption>The consensus shape is a <b>gradient, not a cliff.</b> Attainment is high and flat for the earliest learners, slopes down through childhood, and bottoms out — with wide individual variation — for those starting in adolescence or adulthood.</figcaption>
+  </figure>
+
+  <h3>Is there a hard "critical period" cutoff?</h3>
+  <p>This is where the semi-academic nuance matters. The popular idea of a sharp switch that flips at puberty is <strong>not</strong> what the phonology data show. Modern re-analyses find the decline in pronunciation with later age of acquisition is <em>continuous and gradual</em> — better modeled by a smooth curve than a broken line, with no clean breakpoint at 12–15 years<a class="cite" href="#r12">12</a><a class="cite" href="#r11">11</a>. Some early starters keep a detectable accent; a few late starters get remarkably close to native<a class="cite" href="#r11">11</a>.</p>
+
+  <p>Two lines of evidence bracket the debate. On one side, even highly motivated, fully immersed adult learners (German TAs using German daily) did <em>not</em> reach native pronunciation — their performance did not overlap with native speakers'<a class="cite" href="#r19">19</a>. On the other, Bongaerts found a handful of exceptional Dutch learners of English whose accents were rated <em>within</em> the native range — proving native-like pronunciation after childhood is rare but not impossible<a class="cite" href="#r20">20</a>. The reconciling view: age sets the odds, but continued native-language use, quality of input, motivation and instruction (especially on prosody) all move the needle<a class="cite" href="#r11">11</a><a class="cite" href="#r19">19</a>.</p>
+
+  <div class="note"><b>Phonology vs. grammar close on different schedules.</b> Johnson &amp; Newport's landmark 1989 study tied grammar attainment to age of arrival, declining linearly for childhood arrivals then flattening into large individual differences after puberty<a class="cite" href="#r9">9</a>. But the offset for <em>grammar</em> is surprisingly late: the largest study to date (669,498 people) puts the sharp decline in grammar-learning ability at about <b>age 17.4</b><a class="cite" href="#r21">21</a>. Accent is the earliest-closing door; syntax stays open into adolescence.</div>
+</section>
+
+<!-- ============ NEURAL ============ -->
+<section id="neural">
+  <p class="kicker" style="color:var(--neur)">Thread 4 · Neural embedding</p>
+  <h2>How language gets written into the brain</h2>
+  <p>Why does early exposure matter so much? Because experience physically builds the machinery. Kuhl's phrase for this is <em class="term">neural commitment</em>: as connections that respond to the regularities of the ambient language are strengthened during the first year, the brain becomes optimized for that language — and that same optimization then <em>impedes</em> learning of patterns that don't conform<a class="cite" href="#r4">4</a><a class="cite" href="#r6">6</a>. The native system becomes the default the brain runs on, and later languages must fight against it.</p>
+
+  <h3>Statistical learning: the engine</h3>
+  <p>Infants are powerful <em class="term">statistical learners</em>. Rather than being taught words, they extract them from the speech stream by tracking <em>transitional probabilities</em> — how likely one syllable is to follow another. In continuous, unbroken speech, 7–8-month-olds use these distributional cues to find word boundaries (Saffran, Aslin &amp; Newport's famous demonstration)<a class="cite" href="#r5">5</a><a class="cite" href="#r7">7</a>. The same distributional machinery tunes phoneme categories: infants pick up the frequency patterns of ambient speech sounds, and that reshapes perception<a class="cite" href="#r7">7</a>.</p>
+
+  <h3>Learning begins before birth</h3>
+  <p>The neural record now reaches into the womb. The auditory system is functional by about <strong>30 weeks</strong> gestation, and the fetus hears the low-frequency envelope of the mother's speech through the final weeks of pregnancy<a class="cite" href="#r8">8</a>. Newborns tested within hours of birth already distinguish native from foreign vowels<a class="cite" href="#r8">8</a>. And EEG of newborns 1–5 days old shows enhanced, longer-lasting neural responses specifically to the language heard <em>prenatally</em> (French) — not to rhythmically similar or dissimilar unfamiliar languages — concentrated in the theta band that tracks syllable-rate speech<a class="cite" href="#r22">22</a>. The tuning has already started before the first breath.</p>
+
+  <h3>You can see it in the wiring</h3>
+  <p>Neural commitment is visible in brain structure, not just behavior. In a diffusion-imaging study, 30-month-olds who heard <em>more</em> adult words had <strong>higher myelin concentration</strong> in the core language tracts — the arcuate fasciculus and superior longitudinal fasciculus — direct evidence that language input shapes the physical insulation of language pathways<a class="cite" href="#r16">16</a>. The effect is developmentally timed (it runs the other way at 6 months), consistent with the idea that plasticity itself is on a schedule<a class="cite" href="#r16">16</a>. This echoes Lenneberg's old conjecture that language acquisition rides on brain maturation — cortical density and myelination reaching a threshold — which is one reason the windows close as the brain matures<a class="cite" href="#r5">5</a>.</p>
+
+  <div class="note"><b>The through-line.</b> Statistical learning (the engine) + a maturing, myelinating brain (the timer) = experience-dependent neural commitment. Early input carves deep channels cheaply; the same input later has to re-carve against an already-committed system. That asymmetry is the biology behind "kids just pick up languages," behind perceptual narrowing, and behind the accent that outlives it.</div>
+</section>
+
+<!-- ============ TAKEAWAYS ============ -->
+<section id="takeaways">
+  <p class="kicker">Synthesis</p>
+  <h2>What to hold onto</h2>
+  <p><strong>1. Perception leads production, and both are scheduled.</strong> The infant tunes the ear (universal listener → native specialist, 6–12 months) before and beneath the climb from cooing to babbling to words. Babbling is the language faculty switching on — deaf infants babble in sign on the same clock.</p>
+  <p><strong>2. The accent is set in the sound system's early window.</strong> Age of acquisition is the strongest predictor of foreign accent because phonology commits first and hardest. The decline is a gradient, not a puberty cliff — odds worsen smoothly with age, with real exceptions at both ends.</p>
+  <p><strong>3. Different layers close at different times.</strong> Phonology by ~12 months (with pronunciation advantages for starting before ~7–8); grammar stays learnable into late adolescence (~17). "Critical period" is really a stack of overlapping sensitive periods.</p>
+  <p><strong>4. Experience builds the hardware.</strong> Statistical learning extracts structure from input; a maturing, myelinating brain turns that structure into committed neural architecture — a process that literally begins in the womb and is visible in white-matter myelin by toddlerhood.</p>
+</section>
+
+<!-- ============ REFERENCES ============ -->
+<section id="refs">
+  <p class="kicker">Evidence base</p>
+  <h2>Sources</h2>
+  <p class="dim" style="font-size:14.5px">Primary studies and reviews behind the claims above. Classic works cited by author/year where a stable open link isn't available are marked accordingly.</p>
+  <ol class="refs">
+    <li id="r1"><b>Werker &amp; Tees (1984).</b> Cross-language speech perception: evidence for perceptual reorganization during the first year of life. <i>Infant Behavior &amp; Development.</i> <span class="tagpill">perception</span><br><a href="https://www.sciencedirect.com/science/article/abs/pii/S0163638384800223" target="_blank" rel="noopener">sciencedirect.com/science/article/abs/pii/S0163638384800223</a></li>
+    <li id="r2"><b>Kuhl et al. (1991).</b> Human adults and human infants show a "perceptual magnet effect" for the prototypes of speech categories, monkeys do not. <i>Perception &amp; Psychophysics.</i> <span class="tagpill">perception</span><br><a href="https://www.researchgate.net/publication/21209735_Human_adults_and_human_infants_show_a_perceptual_magnet_effect_for_the_prototypes_of_speech_categories_Monkeys_do_not" target="_blank" rel="noopener">researchgate.net/publication/21209735</a></li>
+    <li id="r3"><b>Kuhl (2000).</b> A new view of language acquisition. <i>PNAS</i> 97(22):11850–11857. <span class="tagpill">perception</span><span class="tagpill">neural</span><br><a href="https://www.pnas.org/doi/10.1073/pnas.97.22.11850" target="_blank" rel="noopener">pnas.org/doi/10.1073/pnas.97.22.11850</a></li>
+    <li id="r4"><b>Kuhl et al. (2006).</b> Infants show a facilitation effect for native-language phonetic perception between 6 and 12 months (native /r–l/ improves, non-native declines); NLM-e theory. <i>Developmental Science.</i> <span class="tagpill">perception</span><span class="tagpill">neural</span><br><a href="https://www.researchgate.net/publication/5994527_Phonetic_Learning_as_a_Pathway_to_Language_New_Data_and_Native_Language_Magnet_Theory_Expanded_NLM-e" target="_blank" rel="noopener">researchgate.net/publication/5994527</a></li>
+    <li id="r5"><b>Kuhl (2010).</b> Brain mechanisms in early language acquisition. <i>Neuron</i> 67(5):713–727. <span class="tagpill">perception</span><span class="tagpill">neural</span><br><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2947444/" target="_blank" rel="noopener">pmc.ncbi.nlm.nih.gov/articles/PMC2947444</a></li>
+    <li id="r6"><b>Kuhl (2011).</b> Early language learning and literacy: neuroscience implications; native-discrimination predicts later outcomes; neural commitment. <i>Mind, Brain &amp; Education.</i> <span class="tagpill">perception</span><span class="tagpill">neural</span><br><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2606791/" target="_blank" rel="noopener">pmc.ncbi.nlm.nih.gov/articles/PMC2606791</a></li>
+    <li id="r7"><b>Kuhl et al. — social gating &amp; statistical learning.</b> Foreign-language phonetic learning requires live social interaction (no learning from TV/audio); distributional learning of phonetic categories. <span class="tagpill">neural</span><br><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2947444/" target="_blank" rel="noopener">pmc.ncbi.nlm.nih.gov/articles/PMC2947444</a></li>
+    <li id="r8"><b>Moon, Lagercrantz &amp; Kuhl (2013).</b> Language experienced in utero affects vowel perception after birth: newborns discriminate native vs. foreign vowels (high-amplitude sucking; England &amp; Sweden). <i>Acta Paediatrica.</i> <span class="tagpill">perception</span><span class="tagpill">neural</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/23173548/" target="_blank" rel="noopener">pubmed.ncbi.nlm.nih.gov/23173548</a></li>
+    <li id="r9"><b>Johnson &amp; Newport (1989).</b> Critical period effects in second language learning: the influence of maturational state on the acquisition of English as a second language. <i>Cognitive Psychology</i> 21(1):60–99. <span class="tagpill">accent</span><span class="tagpill">grammar</span><br><a href="https://www.sciencedirect.com/science/article/abs/pii/0010028589900030" target="_blank" rel="noopener">sciencedirect.com/science/article/abs/pii/0010028589900030</a></li>
+    <li id="r10"><b>Flege, Munro &amp; MacKay (1995) / Flege — age effects on foreign accent.</b> Age of L2 acquisition as the strongest determinant of degree of foreign accent. <span class="tagpill">accent</span><br><a href="https://www.researchgate.net/publication/285700588_What_accounts_for_age_effects_on_overall_degree_of_foreign_accent" target="_blank" rel="noopener">researchgate.net/publication/285700588</a></li>
+    <li id="r11"><b>Piske, MacKay &amp; Flege (2001).</b> Factors affecting degree of foreign accent in an L2: a review — age of acquisition strongest, gradual not sharp; L1 use also matters. <i>Journal of Phonetics.</i> <span class="tagpill">accent</span><br><a href="https://www.sciencedirect.com/science/article/abs/pii/S0095447001901342" target="_blank" rel="noopener">sciencedirect.com/science/article/abs/pii/S0095447001901342</a></li>
+    <li id="r12"><b>Yeni-Komshian, Flege &amp; Liu (2000).</b> Pronunciation proficiency in 240 Korean–English bilinguals by age of arrival; AOA affects phonology independently of morphosyntax; continuous decline. <i>Bilingualism: Language and Cognition.</i> <span class="tagpill">accent</span><br><a href="https://www.cambridge.org/core/journals/bilingualism-language-and-cognition/article/pronunciation-proficiency-in-the-first-and-second-languages-of-koreanenglish-bilinguals/" target="_blank" rel="noopener">cambridge.org — Bilingualism: Language &amp; Cognition</a></li>
+    <li id="r13"><b>University of Pennsylvania, Linguistics 001 (2019).</b> Language acquisition lecture notes: comprehension-before-production gap (Benedict 1979), babbling uniqueness, U-shaped over-regularization, stage sequence. <span class="tagpill">production</span><span class="tagpill">grammar</span><br><a href="https://www.ling.upenn.edu/courses/Fall_2019/ling001/acquisition.html" target="_blank" rel="noopener">ling.upenn.edu/courses/Fall_2019/ling001/acquisition.html</a></li>
+    <li id="r14"><b>Developmental milestone reviews (canonical babbling 6–10 mo; first words 10–15 mo; ~50 words &amp; 2-word combos ~18–24 mo).</b> <span class="tagpill">production</span><br><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2606791/" target="_blank" rel="noopener">pmc.ncbi.nlm.nih.gov/articles/PMC2606791</a></li>
+    <li id="r15"><b>NIDCD — Speech and Language Developmental Milestones (NIH).</b> Cooing/babbling with p, b, m; first words by ~1 yr; two-word phrases 1–2 yr; grammar 2–3 yr. <span class="tagpill">production</span><br><a href="https://www.nidcd.nih.gov/health/speech-and-language" target="_blank" rel="noopener">nidcd.nih.gov/health/speech-and-language</a></li>
+    <li id="r16"><b>Language input &amp; white-matter myelination (2023).</b> Adult word input at 30 months predicts higher myelin in the arcuate fasciculus &amp; SLF; developmentally timed effect. <span class="tagpill">neural</span><br><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10149040/" target="_blank" rel="noopener">pmc.ncbi.nlm.nih.gov/articles/PMC10149040</a></li>
+    <li id="r17"><b>Werker &amp; Tees (2024, retrospective).</b> Phonetic perceptual reorganization across the first year — 40-year review; narrowing extends beyond single contrasts and links to word learning. <i>Infant Behavior &amp; Development.</i> <span class="tagpill">perception</span><br><a href="https://www.sciencedirect.com/science/article/pii/S0163638324000146" target="_blank" rel="noopener">sciencedirect.com/science/article/pii/S0163638324000146</a></li>
+    <li id="r18b"><b>Petitto &amp; Marentette (1991).</b> Babbling in the manual mode: evidence for the ontogeny of language. <i>Science</i> 251:1493–1496. <span class="tagpill">production</span> <i>(classic; cited by author/year)</i></li>
+    <li id="r19"><b>Moyer (1999).</b> Ultimate attainment in L2 phonology: the critical factors of age, motivation, and instruction — immersed adults don't reach native pronunciation; prosodic training helps. <i>SSLA.</i> <span class="tagpill">accent</span><br><a href="https://www.cambridge.org/core/journals/studies-in-second-language-acquisition/article/abs/ultimate-attainment-in-l2-phonology/" target="_blank" rel="noopener">cambridge.org — Studies in Second Language Acquisition</a></li>
+    <li id="r20"><b>Bongaerts et al. (1997).</b> Age and ultimate attainment in the pronunciation of a foreign language — some late Dutch learners of English rated within native range. <i>SSLA.</i> <span class="tagpill">accent</span><br><a href="https://www.cambridge.org/core/journals/studies-in-second-language-acquisition/article/abs/age-and-ultimate-attainment-in-the-pronunciation-of-a-foreign-language/6E23AD5210A8DE7AF3D10FA5F682403C" target="_blank" rel="noopener">cambridge.org/core/journals/studies-in-second-language-acquisition/...6E23AD5210A8DE7AF3D10FA5F682403C</a></li>
+    <li id="r21"><b>Hartshorne, Tenenbaum &amp; Pinker (2018).</b> A critical period for second language acquisition: evidence from 2/3 million English speakers — grammar-learning stays high until ~17.4 yr. <i>Cognition.</i> <span class="tagpill">grammar</span><br><a href="https://www.sciencedirect.com/science/article/abs/pii/S0010027718300994" target="_blank" rel="noopener">sciencedirect.com/science/article/abs/pii/S0010027718300994</a></li>
+    <li id="r22"><b>Newborn EEG &amp; prenatal language (2023).</b> Neural signature of native (prenatally heard) language in 1–5-day-old newborns, theta-band, language-specific. <i>Science Advances.</i> <span class="tagpill">neural</span><br><a href="https://www.science.org/doi/10.1126/sciadv.adj3524" target="_blank" rel="noopener">science.org/doi/10.1126/sciadv.adj3524</a></li>
+  </ol>
+</section>
+
+<footer>
+  <p>Built as a semi-academic explainer for the <b>accent_formation</b> project. Claims drawn from an adversarially fact-checked pass over 18 primary sources; the phonological-window figure is a schematic composite of the cited age-of-acquisition literature, not a single dataset. Dates and findings reflect the cited publications.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  /* ---------- theme ---------- */
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  function apply(t){ root.setAttribute('data-theme',t); btn.textContent = t==='dark' ? '☀' : '◐'; }
+  var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  apply(mq && mq.matches ? 'dark' : 'light');
+  btn.addEventListener('click', function(){
+    apply(root.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+  });
+
+  /* ---------- timeline data ---------- */
+  var STAGES=[
+    {age:"3rd trimester", sub:"~30 wk – birth", lead:"perc",
+     rows:[
+       {k:"perc", t:"<b>Hearing comes online.</b> The auditory system is functional by ~30 weeks; the fetus hears the low-frequency envelope of the mother's speech and begins learning its rhythm and vowels."},
+       {k:"neur", t:"<b>Prenatal tuning.</b> Newborn EEG shows a neural signature specific to the language heard in the womb — learning starts before birth."}
+     ]},
+    {age:"0–2 months", sub:"newborn", lead:"perc",
+     rows:[
+       {k:"perc", t:"<b>Universal listener.</b> Discriminates speech from non-speech and the phonetic contrasts of <i>every</i> language; already distinguishes the native language's rhythm."},
+       {k:"prod", t:"<b>Reflexive sounds.</b> Crying, fussing; cries even carry the melodic contour of the ambient language."}
+     ]},
+    {age:"2–4 months", sub:"", lead:"prod",
+     rows:[
+       {k:"prod", t:"<b>Cooing.</b> First voluntary vowel-like sounds — “ooh,” “aah” — as control of phonation develops."},
+       {k:"perc", t:"<b>Vowel prototypes forming.</b> Native vowel categories start to organize perception."}
+     ]},
+    {age:"4–6 months", sub:"", lead:"prod",
+     rows:[
+       {k:"prod", t:"<b>Marginal babbling.</b> First consonants appear — typically the front, visible <b>p, b, m</b>."},
+       {k:"perc", t:"<b>Perceptual magnet by 6 mo.</b> Native vowel prototypes 'pull in' nearby sounds; infant discrimination now tracks adults'."}
+     ]},
+    {age:"6–10 months", sub:"the pivot", lead:"perc",
+     rows:[
+       {k:"perc", t:"<b>Perceptual narrowing begins.</b> Non-native contrasts start to fade while native ones sharpen — a double dissociation (native /r–l/ up, non-native down)."},
+       {k:"prod", t:"<b>Canonical babbling.</b> Well-formed repeated CV syllables — “bababa,” “dadada.” A universal milestone; deaf infants babble in sign on the same clock."}
+     ]},
+    {age:"10–12 months", sub:"commitment", lead:"perc",
+     rows:[
+       {k:"perc", t:"<b>Native sound system locks in.</b> Non-native discrimination largely lost; the phonology window starts to close. <i>This is where the accent is seeded.</i>"},
+       {k:"prod", t:"<b>Variegated babbling &amp; jargon.</b> Varied syllables carrying the intonation of the ambient language — speech-like, pre-lexical."},
+       {k:"neur", t:"<b>Neural commitment.</b> Connections for ambient-speech regularities strengthen; the brain is now optimized for the native language."}
+     ]},
+    {age:"12–18 months", sub:"", lead:"prod",
+     rows:[
+       {k:"prod", t:"<b>First words.</b> Usually a label for a person or object; comprehension still runs far ahead of production (~60 understood per 10 said)."},
+       {k:"perc", t:"<b>Word segmentation.</b> Statistical learning (transitional probabilities) carves words out of the speech stream."}
+     ]},
+    {age:"18–24 months", sub:"", lead:"prod",
+     rows:[
+       {k:"prod", t:"<b>Vocabulary spurt &amp; two-word combos.</b> ~50-word productive vocabulary; “more milk,” “daddy go.”"},
+       {k:"neur", t:"<b>Input shapes wiring.</b> More adult words → (by 30 mo) higher myelin in core language tracts."}
+     ]},
+    {age:"2–3 years", sub:"", lead:"prod",
+     rows:[
+       {k:"prod", t:"<b>Grammar emerges.</b> Plurals and regular past tense; the U-shaped over-regularization phase (“goed,” “foots”) reveals rule-learning."}
+     ]},
+    {age:"~7–8 years", sub:"phonology advantage", lead:"acc",
+     rows:[
+       {k:"acc", t:"<b>Best odds for native pronunciation.</b> Holding experience constant, there's an advantage to acquiring a second language before ~8 to reach native-like phonology."}
+     ]},
+    {age:"~17 years", sub:"grammar offset", lead:"acc",
+     rows:[
+       {k:"acc", t:"<b>Grammar window closes late.</b> Grammar-learning ability stays high until ~17.4, then declines — much later than the phonology window."}
+     ]},
+    {age:"Adulthood", sub:"", lead:"acc",
+     rows:[
+       {k:"acc", t:"<b>Accent generally persists.</b> Even immersed, motivated adults rarely reach native pronunciation — but rare exceptions prove it's possible, not guaranteed by biology alone."},
+       {k:"neur", t:"<b>Committed system resists.</b> New languages are filtered through the native map; re-carving is costly."}
+     ]}
+  ];
+
+  var LABEL={perc:"Perception",prod:"Production",acc:"Accent",neur:"Neural"};
+  var list=document.getElementById('timeline-list');
+  STAGES.forEach(function(s){
+    var item=document.createElement('div');
+    item.className='tl-item'; item.setAttribute('data-lead',s.lead);
+    var keys = s.rows.map(function(r){return r.k;});
+    item.setAttribute('data-keys', keys.join(' '));
+    var rowsHTML = s.rows.map(function(r){
+      return '<div class="r '+r.k+'"><span class="ic"></span><p>'+r.t+'</p></div>';
+    }).join('');
+    var leadTag='<span class="tag '+s.lead+'">'+LABEL[s.lead]+'</span>';
+    item.innerHTML =
+      '<div class="tl-age"><div class="a1">'+s.age+'</div>'+(s.sub?'<div class="a2">'+s.sub+'</div>':'')+'</div>'+
+      '<div class="tl-body"><div class="tl-card">'+
+        '<h4>'+leadTag+'</h4>'+
+        '<div class="rows">'+rowsHTML+'</div>'+
+      '</div></div>';
+    list.appendChild(item);
+  });
+
+  /* ---------- filter ---------- */
+  var chips=[].slice.call(document.querySelectorAll('#controls .chip'));
+  var items=[].slice.call(document.querySelectorAll('.tl-item'));
+  function setFilter(k){
+    chips.forEach(function(c){ c.setAttribute('aria-pressed', c.dataset.k===k ? 'true':'false'); });
+    items.forEach(function(it){
+      var has = k==='all' || (it.getAttribute('data-keys').split(' ').indexOf(k)>-1);
+      it.classList.toggle('dim-out', !has);
+      // also dim individual rows when a thread is selected
+      [].slice.call(it.querySelectorAll('.r')).forEach(function(r){
+        if(k==='all'){ r.style.opacity='1'; }
+        else { r.style.opacity = r.classList.contains(k) ? '1' : '.32'; }
+      });
+    });
+  }
+  chips.forEach(function(c){ c.addEventListener('click', function(){ setFilter(c.dataset.k); }); });
+  setFilter('all');
+})();
+</script>
+</body>
+</html>

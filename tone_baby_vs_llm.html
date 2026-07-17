@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning Tone — a Baby and an LLM, Side by Side</title>
+<style>
+  :root{
+    color-scheme: light;
+    --surface-1:#fcfcfb; --plane:#f4f4f0; --card:#ffffff;
+    --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --rule:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --baby:#2a78d6;   /* baby side  - blue   */
+    --llm:#4a3aa7;    /* llm side   - violet */
+    --same:#008300;   /* similarity - green  */
+    --diff:#eb6834;   /* difference - orange */
+    --acc:#b5316b;
+    --good:#006300;
+    --shadow: 0 1px 2px rgba(11,11,11,.05), 0 8px 24px rgba(11,11,11,.06);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --surface-1:#1a1a19; --plane:#0d0d0d; --card:#201f1e;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#8f8e88;
+    --grid:#2c2c2a; --rule:#383835; --border:rgba(255,255,255,0.12);
+    --baby:#3987e5; --llm:#9085e9; --same:#3ba55d; --diff:#e5793f; --acc:#dd6fa0; --good:#4fb14f;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--plane); color:var(--ink); font-family:var(--sans); line-height:1.6; -webkit-font-smoothing:antialiased; font-size:17px}
+  .wrap{max-width:920px; margin:0 auto; padding:0 22px}
+
+  header.top{position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--plane) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--border)}
+  .top-in{max-width:920px; margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:14px}
+  .top-in .brand{font-weight:650; letter-spacing:-.01em; font-size:15px}
+  .top-in .brand span{color:var(--muted); font-weight:450}
+  .top-nav{margin-left:auto; display:flex; gap:4px; flex-wrap:wrap}
+  .top-nav a{font-size:13px; color:var(--ink-2); text-decoration:none; padding:5px 9px; border-radius:7px}
+  .top-nav a:hover{background:var(--card); color:var(--ink)}
+  .toggle{border:1px solid var(--border); background:var(--card); color:var(--ink-2); width:34px; height:30px; border-radius:8px; cursor:pointer; font-size:14px; display:grid; place-items:center}
+  .toggle:hover{color:var(--ink)}
+
+  .hero{padding:60px 0 30px; border-bottom:1px solid var(--border)}
+  .eyebrow{font-size:12.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--baby); margin:0 0 16px}
+  .eyebrow b{color:var(--llm)}
+  h1{font-family:var(--serif); font-weight:600; font-size:clamp(30px,5.4vw,50px); line-height:1.08; letter-spacing:-.015em; margin:0 0 18px}
+  .lede{font-size:clamp(17px,2.3vw,20px); color:var(--ink-2); max-width:46ch; margin:0}
+  .meta-row{display:flex; gap:22px; flex-wrap:wrap; margin-top:26px; font-size:13.5px; color:var(--muted)}
+  .meta-row b{color:var(--ink-2); font-weight:600}
+  .partlink{font-size:13px; color:var(--muted); margin-top:14px}
+  .partlink a{color:var(--baby); text-decoration:none; font-weight:600}
+
+  section{padding:50px 0; border-bottom:1px solid var(--border)}
+  .kicker{font-size:12.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+  h2{font-family:var(--serif); font-weight:600; font-size:clamp(24px,3.6vw,33px); line-height:1.15; letter-spacing:-.01em; margin:0 0 16px}
+  h3{font-size:19px; font-weight:650; letter-spacing:-.01em; margin:28px 0 8px}
+  p{margin:0 0 16px; max-width:68ch}
+  .dim{color:var(--ink-2)}
+  strong{font-weight:650}
+  em.term{font-style:normal; font-weight:600; color:var(--acc)}
+  a.cite{color:var(--baby); text-decoration:none; font-weight:600; font-size:.82em; vertical-align:.35em; padding:0 1px}
+  a.cite:hover{text-decoration:underline}
+  .pending{opacity:.55; font-style:italic}
+
+  /* three senses cards */
+  .senses{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:22px 0}
+  .sense{background:var(--card); border:1px solid var(--border); border-radius:13px; padding:16px 17px; box-shadow:var(--shadow)}
+  .sense .st{font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--acc); margin-bottom:6px}
+  .sense h4{margin:0 0 6px; font-size:16px; font-weight:650}
+  .sense p{margin:0; font-size:14px; color:var(--ink-2)}
+
+  /* tone contour figure */
+  figure{margin:24px 0; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px 20px 14px; box-shadow:var(--shadow)}
+  figure svg{width:100%; height:auto; display:block}
+  .fig-title{font-size:15px; font-weight:650; margin:0 0 2px}
+  .fig-sub{font-size:13px; color:var(--ink-2); margin:0 0 8px}
+  figcaption{font-size:13px; color:var(--muted); margin-top:10px; max-width:70ch}
+
+  .note{border-left:3px solid var(--acc); background:color-mix(in srgb,var(--acc) 6%,transparent); padding:14px 18px; border-radius:0 10px 10px 0; margin:20px 0; font-size:15px; color:var(--ink-2)}
+  .note b{color:var(--ink)}
+  .note.baby{border-color:var(--baby); background:color-mix(in srgb,var(--baby) 7%,transparent)}
+  .note.llm{border-color:var(--llm); background:color-mix(in srgb,var(--llm) 8%,transparent)}
+
+  /* mini timeline */
+  .mtl{margin:18px 0; display:flex; flex-direction:column; gap:0}
+  .mtl-row{display:grid; grid-template-columns:120px 1fr; gap:16px}
+  .mtl-age{text-align:right; padding-top:14px; font-weight:700; font-size:14px; font-variant-numeric:tabular-nums}
+  .mtl-b{border-left:2px solid var(--grid); padding:0 0 20px 22px; position:relative}
+  .mtl-b::before{content:""; position:absolute; left:-7px; top:16px; width:12px; height:12px; border-radius:50%; background:var(--card); border:2.5px solid var(--baby)}
+  .mtl-card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:13px 15px; box-shadow:var(--shadow); font-size:14.5px; color:var(--ink-2)}
+  .mtl-card b{color:var(--ink)}
+
+  /* comparison */
+  .cmp-controls{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:6px 0 18px}
+  .cmp-controls .lbl{font-size:12.5px; color:var(--muted); margin-right:2px}
+  .chip{border:1px solid var(--border); background:var(--card); color:var(--ink-2); padding:6px 12px; border-radius:999px; font-size:13px; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:7px; transition:.12s}
+  .chip:hover{color:var(--ink)}
+  .chip .dot{width:9px; height:9px; border-radius:50%; background:var(--muted)}
+  .chip[data-k="same"] .dot{background:var(--same)} .chip[data-k="diff"] .dot{background:var(--diff)}
+  .chip[aria-pressed="true"]{background:var(--ink); color:var(--surface-1); border-color:var(--ink)}
+  .chip[aria-pressed="true"] .dot{outline:2px solid var(--surface-1); outline-offset:1px}
+
+  .cmp{display:flex; flex-direction:column; gap:12px}
+  .cmp-item{background:var(--card); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; transition:opacity .2s, filter .2s}
+  .cmp-item.dim-out{opacity:.25; filter:saturate(.4)}
+  .cmp-head{display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:1px solid var(--border)}
+  .cmp-head .dim-name{font-weight:650; font-size:15.5px; letter-spacing:-.01em}
+  .verdict-tag{margin-left:auto; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:6px; white-space:nowrap}
+  .verdict-tag.same{color:var(--same); background:color-mix(in srgb,var(--same) 14%,transparent)}
+  .verdict-tag.diff{color:var(--diff); background:color-mix(in srgb,var(--diff) 15%,transparent)}
+  .verdict-tag.mixed{color:var(--acc); background:color-mix(in srgb,var(--acc) 13%,transparent)}
+  .cmp-cols{display:grid; grid-template-columns:1fr 1fr}
+  .cmp-col{padding:13px 16px; font-size:14px; color:var(--ink-2)}
+  .cmp-col:first-child{border-right:1px solid var(--border)}
+  .cmp-col .who{font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; margin-bottom:5px; display:flex; align-items:center; gap:6px}
+  .cmp-col .who .pip{width:9px; height:9px; border-radius:3px}
+  .cmp-col.baby .who{color:var(--baby)} .cmp-col.baby .who .pip{background:var(--baby)}
+  .cmp-col.llm .who{color:var(--llm)} .cmp-col.llm .who .pip{background:var(--llm)}
+  .cmp-col b{color:var(--ink)}
+
+  .meter{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--border); border-radius:13px; padding:15px 17px; box-shadow:var(--shadow); margin:20px 0}
+  .meter .big{font-size:30px; font-weight:700; letter-spacing:-.02em; color:var(--acc); line-height:1; white-space:nowrap}
+  .meter .txt{font-size:14px; color:var(--ink-2)}
+
+  ol.refs{margin:8px 0 0; padding:0; counter-reset:r; list-style:none}
+  ol.refs li{position:relative; padding:11px 0 11px 40px; border-top:1px solid var(--border); font-size:14px; color:var(--ink-2); counter-increment:r}
+  ol.refs li::before{content:counter(r); position:absolute; left:0; top:11px; width:26px; height:26px; background:var(--card); border:1px solid var(--border); border-radius:7px; display:grid; place-items:center; font-size:12px; font-weight:700; color:var(--ink)}
+  ol.refs li[id]{scroll-margin-top:80px}
+  ol.refs b{color:var(--ink)} ol.refs a{color:var(--baby); text-decoration:none; word-break:break-word}
+  ol.refs a:hover{text-decoration:underline}
+  .tagpill{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:1px 6px; border-radius:4px; margin-left:6px; color:var(--muted); border:1px solid var(--border)}
+
+  .status{font-size:12.5px; color:var(--muted); border:1px dashed var(--border); border-radius:9px; padding:8px 12px; margin:0 0 18px; display:inline-block}
+  footer{padding:32px 0 60px; color:var(--muted); font-size:13px}
+  footer p{max-width:none}
+
+  @media(max-width:640px){
+    body{font-size:16px}
+    .top-nav{display:none}
+    .mtl-row{grid-template-columns:64px 1fr; gap:12px}
+    .cmp-cols{grid-template-columns:1fr}
+    .cmp-col:first-child{border-right:none; border-bottom:1px solid var(--border)}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Learning Tone <span>· part 2 — baby vs. LLM</span></div>
+    <nav class="top-nav">
+      <a href="#what">What tone is</a>
+      <a href="#baby">The baby</a>
+      <a href="#llm">The LLM</a>
+      <a href="#compare">Side by side</a>
+      <a href="#verdict">How similar?</a>
+      <a href="#refs">Sources</a>
+    </nav>
+    <button class="toggle" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="hero">
+  <p class="eyebrow">Part 2 · a baby <b>and a language model</b>, side by side</p>
+  <h1>Learning tone — the same trick, in two different worlds.</h1>
+  <p class="lede">A baby and an LLM both discover "tone" without ever being taught it — by predicting their world and letting the structure fall out. But the tone each one learns is a different object. Here's where they rhyme, and where they don't.</p>
+  <div class="meta-row">
+    <span><b>Compares</b>&nbsp; infant pitch perception vs. LLM tone representation</span>
+    <span><b>Audience</b>&nbsp; semi-academic</span>
+  </div>
+  <p class="partlink">◄ Continues from <a href="accent_formation.html">Part 1 — How language takes root</a>. Statistical learning shows up in both.</p>
+</div>
+
+<!-- ============ WHAT IS TONE ============ -->
+<section id="what">
+  <p class="kicker">Definitions first</p>
+  <h2>What "tone" actually means</h2>
+  <p>The word hides three different things. Keeping them apart is what makes the baby-vs-LLM comparison honest, because a baby and a text model are not always talking about the same "tone." Linguistically, <strong>tone</strong> proper means pitch patterns that make lexical or grammatical contrasts, and roughly <strong>half the world's languages</strong> use pitch this way<a class="cite" href="#r1">1</a>.</p>
+
+  <div class="senses">
+    <div class="sense">
+      <div class="st">Sense 1 · Lexical tone</div>
+      <h4>Pitch that changes meaning</h4>
+      <p>In tone languages, the pitch contour on a syllable <em>is</em> part of the word. Mandarin <b>mā / má / mǎ / mà</b> = mother / hemp / horse / scold — same consonant and vowel, four meanings, distinguished only by pitch.</p>
+    </div>
+    <div class="sense">
+      <div class="st">Sense 2 · Intonation / prosody</div>
+      <h4>The melody of a phrase</h4>
+      <p>Pitch riding across a whole utterance: a rising tail marks a question, a fall marks a statement, stress lands on what matters. Every language uses this, tonal or not.</p>
+    </div>
+    <div class="sense">
+      <div class="st">Sense 3 · Affective tone</div>
+      <h4>Tone <em>of voice</em> — emotion &amp; stance</h4>
+      <p>Warm, sharp, sarcastic, soothing. The paralinguistic layer that signals how the speaker feels and what they mean beyond the words.</p>
+    </div>
+  </div>
+
+  <p>Physically, all three ride mostly on one signal: <em class="term">fundamental frequency (F0)</em> — how fast the vocal folds vibrate, which we hear as pitch (with help from duration and loudness). F0 is the earliest and most salient auditory dimension a human is exposed to, which is why it becomes the shared acoustic basis for tone, intonation <em>and</em> emotion<a class="cite" href="#r1">1</a>. A baby learning tone is learning to carve this continuous pitch stream into meaningful categories.</p>
+
+  <figure id="tonefig">
+    <p class="fig-title">The four Mandarin tones as pitch contours</p>
+    <p class="fig-sub">Pitch (vertical) over the length of the syllable "ma", on the 5-level scale linguists use. Same sounds — the shape of the pitch is the whole difference.</p>
+    <svg viewBox="0 0 720 240" role="img" aria-label="Four pitch contours for Mandarin tones: tone 1 high level, tone 2 rising, tone 3 dipping, tone 4 falling.">
+      <g stroke="var(--grid)" stroke-width="1">
+        <line x1="60" y1="40" x2="700" y2="40"/><line x1="60" y1="80" x2="700" y2="80"/>
+        <line x1="60" y1="120" x2="700" y2="120"/><line x1="60" y1="160" x2="700" y2="160"/>
+        <line x1="60" y1="200" x2="700" y2="200"/>
+      </g>
+      <g font-size="10.5" fill="var(--muted)" font-family="var(--sans)" text-anchor="end">
+        <text x="52" y="44">5 high</text><text x="52" y="204">1 low</text>
+      </g>
+      <!-- Tone 1: high level 55 -->
+      <g><path d="M80,52 L220,52" fill="none" stroke="var(--baby)" stroke-width="3.5" stroke-linecap="round"/>
+        <text x="150" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="var(--baby)" font-family="var(--sans)">mā ˉ</text>
+        <text x="150" y="224" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--sans)">mother · level</text></g>
+      <!-- Tone 2: rising 35 -->
+      <g><path d="M260,120 L400,52" fill="none" stroke="var(--acc)" stroke-width="3.5" stroke-linecap="round"/>
+        <text x="330" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="var(--acc)" font-family="var(--sans)">má ˊ</text>
+        <text x="330" y="224" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--sans)">hemp · rising</text></g>
+      <!-- Tone 3: dipping 214 -->
+      <g><path d="M440,150 Q470,205 500,190 Q530,175 580,60" fill="none" stroke="var(--same)" stroke-width="3.5" stroke-linecap="round"/>
+        <text x="510" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="var(--same)" font-family="var(--sans)">mǎ ˇ</text>
+        <text x="510" y="224" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--sans)">horse · dipping</text></g>
+      <!-- Tone 4: falling 51 -->
+      <g><path d="M620,52 L690,200" fill="none" stroke="var(--diff)" stroke-width="3.5" stroke-linecap="round"/>
+        <text x="655" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="var(--diff)" font-family="var(--sans)">mà ˋ</text>
+        <text x="655" y="224" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--sans)">scold · falling</text></g>
+    </svg>
+    <figcaption>A large share of the world's languages — by many counts something close to half — use lexical tone this way. A text LLM, by contrast, never sees this pitch curve at all, which is the crux of the comparison below.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ THE BABY ============ -->
+<section id="baby">
+  <p class="kicker" style="color:var(--baby)">The baby</p>
+  <h2>When — and how — a baby identifies tone</h2>
+  <p>Tone perception rides the same developmental logic as the rest of the sound system from Part 1: <strong>start broad, then narrow to the native language.</strong> Pitch is one of the very first things an infant is sensitive to, because it survives the trip into the womb.</p>
+
+  <div class="mtl" id="babytl">
+    <div class="mtl-row"><div class="mtl-age">before birth</div><div class="mtl-b"><div class="mtl-card"><b>Prosody reaches the fetus — and emotion registers at birth.</b> Low-frequency pitch and rhythm pass into the womb better than crisp consonants. Newborns' cries already carry the melodic contour of their native language, and neonates discriminate happy vs. neutral <em>emotional</em> prosody from about 37 weeks gestational age — activating the right superior temporal gyrus, modulated by the native language<a class="cite" href="#r8">8</a>. Affective tone of voice is one of the first things the brain reacts to.</div></div></div>
+    <div class="mtl-row"><div class="mtl-age">0–4 mo</div><div class="mtl-b"><div class="mtl-card"><b>Pitch-tuned from the start.</b> Infants discriminate pitch contours and are drawn to the exaggerated, sing-song pitch of infant-directed speech ("motherese"). Note the asymmetry: affective prosody is reliably read early only <em>with a supporting face</em>, and using F0 alone as an emotion cue isn't reliable until after age 4<a class="cite" href="#r1">1</a> — emotional tone is grounded in the whole social scene, not just the sound.</div></div></div>
+    <div class="mtl-row"><div class="mtl-age">~6 mo</div><div class="mtl-b"><div class="mtl-card"><b>Universal tone listeners.</b> At 4–6 months, infants from <em>any</em> language background — including non-tonal English, French, Dutch and German — can discriminate foreign lexical tone contrasts (e.g., Thai or Cantonese tones). The ability is not yet specialized<a class="cite" href="#r3">3</a>.</div></div></div>
+    <div class="mtl-row"><div class="mtl-age">~9 mo</div><div class="mtl-b"><div class="mtl-card"><b>Tone narrowing.</b> By 9 months, infants learning a <em>non-tonal</em> language lose the ability to discriminate those foreign tone contrasts, while infants learning a tone language keep and sharpen it — the perceptual narrowing seen for consonants and vowels, now on the pitch dimension (Mattock &amp; Burnham; Mattock et&nbsp;al.)<a class="cite" href="#r2">2</a><a class="cite" href="#r3">3</a>. It arrives slightly later than vowel narrowing.</div></div></div>
+    <div class="mtl-row"><div class="mtl-age">~12–18 mo</div><div class="mtl-b"><div class="mtl-card"><b>A twist: the rebound.</b> For non-tone-language infants the loss isn't permanent — Dutch and German babies who fail at 9 months <em>recover</em> tone discrimination in the second year, making the trajectory <em>U-shaped</em><a class="cite" href="#r4">4</a><a class="cite" href="#r5">5</a>. But this is regained general acoustic sensitivity, not lexical tone — they hear the pitch difference again without treating it as meaning.</div></div></div>
+    <div class="mtl-row"><div class="mtl-age">1–2 yr</div><div class="mtl-b"><div class="mtl-card"><b>Tone becomes lexical.</b> Toddlers in tone languages use pitch to tell words apart and lock in meanings — pitch is now part of the word. The specialization even reshapes the cortex: Mandarin speakers develop enhanced categorical tuning to native tones and longer pitch-integration windows than English speakers, atop a shared, language-independent relative-pitch code<a class="cite" href="#r7">7</a>.</div></div></div>
+  </div>
+
+  <div class="note baby"><b>The key move.</b> No one hands the baby labeled examples of "tone 2 vs. tone 3." The categories are <em>discovered</em> from the distribution of pitch in ambient speech<a class="cite" href="#r9">9</a>, then locked in by a developmental window. Hold onto that — it's exactly where the LLM comparison gets interesting.</div>
+</section>
+
+<!-- ============ THE LLM ============ -->
+<section id="llm">
+  <p class="kicker" style="color:var(--llm)">The language model</p>
+  <h2>How an LLM identifies tone</h2>
+  <p>A text LLM has no ears. It never hears F0, never hears a voice rise into a question. So when we say a model "picks up on tone," we mean something specific: it infers <strong>register, sentiment, stance, and emotional coloring from the words, syntax and punctuation alone</strong> — the shadow that spoken tone casts onto text ("I'm <em>fine</em>.", ALL CAPS, a trailing "…", a curt one-word reply).</p>
+
+  <h3>It's a side effect of predicting the next token</h3>
+  <p>An LLM is trained only to predict the next token over enormous amounts of text. But to do that well, it <em>has</em> to model tone: a formal email and an angry tweet continue very differently, so a model that ignored register would predict badly. Tone-sensitivity emerges because it lowers the loss — not because anyone labeled it. This is the same "discover structure from prediction" logic as the baby, just with a different objective.</p>
+
+  <h3>Tone lives as a direction in representation space</h3>
+  <p>Strikingly, tone often ends up encoded in a compact, almost linear way inside the network. In a famous 2017 result, an unsupervised 4,096-unit model trained only to predict the next character in 82 million Amazon reviews developed a single unit — the <em class="term">"sentiment neuron"</em> — that tracked positive vs. negative sentiment with no sentiment labels ever provided; overwriting that one unit's value even steers the sentiment of what the model generates<a class="cite" href="#r10">10</a>. More broadly, the <em class="term">linear representation hypothesis</em> holds that features like sentiment and formality correspond to directions in activation space that you can probe for and <em>steer</em> along<a class="cite" href="#r11">11</a>. Recent probing work finds a single sentiment direction that multiple methods agree on, and shows it is causally load-bearing — ablate it and sentiment-task accuracy collapses from 100% to 62%<a class="cite" href="#r12">12</a>.</p>
+
+  <p>One detail is almost poetic: that sentiment isn't stored only on obviously emotional words. Models <em>summarize</em> tone at neutral positions — punctuation and names — so that ablating the direction at the <strong>commas alone</strong> already drops accuracy sharply<a class="cite" href="#r12">12</a>. The model builds a running estimate of "how does this feel" and parks it on the scaffolding of the sentence.</p>
+
+  <div class="note llm"><b>Attention supplies the context tone needs.</b> Tone is contextual — "great, another meeting" is only sarcastic given surrounding cues. The transformer's self-attention lets each token pull in that context, which is how a model resolves sarcasm, irony, and register from text.</div>
+
+  <h3>Speech LLMs get closer to the baby's channel</h3>
+  <p>Text models are the mismatched case. But <strong>speech and multimodal models</strong> that take audio can process F0 and prosody directly. Self-supervised speech units turn out to implicitly carry emotional information — one system reaches ~61% emotion recognition from units alone and preserves relative pitch contours through reconstruction<a class="cite" href="#r15">15</a> — and models with explicit pitch tokens develop emergent emotion- and emphasis-recognition purely from pre-training<a class="cite" href="#r15">15</a>. Those systems learn tone from something much closer to what the baby hears, which narrows the signal gap (though not the grounding gap) considerably.</p>
+</section>
+
+<!-- ============ SIDE BY SIDE ============ -->
+<section id="compare">
+  <p class="kicker">Interactive</p>
+  <h2>Side by side: how alike is the learning?</h2>
+  <p class="dim">Each dimension is tagged as a <span style="color:var(--same);font-weight:600">similarity</span>, a <span style="color:var(--diff);font-weight:600">difference</span>, or <span style="color:var(--acc);font-weight:600">mixed</span>. Filter to see the pattern.</p>
+
+  <div class="cmp-controls" id="cmpControls">
+    <span class="lbl">Show:</span>
+    <button class="chip" data-k="all" aria-pressed="true">Everything</button>
+    <button class="chip" data-k="same" aria-pressed="false"><span class="dot"></span>Similarities</button>
+    <button class="chip" data-k="diff" aria-pressed="false"><span class="dot"></span>Differences</button>
+  </div>
+
+  <div class="cmp" id="cmpList"><!-- injected --></div>
+</section>
+
+<!-- ============ VERDICT ============ -->
+<section id="verdict">
+  <p class="kicker">The answer</p>
+  <h2>So how similar is it, really?</h2>
+
+  <div class="meter">
+    <div class="big">Same&nbsp;method,<br>different&nbsp;world</div>
+    <div class="txt">The <b>algorithm</b> rhymes closely. The <b>thing being learned</b> does not.</div>
+  </div>
+
+  <p><strong>Where they genuinely rhyme:</strong> both are <em>self-supervised, distributional learners</em>. Neither is given labeled "tone." Both discover it as latent structure because it helps them predict — the baby anticipating a caregiver's world, the model minimizing next-token loss. The mechanism the baby uses, tracking transitional probabilities in the input, is domain-general enough to work on non-linguistic tone sequences too<a class="cite" href="#r9">9</a>, and it's the same "structure from prediction" logic that gives an LLM a sentiment direction. Both wind up representing tone as a reusable internal dimension, and both <em>specialize to their input distribution</em>: the baby narrows to its native tone system, the model's tone sense reflects (and is biased by) its training corpus.</p>
+
+  <p><strong>Where the analogy breaks:</strong> the baby learns tone as <em>physics grounded in feeling</em> — real pitch from a real voice, tied to emotion, faces, and a caregiver who responds. The text LLM learns tone as a <em>statistical shadow in symbols</em>, with no felt affect behind it (though how absolute that "grounding" gap is remains actively debated<a class="cite" href="#r16">16</a>). Three hard asymmetries remain. <strong>Data:</strong> children reach comparable emergent abilities on a few million words, while LLMs need 3–4, up to 6, <em>orders of magnitude</em> more language data<a class="cite" href="#r14">14</a>. <strong>The window:</strong> the baby's specialization is enforced by a developmental critical period — and tellingly, standard LMs <em>don't</em> develop one from statistical learning alone; researchers had to bolt on an artificial maturational constraint (a regularizer) to reproduce critical-period behavior, and without it LMs just catastrophically forget instead<a class="cite" href="#r13">13</a>. That's strong evidence the baby's window is a biological add-on, not an automatic consequence of being a good learner. <strong>The loop:</strong> the baby also produces tone and hears itself, closing a perceive-act circuit a text model lacks. So: <strong>a similar learning trick applied to two very different objects.</strong></p>
+
+  <p class="dim">Put simply: the baby and the model are both brilliant pattern-finders who were never taught tone and figured it out anyway. But the baby is learning what a voice <em>is</em>; the model is learning what people <em>write</em> as if a voice were there.</p>
+</section>
+
+<!-- ============ REFERENCES ============ -->
+<section id="refs">
+  <p class="kicker">Evidence base</p>
+  <h2>Sources</h2>
+  <p class="dim" id="refsnote">Primary studies and reviews behind the claims above, verified in an adversarial fact-checking pass. Classic works are cited by author/year where a stable open link isn't listed.</p>
+  <ol class="refs" id="refslist">
+    <li id="r1"><b>Yip / Cambridge Handbook of Phonology — "Tone."</b> Tone as pitch making lexical/grammatical contrasts; ~half of the world's languages use lexical tone; F0 as the primary acoustic dimension for tone, intonation and emotion; the after-age-4 F0-alone emotion cue. <span class="tagpill">tone · defn</span><br><a href="https://www.cambridge.org/core/books/cambridge-handbook-of-phonology/tone/AB5CD378A7FC81EE433779043D70C2CF" target="_blank" rel="noopener">cambridge.org — Cambridge Handbook of Phonology: Tone</a>; developmental prosody review: <a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2022.906848/full" target="_blank" rel="noopener">Frontiers in Psychology 2022, 13:906848</a></li>
+    <li id="r2"><b>Mattock &amp; Burnham (2006).</b> Chinese and English infants' tone perception: evidence for perceptual reorganization. <i>Infancy</i> 10(3):241–265. <span class="tagpill">baby · tone</span> <i>(cited by author/year)</i></li>
+    <li id="r3"><b>Mattock, Molnar, Polka &amp; Burnham (2008).</b> The developmental course of lexical tone perception in the first year of life — English/French infants discriminate Thai tones at 4–6 mo, fail by 9 mo; tone narrowing lags vowel narrowing. <i>Cognition</i> 106(3):1367–1381. <span class="tagpill">baby · tone</span><br><a href="https://pubmed.ncbi.nlm.nih.gov/17707789/" target="_blank" rel="noopener">pubmed.ncbi.nlm.nih.gov/17707789</a></li>
+    <li id="r4"><b>Liu &amp; Kager (2014).</b> Perception of tones by infants learning a non-tone language — Dutch infants show a U-shaped trajectory (loss at ~9 mo, rebound in year two). <i>Cognition</i> 133(2):385–394. <span class="tagpill">baby · tone</span><br><a href="https://www.sciencedirect.com/science/article/abs/pii/S0010027714001140" target="_blank" rel="noopener">sciencedirect.com/science/article/abs/pii/S0010027714001140</a></li>
+    <li id="r5"><b>Götz, Yeung, Krasotkina, Schwarzer &amp; Höhle (2018).</b> German-learning infants show a U-shaped curve for Cantonese tone discrimination (6 &amp; 18 mo yes, 9 mo no); method-dependent. <i>Frontiers in Psychology</i> 9:477. <span class="tagpill">baby · tone</span><br><a href="https://www.frontiersin.org/articles/10.3389/fpsyg.2018.00477/full" target="_blank" rel="noopener">frontiersin.org — Front. Psychol. 9:477</a></li>
+    <li id="r6"><b>Yeung, Chen &amp; Werker (2013).</b> When does native language input affect phonetic perception? The precocious case of lexical tone. <i>Journal of Memory and Language.</i> <span class="tagpill">baby · tone</span> <i>(cited by author/year)</i></li>
+    <li id="r7"><b>Tang, Chang et&nbsp;al. (2021).</b> Cortical encoding of speech pitch: a shared, speaker-normalized relative-pitch mechanism, with tone-language-driven enhancement of native-tone categorical tuning and longer temporal integration in Mandarin speakers. <i>Nature Communications</i> 12:1161. <span class="tagpill">baby · neural</span><br><a href="https://www.nature.com/articles/s41467-021-21430-x" target="_blank" rel="noopener">nature.com/articles/s41467-021-21430-x</a></li>
+    <li id="r8"><b>Neonatal emotional prosody.</b> Newborns discriminate emotional (happy/fearful/angry vs. neutral) prosody at birth — right superior temporal gyrus, modulated by native language; discrimination present from ~37 weeks gestational age. <span class="tagpill">baby · affect</span><br><a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2019.00364/full" target="_blank" rel="noopener">Front. Psychol. 2019, 10:364</a>; ERP/GA study <a href="https://onlinelibrary.wiley.com/doi/10.1111/infa.70087" target="_blank" rel="noopener">Infancy (2024)</a></li>
+    <li id="r9"><b>Saffran, Aslin &amp; Newport (1996)</b> + statistical-learning reviews. 8-month-olds segment words via transitional probabilities; the mechanism is domain-general (works on non-linguistic tone sequences) and shapes phonetic-category formation. <i>Science</i> 274:1926–1928; <i>Developmental Review</i> (2015). <span class="tagpill">both · mechanism</span><br><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3112001/" target="_blank" rel="noopener">pmc.ncbi.nlm.nih.gov/articles/PMC3112001</a></li>
+    <li id="r10"><b>Radford, Józefowicz &amp; Sutskever (2017).</b> Learning to generate reviews and discovering sentiment — an unsupervised 4,096-unit mLSTM (82M Amazon reviews) develops a single "sentiment neuron" that can be overwritten to steer sentiment; SOTA on SST. <i>arXiv:1704.01444.</i> <span class="tagpill">llm</span><br><a href="https://www.semanticscholar.org/paper/Learning-to-Generate-Reviews-and-Discovering-Radford-J%C3%B3zefowicz/664ec878de4b7170712baae4a7821fc2602bba25" target="_blank" rel="noopener">semanticscholar.org — Radford et al. 2017</a></li>
+    <li id="r11"><b>Park, Choe &amp; Veitch (2023).</b> The linear representation hypothesis — abstract concepts encoded as directions in representation space, readable by linear probes and usable as steering vectors. <i>arXiv:2311.03658.</i> <span class="tagpill">llm</span><br><a href="https://arxiv.org/html/2311.03658v2" target="_blank" rel="noopener">arxiv.org/html/2311.03658v2</a></li>
+    <li id="r12"><b>Sentiment as a linear feature (2024, BlackboxNLP).</b> Multiple methods converge on one sentiment direction; ablating it drops SST accuracy 100%→62%; sentiment is "summarized" at non-valenced positions (punctuation, names), so ablating at commas alone drops accuracy to 82%. <span class="tagpill">llm</span><br><a href="https://aclanthology.org/2024.blackboxnlp-1.5.pdf" target="_blank" rel="noopener">aclanthology.org/2024.blackboxnlp-1.5.pdf</a></li>
+    <li id="r13"><b>Constantinescu, Warstadt et&nbsp;al. (2024).</b> Investigating critical period effects in language acquisition with LMs — LMs show no critical period from statistical learning alone; it must be engineered via an Elastic Weight Consolidation regularizer, else L1 is catastrophically forgotten. <i>TACL</i> / <i>arXiv:2407.19325.</i> <span class="tagpill">llm · CP</span><br><a href="https://direct.mit.edu/tacl/article/doi/10.1162/tacl_a_00725/127669/Investigating-Critical-Period-Effects-in-Language" target="_blank" rel="noopener">direct.mit.edu/tacl — tacl_a_00725</a></li>
+    <li id="r14"><b>Frank (2023).</b> Bridging the data gap between children and large language models — LLMs receive 3–4 (up to 6) orders of magnitude more language data than children, who reach comparable emergent abilities on a few million words. <i>Trends in Cognitive Sciences</i> 27(11). <span class="tagpill">compare · data</span><br><a href="https://www.sciencedirect.com/science/article/abs/pii/S1364661323002036" target="_blank" rel="noopener">sciencedirect.com/science/article/abs/pii/S1364661323002036</a></li>
+    <li id="r15"><b>Speech / prosody LLMs.</b> USDM (NeurIPS 2024): self-supervised acoustic units implicitly encode emotion (~60.8% on CREMA-D) and preserve relative pitch contours. ProsodyLM (2025): explicit word-level F0/energy/duration tokens yield emergent emotion &amp; emphasis recognition from pre-training. <span class="tagpill">llm · speech</span><br><a href="https://proceedings.neurips.cc/paper_files/paper/2024/file/ecfa5340fd896e5314bc5e132b5dd5ca-Paper-Conference.pdf" target="_blank" rel="noopener">NeurIPS 2024 — USDM</a>; <a href="https://arxiv.org/pdf/2507.20091" target="_blank" rel="noopener">arXiv:2507.20091 — ProsodyLM</a></li>
+    <li id="r16"><b>Pavlick (2023).</b> Symbols and grounding in large language models — argues the "no symbols / no grounding" objections to LLMs as models of language are premature and should be settled empirically via internal representations. <i>Phil. Trans. R. Soc. A.</i> <span class="tagpill">compare · grounding</span> <i>(cited by author/year)</i></li>
+    <li id="r17"><b>Werker &amp; Tees (1984; 2024 retrospective).</b> The perceptual-reorganization framework that tone-narrowing studies build on; attunement extends beyond segments to prosodic/tonal dimensions. <i>Infant Behavior &amp; Development.</i> <span class="tagpill">baby · framework</span><br><a href="https://www.sciencedirect.com/science/article/pii/S0163638324000146" target="_blank" rel="noopener">sciencedirect.com/science/article/pii/S0163638324000146</a></li>
+  </ol>
+</section>
+
+<footer>
+  <p>Part 2 of the <b>accent_formation</b> project. Live draft: the argument is complete; specific citations are being fact-checked by a background research pass and will be finalized in Sources. The Mandarin-tone figure uses the standard Chao 5-level pitch notation.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  function apply(t){ root.setAttribute('data-theme',t); btn.textContent = t==='dark' ? '☀' : '◐'; }
+  var mq=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  apply(mq && mq.matches ? 'dark':'light');
+  btn.addEventListener('click', function(){ apply(root.getAttribute('data-theme')==='dark'?'light':'dark'); });
+
+  /* comparison data */
+  var DIM=[
+    {name:"What “tone” even is", v:"diff",
+     baby:"Acoustic <b>pitch (F0)</b> from a real voice — lexical tone, intonation, and emotion, all in sound.",
+     llm:"<b>Register &amp; sentiment inferred from text</b> — word choice, syntax, punctuation. No pitch at all (unless it's a speech model)."},
+    {name:"Learning objective", v:"same",
+     baby:"Predict and make sense of the social world; anticipate what comes next.",
+     llm:"<b>Predict the next token.</b> Both are prediction machines — tone falls out as useful structure."},
+    {name:"Supervision signal", v:"same",
+     baby:"<b>No labels.</b> Tone categories are discovered from the distribution of pitch in ambient speech.",
+     llm:"<b>No labels.</b> Tone/sentiment emerge unsupervised from raw text (e.g. the sentiment neuron)."},
+    {name:"Internal representation", v:"same",
+     baby:"Neural tuning forms discrete tone categories out of a continuous pitch space; tone-language cortex shows enhanced categorical pitch tuning.",
+     llm:"Tone becomes a compact, often near-<b>linear direction</b> you can probe, ablate and steer — even summarized at the commas."},
+    {name:"Specializing to the input", v:"same",
+     baby:"Narrows to the <b>native</b> tone system; keeps what the language uses.",
+     llm:"Tone sense reflects — and is biased by — the <b>training corpus</b> (register, language mix)."},
+    {name:"Narrowing vs. critical period", v:"mixed",
+     baby:"Specialization is locked in by a <b>developmental window</b> (narrowing ~9 mo; a U-shaped rebound follows for non-tone learners).",
+     llm:"Specializes to data too, but shows <b>no critical period</b> unless one is artificially engineered in — otherwise it just catastrophically forgets."},
+    {name:"Data efficiency", v:"diff",
+     baby:"Learns tone from a <b>few million</b> words plus rich social feedback, in months.",
+     llm:"Needs <b>3–4 to 6 orders of magnitude</b> more language data to reach comparable ability."},
+    {name:"Grounding &amp; embodiment", v:"diff",
+     baby:"<b>Embodied, multimodal, felt.</b> Pitch tied to faces, situations, real emotion, a responsive caregiver.",
+     llm:"<b>Symbolic text only.</b> Models how tone is <i>written about</i>; has no felt affect behind it."},
+    {name:"Perceive-and-produce loop", v:"diff",
+     baby:"Also <b>produces</b> tone (babble melody) — a closed feedback loop between hearing and saying.",
+     llm:"Base model only emits text; no vocal production, no acoustic self-monitoring."}
+  ];
+  var VLABEL={same:"Similarity", diff:"Difference", mixed:"Mixed"};
+  var list=document.getElementById('cmpList');
+  DIM.forEach(function(d){
+    var el=document.createElement('div');
+    el.className='cmp-item'; el.setAttribute('data-v', d.v);
+    el.innerHTML =
+      '<div class="cmp-head"><span class="dim-name">'+d.name+'</span>'+
+        '<span class="verdict-tag '+d.v+'">'+VLABEL[d.v]+'</span></div>'+
+      '<div class="cmp-cols">'+
+        '<div class="cmp-col baby"><div class="who"><span class="pip"></span>Baby</div>'+d.baby+'</div>'+
+        '<div class="cmp-col llm"><div class="who"><span class="pip"></span>LLM</div>'+d.llm+'</div>'+
+      '</div>';
+    list.appendChild(el);
+  });
+
+  var chips=[].slice.call(document.querySelectorAll('#cmpControls .chip'));
+  var items=[].slice.call(document.querySelectorAll('.cmp-item'));
+  function setF(k){
+    chips.forEach(function(c){ c.setAttribute('aria-pressed', c.dataset.k===k?'true':'false'); });
+    items.forEach(function(it){
+      var v=it.getAttribute('data-v');
+      var show = k==='all' || v===k || (k!=='all' && v==='mixed');
+      it.classList.toggle('dim-out', !show);
+    });
+  }
+  chips.forEach(function(c){ c.addEventListener('click', function(){ setF(c.dataset.k); }); });
+  setF('all');
+})();
+</script>
+</body>
+</html>
