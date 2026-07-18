@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-label="TravelBuddy — AI trip planner illustration">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b7fa6"/>
+      <stop offset="1" stop-color="#31517a"/>
+    </linearGradient>
+    <linearGradient id="pin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e8ecf7"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="400" fill="url(#sky)"/>
+
+  <!-- faint skyline -->
+  <g fill="#ffffff" opacity="0.10">
+    <rect x="40" y="250" width="46" height="150"/>
+    <rect x="98" y="215" width="58" height="185"/>
+    <rect x="168" y="265" width="40" height="135"/>
+    <rect x="376" y="235" width="52" height="165"/>
+    <rect x="440" y="270" width="44" height="130"/>
+    <rect x="496" y="225" width="60" height="175"/>
+  </g>
+
+  <!-- dashed travel route -->
+  <path d="M60 330 C 160 240, 240 300, 300 210 S 460 130, 540 180"
+        fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"
+        stroke-dasharray="2 16" opacity="0.85"/>
+
+  <!-- route stops -->
+  <circle cx="60" cy="330" r="9" fill="#ffd166"/>
+  <circle cx="300" cy="210" r="7" fill="#ffffff" opacity="0.9"/>
+
+  <!-- destination pin -->
+  <g transform="translate(540 180)">
+    <path d="M0 -74 C -26 -74 -44 -55 -44 -32 C -44 0 0 40 0 40 C 0 40 44 0 44 -32 C 44 -55 26 -74 0 -74 Z"
+          fill="url(#pin)"/>
+    <circle cx="0" cy="-33" r="15" fill="#4B62F0"/>
+  </g>
+
+  <!-- little plane -->
+  <g transform="translate(180 150) rotate(-18)">
+    <path d="M0 0 L58 8 L74 0 L58 -8 Z" fill="#ffd166"/>
+    <path d="M28 4 L18 26 L28 22 L36 8 Z" fill="#ffd166" opacity="0.9"/>
+    <path d="M28 -4 L18 -26 L28 -22 L36 -8 Z" fill="#ffd166" opacity="0.9"/>
+  </g>
+
+  <!-- ticket / itinerary card -->
+  <g transform="translate(96 96) rotate(-6)">
+    <rect x="0" y="0" width="150" height="86" rx="10" fill="#ffffff" opacity="0.95"/>
+    <rect x="14" y="16" width="86" height="9" rx="4.5" fill="#4B62F0" opacity="0.85"/>
+    <rect x="14" y="35" width="118" height="7" rx="3.5" fill="#9aa7c7"/>
+    <rect x="14" y="50" width="104" height="7" rx="3.5" fill="#9aa7c7" opacity="0.8"/>
+    <rect x="14" y="65" width="64" height="7" rx="3.5" fill="#ffd166"/>
+  </g>
+</svg>
