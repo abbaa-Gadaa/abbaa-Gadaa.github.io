@@ -18,3 +18,6 @@ node_modules/
 
 # Tools output
 tools/*.log
+
+# Course PDFs (not for publishing)
+*.pdf

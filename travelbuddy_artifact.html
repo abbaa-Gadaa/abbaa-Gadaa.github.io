@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TravelBuddy – AIML-505 Portfolio Artifact – Abel Edea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg: #FAF4EB;
+      --bg-warm: #F3EAD8;
+      --bg-dark: #1B1B18;
+      --text: #2C2C28;
+      --text-muted: #7A776D;
+      --text-light: #A09C92;
+      --accent: #8B6E4E;
+      --accent-light: #C4A97D;
+      --border: rgba(0,0,0,0.08);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+
+    .nav {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 1.5rem 3rem; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250, 244, 235, 0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted); transition: color 0.3s;
+    }
+    .nav-back:hover { color: var(--text); }
+    .nav-title {
+      font-family: var(--serif); font-size: 1rem;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    .hero {
+      min-height: 90vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 8rem 2rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--serif);
+      font-size: clamp(8rem, 22vw, 20rem);
+      font-weight: 400; color: rgba(0,0,0,0.03);
+      line-height: 1; pointer-events: none; user-select: none;
+      white-space: nowrap;
+    }
+    .hero-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 2rem; position: relative;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 400; line-height: 1.05; color: var(--text);
+      margin-bottom: 2rem; max-width: 850px; position: relative;
+    }
+    .hero-sub {
+      font-size: 1.15rem; color: var(--text-muted);
+      max-width: 560px; line-height: 1.8; position: relative;
+    }
+    .hero-cta {
+      margin-top: 2.5rem; position: relative;
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      background: var(--bg-dark); color: #F5F0E8;
+      border-radius: 999px;
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hero-cta:hover { transform: translateY(-2px); opacity: 0.9; box-shadow: 0 10px 28px rgba(27, 27, 24, 0.22); }
+
+    .section { padding: 5.5rem 3rem; position: relative; }
+    .section--warm { background: var(--bg-warm); }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    .section-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem; display: block;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 400; line-height: 1.15; color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .section-text {
+      font-size: 1rem; color: var(--text-muted); line-height: 1.8;
+    }
+    .section-text + .section-text { margin-top: 1rem; }
+    .section-text strong { color: var(--text); font-weight: 600; }
+
+    .divider {
+      max-width: 900px; margin: 0 auto;
+      border: none; border-top: 1px solid var(--border);
+    }
+
+    /* Process steps */
+    .steps { margin-top: 2.5rem; display: grid; gap: 1.25rem; }
+    .step {
+      display: grid; grid-template-columns: 56px 1fr; gap: 1.25rem;
+      padding: 1.5rem; border: 1px solid var(--border);
+      border-radius: 1rem; background: var(--bg);
+      align-items: start;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .step:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(43, 43, 40, 0.07);
+    }
+    .step-num {
+      font-family: var(--serif); font-size: 1.4rem;
+      color: var(--accent); line-height: 1;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--accent-light); border-radius: 50%;
+      background: rgba(196, 169, 125, 0.08);
+    }
+    .step h3 {
+      font-family: var(--serif); font-size: 1.2rem; font-weight: 400;
+      margin-bottom: 0.4rem; color: var(--text);
+    }
+    .step p { font-size: 0.92rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* Decision / evidence callouts */
+    .decision {
+      margin-top: 2rem; padding: 1.75rem 2rem;
+      border-left: 3px solid var(--accent);
+      background: var(--bg);
+      border-radius: 0 1rem 1rem 0;
+      box-shadow: 0 4px 18px rgba(43, 43, 40, 0.04);
+    }
+    .decision-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent); display: block;
+      margin-bottom: 0.6rem;
+    }
+    .decision p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.75; }
+    .decision p strong { color: var(--text); }
+
+    /* Prompt example */
+    .prompt-box {
+      margin-top: 2rem; border: 1px solid var(--border);
+      border-radius: 1rem; overflow: hidden;
+    }
+    .prompt-box-head {
+      padding: 0.8rem 1.5rem; background: var(--bg-warm);
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      border-bottom: 1px solid var(--border);
+    }
+    .prompt-box-body {
+      padding: 1.5rem;
+      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 0.85rem; line-height: 1.7; color: var(--text);
+      background: var(--bg);
+      white-space: pre-wrap;
+    }
+
+    /* Modes table */
+    .compare-table {
+      max-width: 760px;
+      margin: 2.5rem auto 0;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .compare-table table { width: 100%; border-collapse: collapse; }
+    .compare-table th {
+      font-family: var(--serif); font-size: 1rem; font-weight: 400;
+      padding: 1.1rem 1.25rem; text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: rgba(139,110,78,0.06);
+    }
+    .compare-table td {
+      padding: 0.9rem 1.25rem; font-size: 0.88rem;
+      color: var(--text-muted); line-height: 1.6;
+      border-bottom: 1px solid var(--border); vertical-align: top;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr { transition: background 0.25s ease; }
+    .compare-table tr:has(td):hover { background: rgba(139, 110, 78, 0.04); }
+    .compare-table td:first-child { color: var(--text); font-weight: 500; }
+
+    .takeaway {
+      padding: 6rem 3rem; text-align: center;
+      background: var(--bg-dark); color: #E8E4DC;
+      position: relative; overflow: hidden;
+    }
+    .takeaway-bg {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--serif);
+      font-size: clamp(10rem, 25vw, 20rem);
+      font-weight: 400; color: rgba(255,255,255,0.03);
+      line-height: 1; pointer-events: none; user-select: none;
+    }
+    .takeaway-inner { max-width: 650px; margin: 0 auto; position: relative; }
+    .takeaway-text {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 400; line-height: 1.5; color: #F5F0E8;
+    }
+    .takeaway-sub { margin-top: 1.5rem; font-size: 0.85rem; color: #7A776D; letter-spacing: 0.04em; }
+
+    .project-info { padding: 6rem 3rem; border-top: 1px solid var(--border); }
+    .project-info-inner { max-width: 800px; margin: 0 auto; }
+    .project-info h2 {
+      font-family: var(--serif); font-size: 1.8rem;
+      font-weight: 400; color: var(--text);
+      text-align: center; margin-bottom: 3.5rem;
+    }
+    .info-grid { display: grid; grid-template-columns: 150px 1fr; gap: 2rem 2.5rem; }
+    .info-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); padding-top: 0.15rem;
+    }
+    .info-text { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; }
+
+    .footer {
+      text-align: center; padding: 3rem 2rem;
+      background: var(--bg-dark); color: #5A574F;
+      font-size: 0.8rem; letter-spacing: 0.06em;
+    }
+
+    @media (max-width: 900px) {
+      .nav { padding: 1.25rem 1.5rem; }
+      .section { padding: 4rem 1.5rem; }
+      .info-grid { grid-template-columns: 1fr; gap: 0.5rem 0; }
+      .info-label { padding-top: 1rem; }
+      .compare-table th, .compare-table td { padding: 0.75rem 1rem; font-size: 0.85rem; }
+      .takeaway { padding: 5rem 1.5rem; }
+      .project-info { padding: 4rem 1.5rem; }
+      .step { grid-template-columns: 40px 1fr; padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-back">← Portfolio</a>
+    <span class="nav-title">AIML-505 · TravelBuddy</span>
+  </nav>
+
+  <!-- Hero / Title -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true">Travel</div>
+    <span class="hero-label reveal">AIML-505 Portfolio Artifact</span>
+    <h1 class="reveal reveal-delay-1">TravelBuddy:<br>An AI Trip Planner</h1>
+    <p class="hero-sub reveal reveal-delay-2">A full-stack generative-AI application built in a four-hour hack-a-thon sprint — it turns "I want three days in Chicago on a budget" into a routed, budget-balanced, bookable itinerary, with RAG retrieval and a simulated checkout.</p>
+    <a href="travelbuddy/" class="hero-cta reveal reveal-delay-3">Try the live demo →</a>
+  </section>
+
+  <!-- Objective -->
+  <section class="section">
+    <div class="section-inner">
+      <span class="section-label reveal">Objective · Why I built it</span>
+      <h2 class="section-title reveal reveal-delay-1">From course concepts<br>to a working product</h2>
+      <p class="section-text reveal reveal-delay-2">TravelBuddy was our AIML-505 hack-a-thon final project: a five-person team, less than four hours, and one goal — take generative-AI concepts from the course past the notebook stage and ship a <strong>complete, usable application</strong> where an LLM does real planning work, retrieval grounds it in real data, and a non-technical person can use it without reading anything first.</p>
+      <p class="section-text reveal reveal-delay-3">We chose trip planning deliberately: it's a relatable domain that showcases RAG and multi-step AI orchestration, and it stresses exactly the things generative AI is bad at when used naively — staying inside a budget, respecting geography, and not inventing hotels that don't exist. Each of those failure modes forced a design decision you can see in the finished app.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Process -->
+  <section class="section section--warm">
+    <div class="section-inner">
+      <span class="section-label reveal">Process · How I made it</span>
+      <h2 class="section-title reveal reveal-delay-1">Showing my work</h2>
+      <p class="section-text reveal reveal-delay-2">Five of us — Abel Edea, Laykumar Lad, Sai Kaushik Surampudi, Suhail Syed, and Saurabh Rawat — built TravelBuddy in a hack-a-thon sprint of under four hours, using Claude extensively to accelerate architecture design and code generation while the team owned the scope, the module boundaries, and the evaluation of every AI-generated piece.</p>
+
+      <div class="steps">
+        <div class="step reveal">
+          <span class="step-num">1</span>
+          <div>
+            <h3>Converge on a domain and an API surface</h3>
+            <p>We brainstormed for a relatable domain that could showcase RAG and multi-step AI orchestration, converged on trip planning, and designed a concise API surface first — health, destination management, planning, and checkout — before writing feature code.</p>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-1">
+          <span class="step-num">2</span>
+          <div>
+            <h3>Separate the concerns</h3>
+            <p>We scoped the system into clean modules — data, retrieval, planning, LLM integration, budget, and storage — with a frontend that mirrors the logical user journey screen by screen. Retrieval and planning were deliberately kept separate: retrieval selects real candidates from a curated knowledge base of hotels, restaurants, and activities; planning composes days from only those candidates.</p>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <span class="step-num">3</span>
+          <div>
+            <h3>Build with Claude, within scope</h3>
+            <p>With less than four hours on the clock, Claude accelerated architecture, code generation, and iteration on both backend and frontend. The discipline was staying inside the defined scope — backend and frontend sub-teams collaborated on payload contracts so AI-generated code on both sides actually fit together.</p>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <span class="step-num">4</span>
+          <div>
+            <h3>Validate both modes end to end</h3>
+            <p>We tuned the domain knowledge base and validated the full flow under both deterministic (retrieval-only) and AI-enabled modes, with shared budget logic across backend and frontend so itineraries stay consistent and budget-aware either way. This was my role on the team — testing the end-to-end flows, catching where the two modes disagreed, and feeding issues back to the sub-teams.</p>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <span class="step-num">5</span>
+          <div>
+            <h3>Make the simulation honest, then ship</h3>
+            <p>We refined copy and UX to make the simulated nature of the data and checkout explicit — no real payments, no external booking systems. The frontend ships as a static React/Vite build, deployed here on GitHub Pages so anyone can use it.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision reveal">
+        <span class="decision-label">A decision that mattered</span>
+        <p><strong>We refused to let the LLM freewheel.</strong> Instead of "just ask the model for an itinerary," the architecture separates retrieval from planning: the model only composes from real, retrieved candidates, and shared deterministic budget logic constrains the result on both backend and frontend. That separation is why the app also works with no API key at all — and it's the difference between a demo that impresses and one that survives inspection.</p>
+      </div>
+
+      <div class="prompt-box reveal">
+        <div class="prompt-box-head">Evidence · The shape of the planning prompt</div>
+        <div class="prompt-box-body">You are a trip planner. Compose a {days}-day itinerary for {city}
+using ONLY the candidate hotels and activities provided below.
+Total budget: ${budget}. Interests: {interests}.
+Rules: stay within budget, group each day by neighborhood,
+one hotel for the whole stay, return structured JSON.
+
+CANDIDATES (retrieved): {retrieved_entries}</div>
+      </div>
+      <p class="section-text reveal" style="margin-top: 1rem; font-size: 0.85rem;">The key move: the model never sees the whole world — only retrieved, real candidates, with the budget and structure stated as rules. Getting reliable structured JSON back took several prompt revisions.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Modes / how it works -->
+  <section class="section">
+    <div class="section-inner">
+      <span class="section-label reveal">Under the hood</span>
+      <h2 class="section-title reveal reveal-delay-1">Three planning modes</h2>
+      <p class="section-text reveal reveal-delay-2">The app labels every itinerary with its source, so viewers can see exactly which parts are AI and which are retrieval — an honesty choice I'd defend in any production AI product.</p>
+      <div class="compare-table reveal reveal-delay-2">
+        <table>
+          <tr><th>Mode</th><th>When it runs</th><th>What it demonstrates</th></tr>
+          <tr>
+            <td>Composed by Claude</td>
+            <td>API key present, supported city</td>
+            <td>Full RAG pipeline — retrieval feeds the LLM, which composes the itinerary</td>
+          </tr>
+          <tr>
+            <td>AI-generated custom city</td>
+            <td>City outside the curated dataset</td>
+            <td>Generation without retrieval — clearly labeled so the trust boundary is visible</td>
+          </tr>
+          <tr>
+            <td>Built-in planner (fallback)</td>
+            <td>No API key</td>
+            <td>Pure retrieval + scoring — the demo works for everyone, always</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="takeaway">
+    <div class="takeaway-bg" aria-hidden="true">RAG</div>
+    <div class="takeaway-inner reveal">
+      <p class="takeaway-text">Generative AI becomes useful when you constrain it — retrieval for truth, rules for budgets, structure for output.</p>
+      <p class="takeaway-sub">TravelBuddy is that idea, shipped.</p>
+    </div>
+  </section>
+
+  <!-- Artifact Information -->
+  <section class="project-info">
+    <div class="project-info-inner">
+      <h2 class="reveal">Artifact Information</h2>
+      <div class="info-grid reveal reveal-delay-1">
+        <span class="info-label">Title</span>
+        <span class="info-text">TravelBuddy — an AI trip planner with retrieval-augmented generation, built as the hack-a-thon final project for AIML-505 (Generative AI) at Indiana Wesleyan University.</span>
+
+        <span class="info-label">Team</span>
+        <span class="info-text">Abel Edea, Laykumar Lad, Sai Kaushik Surampudi, Suhail Syed, Saurabh Rawat — built in a single sprint of under four hours.</span>
+
+        <span class="info-label">My Role</span>
+        <span class="info-text">Tester — validated the end-to-end user journey in both deterministic and AI-enabled modes, verified budget consistency between backend and frontend, and fed defects back to the sub-teams during the sprint. The app is also deployed and hosted on my domain.</span>
+
+        <span class="info-label">Objective</span>
+        <span class="info-text">To demonstrate moving generative-AI concepts from coursework into a complete, deployed application under real time pressure: applying RAG to ground LLM output in real data, constraining generation with shared budget logic, and designing a screen-based flow a non-technical user can succeed with on the first try.</span>
+
+        <span class="info-label">Process</span>
+        <span class="info-text">Brainstormed a domain that showcases RAG and multi-step AI orchestration → designed a concise API surface (health, destinations, planning, checkout) → separated the system into modules (data, retrieval, planning, LLM integration, budget, storage) → used Claude extensively to accelerate architecture and code generation on both backend and frontend, with sub-teams collaborating on payload contracts → tuned the domain knowledge base and validated end-to-end flows in both deterministic and AI-enabled modes → refined copy and UX to make the simulated data and checkout explicit → deployed the frontend as a static React/Vite build on GitHub Pages.</span>
+
+        <span class="info-label">Tools</span>
+        <span class="info-text">Claude (architecture design, code generation, and itinerary composition via API — the accelerator that made a four-hour build possible); React + Vite (screen-based frontend and static bundling); custom retrieval and shared budget logic in JavaScript; GitHub Pages (deployment).</span>
+
+        <span class="info-label">Value Proposition</span>
+        <span class="info-text">This artifact is evidence of designing and shipping an AI-supported product end to end, fast, as a team — not just prompting a model, but architecting around its weaknesses: retrieval to prevent hallucination, deterministic constraints to enforce budgets, a no-API-key fallback to guarantee reliability, and honest labeling of what is and isn't AI-generated or simulated. The result is a reusable reference architecture for AI-driven planners and recommenders, and the pattern (retrieve → constrain → generate → verify) transfers directly to adjacent domains like customer support, document processing, and internal tooling.</span>
+
+        <span class="info-label">Try It</span>
+        <span class="info-text"><a href="travelbuddy/" style="color: var(--accent); text-decoration: underline;">Open the live TravelBuddy demo →</a> No sign-up, no API key needed — the built-in planner runs entirely in your browser.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    © 2026 Abel Edea · AIML-505 · Indiana Wesleyan University
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
